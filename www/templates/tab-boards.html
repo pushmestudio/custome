@@ -1,0 +1,22 @@
+<!--
+  お試しにいくつかのボードを一覧表示したもの
+  + 削除
+  使用コントローラー: BoardCtrl (controller.js)
+-->
+<ion-view view-title="Boards">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="board in boards" type="item-text-wrap" href="#/custome/boards/{{board.id}}">
+        <img ng-src="{{board.img}}">
+        <h2>{{board.name}}</h2>
+        <p>{{board.lastText}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+
+        <button ng-click="remove(board)">
+          削除
+        </button>
+
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
