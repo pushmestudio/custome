@@ -1,3 +1,4 @@
+// mainApp.servicesというモジュールを定義する
 angular.module('mainApp.services', [])
 
 .factory('Boards', function() {
@@ -5,18 +6,23 @@ angular.module('mainApp.services', [])
   var boards = [{
     id: 0,
     name: 'タスクボード1',
-    lastText: '基本的なボード',
-    img: 'http://image.itmedia.co.jp/ait/articles/1112/01/r2005.gif'
+    lastText: '小島ボード1',
+    img: 'img/taskboard_port_blue.png'
   }, {
     id: 1,
     name: 'タスクボード2',
-    lastText: 'カレンダー的なボード',
-    img: 'http://a413.phobos.apple.com/us/r1000/064/Purple/v4/ac/d5/0c/acd50c87-a6b6-83df-5ffc-7c56e5738a96/mzl.xbrjlmtk.png'
+    lastText: '小島ボード2',
+    img: 'img/taskboard_port_green.png'
   }, {
     id: 2,
     name: 'タスクボード3',
-    lastText: 'その他',
-    img: 'https://lh3.ggpht.com/ZWR6MBaSTMeGclP_KF2sBQNoKAUBgbWWbKWbUne4b_SCjYN_3emJWnhTyzgdKoLUzw=w300'
+    lastText: '小島ボード3',
+    img: 'img/taskboard_virt_blue.png'
+  }, {
+    id: 3,
+    name: 'タスクボード4',
+    lastText: '小島ボード4',
+    img: 'img/taskboard_virt_orange.png'
   }];
 
   return {
