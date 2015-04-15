@@ -40,7 +40,7 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers', 'mainApp.services'])
   // tabs.html :
   // 複数のタブをここで定義している。
   // tabs.htmlの中で、タブ内で使用する画像や、文字列なども指定している
-  // 新しいタブを作ったり、タブそのものを変更する場合は、tabs.htmkをを弄る。
+  // 新しいタブを作ったり、タブそのものを変更する場合は、tabs.htmlをを弄る。
   
 
   .state('custome', {
@@ -50,35 +50,48 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers', 'mainApp.services'])
   })
 
   // 各タブを選択時に表示するテンプレートやコントローラーなど指定
-
+  // stateは階層構造を持ち、ドットで区切って設定する。以下のcustome.initは、customeが親view, initが子viewというイメージ
+  // 子viewとして設定すると、テンプレートを表示する位置がデフォルトで親の内側になったり、URLが親のURLに続く(custome.initのurlは/custome/initとなる)
   .state('custome.init', {
     url: '/init',
     views: {
-      'custome-init': {
+      'custome-init': { // viewの名前
         templateUrl: 'templates/tab-init.html',
         controller: 'InitCtrl'
       }
     }
   })
 
+  // initタブ内でboardの詳細を表示するために一時的に追加
+  .state('custome.tab-init-board', {
+    url: '/init/:boardId',
+    views: {
+      'custome-init': {
+        templateUrl: 'templates/tab-boards-detail.html',
+        controller: 'BoardsDetailCtrl'
+      }
+    }
+  })
+
   .state('custome.boards', {
-      url: '/boards',
-      views: {
-        'custome-boards': {
-          templateUrl: 'templates/tab-boards.html',
-          controller: 'BoardsCtrl'
-        }
+    url: '/boards',
+    views: {
+      'custome-boards': {
+        templateUrl: 'templates/tab-boards.html',
+        controller: 'BoardsCtrl'
       }
-    })
-    .state('custome.tab-boards-detail', {
-      url: '/boards/:boardId',
-      views: {
-        'custome-boards': {
-          templateUrl: 'templates/tab-boards-detail.html',
-          controller: 'BoardsDetailCtrl'
-        }
+    }
+  })
+
+  .state('custome.tab-boards-detail', {
+    url: '/init/:boardId',
+    views: {
+      'custome-boards': {
+        templateUrl: 'templates/tab-boards-detail.html',
+        controller: 'BoardsDetailCtrl'
       }
-    })
+    }
+  })
 
   .state('custome.sample', {
     url: '/sample',
