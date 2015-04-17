@@ -6,12 +6,7 @@
   使用コントローラー: BoardsDetailCtrl (controller.js)
 -->
 <ion-view view-title="{{board.name}}">
-  <ion-content class="padding">
-    <a href = "#/custome/board/{{board.id}}"}>
-      <img ng-src="{{board.img}}" style="width: 64px; height: 64px">
-    </a>
-    <p>
-      {{board.lastText}}
-    </p>
+  <ion-content class="padding" style="background: url({{board.img}}) no-repeat 0% 0%;">
+
   </ion-content>
 </ion-view>
