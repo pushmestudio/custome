@@ -93,6 +93,16 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers', 'mainApp.services'])
     }
   })
 
+  .state('custome.tab-board', {
+    url: '/board/:boardId',
+    views: {
+      'custome-boards': {
+        templateUrl: 'templates/tab-board.html',
+        controller: 'BoardsDetailCtrl'
+      }
+    }
+  })
+
   .state('custome.sample', {
     url: '/sample',
     views: {
