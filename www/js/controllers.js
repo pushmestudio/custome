@@ -2,6 +2,9 @@
 // mainApp.controllersというモジュールを定義する
 angular.module('mainApp.controllers', [])
 
+//InitCtrlは削除予定。
+
+/*
 //1つめのタブ(Init)を選択時に使用するコントローラーを定義する(.controllerはmainApp.controllersというモジュールの短縮表記)
 // コントローラの実態は、AngularJSのスコープオブジェクト($scope)を引数として使用する、JavaScriptのオブジェクト
 .controller('InitCtrl', function($scope, $ionicModal){
@@ -22,7 +25,8 @@ angular.module('mainApp.controllers', [])
   };
 })
 
-//2つめのタブ(Boards)を選択時に使用するコントローラー
+*/
+//Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, Boards) {
   $scope.boards = Boards.all();
   $scope.remove = function(board) {
@@ -30,7 +34,8 @@ angular.module('mainApp.controllers', [])
   }
 })
 
-//2つめのタブ(Boards)を選択し、いずれかのBoardを選択した時に使用するコントローラー
+//Board上に操作を加えるコントローラー
+//(as of 4/25では，バックグラウンドに壁紙指定のみ)
 .controller('BoardsDetailCtrl', function($scope, $stateParams, Boards) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
@@ -44,12 +49,3 @@ angular.module('mainApp.controllers', [])
     enableFriends: true
   };
 })
-
-// これなに？
-/*
-.controller('InitCtrl3', function($scope){
-    $scope.selectBoard = function(){
-        $scope.testMessage = "You should implement selectBoard method here via Controller."
-    };
-});
-*/
