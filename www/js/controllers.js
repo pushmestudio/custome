@@ -36,10 +36,11 @@ angular.module('mainApp.controllers', [])
 
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, Boards) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, Boards, DBConn) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   $scope.board = Boards.get($stateParams.boardId);
+  DBConn.connect();
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
