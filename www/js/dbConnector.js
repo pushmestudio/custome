@@ -28,17 +28,15 @@ angular.module('mainApp.dbConnector', [])
     /**
      * DBへの接続を行う。
      * 接続に成功したら、変数dbにオブジェクトを格納して使いまわす。
-     * @return {Promise} このメソッドの成否
+     * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.connect =  function() {
       module.debug('connect is called');
       var deferred = module.q.defer();
 
-      /*
-       CustoMeDBという名称のDBを開く、なければ作成する
-       module.versionのバージョンがローカルより新しい場合
-       request.onupgradeneededで定義した処理が呼ばれる
-      */
+      /* CustoMeDBという名称のDBを開く、なければ作成する
+         module.versionのバージョンがローカルより新しい場合
+         request.onupgradeneededで定義した処理が呼ばれる */
       var request = indexedDB.open('CustoMeDB', module.version);
 
       request.onupgradeneeded = module.init;
@@ -61,15 +59,17 @@ angular.module('mainApp.dbConnector', [])
     module.init = function(event) {
       module.debug('init is called.');
       module.db = event.target.result;
-      if(module.db.objectStoreNames.contains(module.storeName) {
+      if(module.db.objectStoreNames.contains(module.storeName)) {
         module.db.deleteObjectStore(module.storeName);
       }
 
       // オブジェクトストアを作成、Keypathは所謂Primary Key
+      // TODO:主キーを単なる数字にした場合にはkeyPathと同じ場所で、
+      // autoIncrement: trueの指定ができるがどうするか、要検討
       var store = module.db.createObjectStore(module.storeName, {keyPath: 'boardId'});
 
       // データの構造を変更したら、必ずこのIndexも更新すること
-      store.createIndex('boardContent', 'boardContent', {unique: false});
+      store.createIndex('boardId', 'boardId', {unique: true});
 
       module.createSample(store);
     }
@@ -82,13 +82,13 @@ angular.module('mainApp.dbConnector', [])
       if(!store) return;
 
       var samples = [
-        '{parts:[{"partId":"001"}]}'
-        , '{parts:[{"partId":"002", "title":"no2"}, {"partId":"003"}]}'
+        {boardId: '1430626351000', boardContent: '{parts:[{"partId":"001"}]}'}
+        , {boardId: '1430626354000', boardContent: '{parts:[{"partId":"002", "title":"no2"}, {"partId":"003"}]}'}
       ];
 
       // サンプルデータを一件ずつ追加する
       for(sample of samples) {
-        module.addNewBoard(sample);
+        store.add(sample);
         module.debug(sample + 'is added');
       }
     }
@@ -98,7 +98,7 @@ angular.module('mainApp.dbConnector', [])
      * 指定がある場合は、boardIdが同じもののboardContentを上書きするイメージ。
      * @param {String} boardContent JSON形式、中にpartsやwallpaperなどを持つ
      * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
-     * @return {Promise} このメソッドの成否
+     * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.saveBoardContent = function(boardContent, boardId) {
       module.debug('saveBoardContent is called');
@@ -108,7 +108,7 @@ angular.module('mainApp.dbConnector', [])
         updateFlag = false; // 判定結果として、要新規作成
       }
 
-      // boardIdに対応するものがDBに保存するかを確認する
+      // boardIdに対応するものがDBに保存されてるかを確認する
       // TODO:boardIdを引数に読み出す処理が出来た際は当該メソッドに置き換える
       if(updateFlag) {
         // DBへの問い合わせ処理を開始するための事前準備
@@ -117,6 +117,9 @@ angular.module('mainApp.dbConnector', [])
 
         // 名前が一致するデータを取得する
         var range = IDBKeyRange.only(boardId);
+
+        /* onsuccess内でupdateやaddを呼ぶことにより、
+           openCursorの処理を同期してからupdateなどができる */
         store.openCursor(range).onsuccess = function(event) {
           var cursor = event.target.result; // 取得結果を得る
           if(cursor) {
@@ -125,16 +128,16 @@ angular.module('mainApp.dbConnector', [])
             updateFlag = false;
             module.debug('boardIdと一致するデータが無いため新規作成');
           }
+          module.debug('updateFlag:' + updateFlag);
+          // updateFlagの内容に応じ、更新あるいは新規作成をする
+          if(updateFlag) { // 更新処理
+            module.updateBoard(boardId, boardContent);
+          } else { // 新規作成
+            module.addNewBoard(boardContent);
+          }
         }
-      }
-
-      module.debug('updateFlag:' + updateFlag);
-
-      // updateFlagの内容に応じ、更新あるいは新規作成をする
-      if(updateFlag) { // 更新処理
-        module.updateBoard(boardId, boardContent);
-      } else { // 新規作成
-        module.addNewBoard(boardContent);
+      } else {
+        module.addNewBoard(boardContent); // DBを確認するまでもなく新規登録の場合
       }
     }
 
@@ -142,11 +145,11 @@ angular.module('mainApp.dbConnector', [])
      * オブジェクトストアに登録されている項目を更新する。
      * @param {String} boardId アップデート対象のボードのID
      * @param {String} boardContent 更新内容
-     * @return {Promise} updateメソッドに対する成否
+     * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.updateBoard = function(boardId, boardContent) {
       module.debug('updateBoard is called');
-      var updateBoard = {boardId: boardId, boardContent; boardContent};
+      var updateBoard = {boardId: boardId, boardContent: boardContent};
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
@@ -181,14 +184,14 @@ angular.module('mainApp.dbConnector', [])
     /**
      * 新しくボードを追加する。ボードのidはunixtimeを用いる。
      * @param {String} boardContent JSON形式のボードの中身
-     * @return {Promise} addメソッドに対する成否
+     * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.addNewBoard = function(boardContent) {
       module.debug('addNewBoard is called');
-      var time = Date.now(); // JavascriptのDateよりunixtimeを取得
+      var time = '' +Date.now() +''; // JavascriptのDateでunixtimeを取得し、文字列化
       var newBoard = {boardId: time, boardContent: boardContent};
 
-      var trans = module.cb.trasaction(module.storeName, 'readwrite');
+      var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
       var deferred = module.q.defer();
 
@@ -205,19 +208,18 @@ angular.module('mainApp.dbConnector', [])
 
     /**
      * データベースに作成したオブジェクトストアを削除する
-     * @param {String} storeName 削除するオブジェクトストアの名前
+     * onupgradeneeded = module.deleteStoreのように指定して使う
+     * IDBの仕様上、onup...のコールバック内でしかdeleteできないので注意
      */
-    module.deleteStore = function(deleteTarget) {
-      module.debug('deleteStore is called');
-      var targetName = null;
+    module.reset = function() {
+      module.debug('reset is called');
+      var trans = module.db.transaction(module.storeName, 'readwrite');
+      var store = trans.objectStore(module.storeName);
 
-      if(typeof deleteTarget === 'undefined' ||| deleteTarget === null) {
-        targetName = module.storeName; // 引数が空なので、storeNameを使う
-      } else {
-        targetName = deleteTarget;
+      var request = store.clear(); // storeの中身をすべて消す
+      request.onsuccess = function(event) {
+        module.debug(module.storeName + ' is cleaned');
       }
-      module.db.deleteObjectStore(targetName);
-      module.debug(targetName + 'is deleted');
     }
 
     /**
@@ -239,8 +241,8 @@ angular.module('mainApp.dbConnector', [])
       , save: function(boardContent, boardId) {
         module.saveBoardContent(boardContent, boardId);
       }
-      , deleteStore: function(deleteTarget){
-        module.deleteStore(deleteTarget);
+      , reset: function() {
+        module.reset();
       }
     };
   }

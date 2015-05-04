@@ -27,7 +27,8 @@ angular.module('mainApp.controllers', [])
 
 */
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, Boards) {
+.controller('BoardsCtrl', function($scope, Boards, DBConn) {
+  DBConn.connect(); // 使用する前に接続処理を行う
   $scope.boards = Boards.all();
   $scope.remove = function(board) {
     Boards.remove(board);
@@ -40,7 +41,11 @@ angular.module('mainApp.controllers', [])
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   $scope.board = Boards.get($stateParams.boardId);
-  DBConn.connect();
+
+  // テスト用 //TODO:テスト終了後削除
+  var bCont = '{parts:[{"partId":"8888"}]}';
+  var bId = '1430626351000';
+  DBConn.save(bCont, bId);
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
