@@ -3,13 +3,22 @@
   'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
   The FriendsCtrl pulls data from the Friends service (service.js)
   The Friends service returns an array of friend data
-  �g�p�R���g���[���[: BoardsDetailCtrl (controller.js)
+  Žg—pƒRƒ“ƒgƒ[ƒ‰[: BoardsDetailCtrl (controller.js)
 -->
 <ion-view view-title="{{board.name}}">
   <ion-nav-buttons side="right">
     <button menu-toggle="right" class="button button-icon icon ion-android-color-palette"></button>
   </ion-nav-buttons>
   <ion-content has-header="false" style="background: url({{board.img}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;">
-
+  <!-- 読込テスト用 TODO: テスト終了後削除 -->
+  <!--
+    boardDataにはcontrollers.jsの56行目で読み込んだデータがバインドされている。
+    以下は読出例
+  -->
+    <div> boardId is : {{boardData.boardId}} </div>
+    <div> boardContent is : {{boardData.boardContent}} </div>
+    <div> first part is : {{boardData.boardContent.parts[0]}} </div>
+    <div> first part's x position is : {{boardData.boardContent.parts[0].position.x}}
+    <div> wallPaper is : {{boardData.boardContent.wallPaper}} </div>
   </ion-content>
 </ion-view>
