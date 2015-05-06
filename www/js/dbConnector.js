@@ -69,6 +69,8 @@ angular.module('mainApp.dbConnector', [])
       var store = module.db.createObjectStore(module.storeName, {keyPath: 'boardId'});
 
       // データの構造を変更したら、必ずこのIndexも更新すること
+      // (冨田)KeyPathの値はIndexを作成せずとも参照可能なので、Indexを作成するのは、KeyPath以外の値で何かを参照したいとき
+      // そのため、updateBoardにおけるボードの参照方法を一部修正してます。
       store.createIndex('boardId', 'boardId', {unique: true});
 
       module.createSample(store);
@@ -82,8 +84,33 @@ angular.module('mainApp.dbConnector', [])
       if(!store) return;
 
       var samples = [
-        {boardId: '1430626351000', boardContent: '{parts:[{"partId":"001"}]}'}
-        , {boardId: '1430626354000', boardContent: '{parts:[{"partId":"002", "title":"no2"}, {"partId":"003"}]}'}
+        {boardId: '1430626351000', boardContent: { 'parts': [ { 'partId': '001'}, { 'type': 'button'} ] } },
+        {boardId: '1430626354000', boardContent: { 'parts': [ { 'partId': '002', 'title': 'no2'}, { 'partId': '003'} ] } },
+        {boardId: '1430626357000',
+         boardContent: {
+          'parts': [
+            {
+              'partId': '001',
+              'image': 'path2image',
+              'type': 'post_it',
+              'position': {
+                'x': 100,
+                'y': 200
+              }
+            },
+            {
+              'partId': '002',
+              'image': 'path2image2',
+              'type': 'button',
+              'position': {
+                'x': 200,
+                'y': 768
+              }
+            }
+          ],
+          'wallPaper': 'img/board0.png'
+          }
+        }
       ];
 
       // サンプルデータを一件ずつ追加する
@@ -155,12 +182,23 @@ angular.module('mainApp.dbConnector', [])
       var store = trans.objectStore(module.storeName);
       var deferred = module.q.defer();
 
-      // 名前が一致するデータを取得する
+      /*
+      (冨田)rangeを使用することで特定の(あるいは特定の範囲の)データのみを絞り込みでき、openCursorは指定された範囲内のデータを全件取得します。
+      そのため、下記のコードだと、
+        1. オブジェクトストア内で指定されたboardIdをもつレコードを絞り込む
+        2. 1で絞り込んだ結果をを全件取得
+      となり、若干冗長だと感じたため、直接getする方法にしています。
       var range = IDBKeyRange.only(boardId);
       var index = store.index('boardId');
       index.openCursor(range).onsuccess = function(event) {
-        var cursor = event.target.result;
-        if(cursor) { // 該当結果がある場合
+      ちなみに、indexは上述のとおりKeyPath以外のkey値で参照をかけるときに必要になるので、KeyPathであるboardIDで参照をかけるときは不要です。
+      */
+      // 名前が一致するデータを取得する
+      store.get(boardId).onsuccess = function(event) {
+//        var cursor = event.target.result; // TODO: 現状のソースで問題ないことが確認できたら削除
+        var data = event.target.result;
+//        if(cursor) { // TODO: 現状のソースで問題ないことが確認できたら削除
+        if(data) { // 該当結果がある場合
           var request = store.put(updateBoard); // ストアへ更新をかける
           request.onsuccess = function(event) {
             deferred.resolve();
@@ -174,7 +212,8 @@ angular.module('mainApp.dbConnector', [])
           module.debug('update対象が見つかりません');
         }
       };
-      index.openCursor(range).onerror = function(event) {
+//      index.openCursor(range).onerror = function(event) { // TODO: 現状のソースで問題ないことが確認できたら削除
+      store.get(boardId).onerror = function(event) {
         deferred.reject('request is rejected');
         module.debug('update error:' + event.message);
       }
@@ -202,6 +241,38 @@ angular.module('mainApp.dbConnector', [])
       request.onerror = function(event) {
         deferred.reject('add request is failed!');
         module.debug('addNewBoard失敗: '+ event.message);
+      };
+      return deferred.promise;
+    }
+
+    /**
+     * オブジェクトストアに登録されている項目を取得する。
+     * @param {String} boardId boardContentを取得したいボードのID
+     * @return {Promise} 同期処理を行うためのオブジェクト
+     */
+    module.loadBoardContent = function(boardId) {
+      module.debug("loadBoardContent is called");
+//      var boardContents = []; // (冨田)配列として返すことも可能(ユニークな値なので不要だと思うが)
+      var trans = module.db.transaction(module.storeName, "readonly");
+      var store = trans.objectStore(module.storeName);
+
+      var deferred = module.q.defer();
+
+      // boardIDが一致するデータを取得する
+      store.get(boardId).onsuccess = function(event){
+        var data = event.target.result;
+        if(data){
+//          boardContents.push(data);
+//          deferred.resolve(boardContents);
+          deferred.resolve(data);
+        } else { // 該当結果がない場合
+          module.debug('load対象が見つかりません');
+        }
+      };
+
+      store.get(boardId).onerror = function(event){
+        deferred.reject('request is rejected');
+        module.debug('load error:' + event.message);
       };
       return deferred.promise;
     }
@@ -240,6 +311,9 @@ angular.module('mainApp.dbConnector', [])
       }
       , save: function(boardContent, boardId) {
         module.saveBoardContent(boardContent, boardId);
+      }
+      , load: function(boardId) {
+        return module.loadBoardContent(boardId);
       }
       , reset: function() {
         module.reset();
