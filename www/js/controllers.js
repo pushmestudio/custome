@@ -1,6 +1,6 @@
 //これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
 // mainApp.controllersというモジュールを定義する
-angular.module('mainApp.controllers', [])
+angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'])
 
 //InitCtrlは削除予定。
 
@@ -41,21 +41,6 @@ angular.module('mainApp.controllers', [])
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   $scope.board = Boards.get($stateParams.boardId);
-
-  // 保存テスト用 //TODO:テスト終了後削除
-  /*
-  var bCont = '{parts:[{"partId":"8887"}]}';
-  var bId = '1430626351000';
-  DBConn.save(bCont, bId);
-  */
-
-  // 読込テスト用 //TODO: テスト終了後削除
-  var bId = '1430626357000';
-  DBConn.load(bId).then(function(boardData){
-    console.debug(boardData);
-    // board.htmlで使用できるようにバインドする
-    $scope.boardData = boardData;
-  });
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
