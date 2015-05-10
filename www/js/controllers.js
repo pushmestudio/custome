@@ -41,7 +41,6 @@ angular.module('mainApp.controllers', [])
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   $scope.board = Boards.get($stateParams.boardId);
-
   // 保存テスト用 //TODO:テスト終了後削除
   /*
   var bCont = '{parts:[{"partId":"8887"}]}';
@@ -58,6 +57,15 @@ angular.module('mainApp.controllers', [])
   });
 })
 
+//Parts操作用のコントローラー
+.controller('PartsCtrl', function($scope, Parts){
+  $scope.parts = Parts.all();
+  $scope.deploy = function(part){
+    Parts.deploy(part);
+  }
+  $scope.deployedParts = Parts.getAllDeployed();
+})
+
 //3つめのタブ(Sample)を選択時に使用するコントローラー
 //動作確認や、ノウハウ記録用に使用
 .controller('SampleCtrl', function($scope) {
@@ -65,3 +73,18 @@ angular.module('mainApp.controllers', [])
     enableFriends: true
   };
 })
+
+.controller('CoordCtrl', ['$scope', function($scope){
+  $scope.ev = {
+    mo: {},
+    mm: {},
+    ml: {},
+    click: {}
+  }
+  $scope.click = function($event){
+    $scope.ev.click = {
+      x: $event.x,
+      y: $event.y
+    };
+  }
+}])

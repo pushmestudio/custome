@@ -2,7 +2,7 @@
 angular.module('mainApp.services', [])
 
 .factory('Boards', function() {
- 
+
   var boards = [{
     id: 0,
     name: 'タスクボード1',
@@ -39,6 +39,45 @@ angular.module('mainApp.services', [])
         }
       }
       return null;
+    }
+  };
+})
+
+.factory('Parts', function() {
+
+  var parts = [{
+    id: 0,
+    title: 'yellow',
+    type: 'fusen',
+    img: 'img/part_fusen_yellow.png',
+    counter: 0
+  }, {
+    id: 1,
+    title: 'blue',
+    type: 'fusen',
+    img: 'img/part_fusen_blue.png',
+    counter: 0
+  }];
+
+  var deployedParts=[];
+
+  return {
+    all: function() {
+      return parts;
+    },
+    deploy: function(part) {
+      part.counter++;
+      var deployedPart = {
+        partId : part.id,
+        partImg : part.img,
+        partType : part.type,
+        message : "This is.."
+      };
+      deployedParts.push(deployedPart);
+      return deployedParts;
+    },
+    getAllDeployed: function(){
+      return deployedParts;
     }
   };
 });

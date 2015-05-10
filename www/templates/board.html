@@ -9,7 +9,16 @@
   <ion-nav-buttons side="right">
     <button menu-toggle="right" class="button button-icon icon ion-android-color-palette"></button>
   </ion-nav-buttons>
-  <ion-content has-header="false" style="background: url({{board.img}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;">
+  <ion-content ng-controller="CoordCtrl" has-header="false" style="background: url({{board.img}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;">
+    <!--<div ng-controller="testCtrl">-->
+      <div ng-click="click($event)" ng-style="width: 100%; height: 100%;">
+        <p>mouse click ( x: {{ev.click.x}}, y: {{ev.click.y}} )</p>
+      </div>
+      <div ng-controller="PartsCtrl" ng-repeat="deployedPart in deployedParts">
+        <img ng-src={{deployedPart.partImg}} ng-style="position: absolute; width: 100%; height: 100%;">
+      </div>
+
+    <!--</div>-->
   <!-- 読込テスト用 TODO: テスト終了後削除 -->
   <!--
     boardDataにはcontrollers.jsの56行目で読み込んだデータがバインドされている。
