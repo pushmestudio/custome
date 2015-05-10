@@ -30,8 +30,8 @@
       サイドバーは全画面に共通の部品として用意するが、サイドバーを呼び出すボタンをboard.htmlにしか配置しないことで対応
       ドラッグしてサイドバーを引き出せるようにする場合、全ての画面でサイドバーを引き出せてしまうので、一旦無効化している
     -->
-    <ion-side-menus>
-  
+    <ion-side-menus ng-controller="PartsCtrl">
+
       <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-positive">
           <ion-nav-back-button>
@@ -50,7 +50,18 @@
           <h1 class="title">Palette</h1>
         </ion-header-bar>
         <ion-content class="has-header">
-          Palette!!!
+          <ion-list>
+            <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap">
+              <img ng-src="{{part.img}}">
+              <h2>{{part.title}}</h2>
+              <p>{{part.type}}</p>
+              <button ng-click="deploy(part)">
+                deploy
+              </button>
+              <p>{{part.counter}}個</p>
+              <p>配置しています</p>
+            </ion-item>
+          </ion-list>
         </ion-content>
       </ion-side-menu>
 
