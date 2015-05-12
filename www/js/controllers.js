@@ -59,11 +59,15 @@ angular.module('mainApp.controllers', [])
 
 //Parts操作用のコントローラー
 .controller('PartsCtrl', function($scope, Parts){
-  $scope.parts = Parts.all();
-  $scope.deploy = function(part){
-    Parts.deploy(part);
+  $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
+  $scope.select = function(part){
+    Parts.select(part);//パレットからボードに配置するパーツを選択
   }
-  $scope.deployedParts = Parts.getAllDeployed();
+  $scope.deployedParts = Parts.getAllDeployed();//配置するパーツをすべて取得
+  $scope.click = function($event){
+    Parts.setCoord($event);//配置先の座標取得
+    Parts.deploy();//パーツをボードに配置
+  }
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
@@ -73,18 +77,3 @@ angular.module('mainApp.controllers', [])
     enableFriends: true
   };
 })
-
-.controller('CoordCtrl', ['$scope', function($scope){
-  $scope.ev = {
-    mo: {},
-    mm: {},
-    ml: {},
-    click: {}
-  }
-  $scope.click = function($event){
-    $scope.ev.click = {
-      x: $event.x,
-      y: $event.y
-    };
-  }
-}])
