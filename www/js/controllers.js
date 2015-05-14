@@ -41,7 +41,6 @@ angular.module('mainApp.controllers', [])
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   $scope.board = Boards.get($stateParams.boardId);
-
   // 保存テスト用 //TODO:テスト終了後削除
   /*
   var bCont = '{parts:[{"partId":"8887"}]}';
@@ -56,6 +55,19 @@ angular.module('mainApp.controllers', [])
     // board.htmlで使用できるようにバインドする
     $scope.boardData = boardData;
   });
+})
+
+//Parts操作用のコントローラー
+.controller('PartsCtrl', function($scope, Parts){
+  $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
+  $scope.select = function(part){
+    Parts.select(part);//パレットからボードに配置するパーツを選択
+  }
+  $scope.deployedParts = Parts.getAllDeployed();//配置するパーツをすべて取得
+  $scope.click = function($event){
+    Parts.setCoord($event);//配置先の座標取得
+    Parts.deploy();//パーツをボードに配置
+  }
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
