@@ -229,6 +229,7 @@ angular.module('mainApp.dbConnector', [])
       module.debug('addNewBoard is called');
       var time = '' +Date.now() +''; // JavascriptのDateでunixtimeを取得し、文字列化
       var newBoard = {boardId: time, boardContent: boardContent};
+      module.debug('addNewBoard ID is ' +time);
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);

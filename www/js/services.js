@@ -23,6 +23,11 @@ angular.module('mainApp.services', [])
     name: 'タスクボード4',
     lastText: '小島ボード4',
     img: 'img/taskboard_virt_orange.png'
+  }, {
+    id: 1431636403391,
+    name: '保存したタスクボード',
+    lastText: '小島ボード1',
+    img: 'img/taskboard_virt_blue.png'
   }];
 
   return {
@@ -109,24 +114,25 @@ angular.module('mainApp.services', [])
       partY = $event.y;
       return null;
     },
-    /*
+    
     //DBから読み込んだデータを引数とする
     //ボードに再配置するパーツをまとめるメソッド
     reDeploy: function(boardContent){
-      var reDeployedParts=[];
-      for (part of boardContent.parts){
-        var reDeployedPart = {
-          partId : part.id,
-          image : part.image,
-          type : part.type,
+      //var reDeployedParts=[];
+      for(part of boardContent){
+        //console.debug(object);
+        /*var reDeployedPart = {
+          partId : object.id,
+          image : object.image,
+          type : object.type,
           position : {
-            x : part.position.x-50,
-            y : part.position.y-100,
+            x : object.position.x-50,
+            y : object.position.y-100,
           }
-        };
-        reDeployedParts.push(reDeployedPart);
-        return reDeployedParts;
+        };*/
+        deployedParts.push(part);
       }
-    }*/
+      return deployedParts;
+    }
   };
 });
