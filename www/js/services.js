@@ -24,9 +24,9 @@ angular.module('mainApp.services', [])
     lastText: '小島ボード4',
     img: 'img/taskboard_virt_orange.png'
   }, {
-    id: 1431636403391,
+    id: 1431759653574,
     name: '保存したタスクボード',
-    lastText: '小島ボード1',
+    lastText: '#45テスト用',
     img: 'img/taskboard_virt_blue.png'
   }];
 
@@ -120,16 +120,17 @@ angular.module('mainApp.services', [])
     reDeploy: function(boardContent){
       //var reDeployedParts=[];
       for(part of boardContent){
-        //console.debug(object);
+        //console.debug(part);
         /*var reDeployedPart = {
-          partId : object.id,
-          image : object.image,
-          type : object.type,
+          partId : part.id,
+          image : part.image,
+          type : part.type,
           position : {
-            x : object.position.x-50,
-            y : object.position.y-100,
+            x : part.position.x-50,
+            y : part.position.y-100,
           }
         };*/
+        parts[part.partId].counter++;
         deployedParts.push(part);
       }
       return deployedParts;

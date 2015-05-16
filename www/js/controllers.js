@@ -40,32 +40,18 @@ angular.module('mainApp.controllers', [])
 .controller('BoardsDetailCtrl', function($scope, $stateParams, Boards, DBConn, Parts) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
-  //DBConn.load("1431636403391").then(function(boardData){
-  DBConn.load("$stateParams.boardId").then(function(boardData){
+  // パーツの読込
+  DBConn.load($stateParams.boardId).then(function(boardData){
     console.debug(boardData);
     // board.htmlで使用できるようにバインドする
     $scope.boardData = boardData;
     Parts.reDeploy(boardData.boardContent);
-    //Parts.deploy();
   });
   $scope.board = Boards.get($stateParams.boardId);
+  // 保存処理
   $scope.save = function(){
     DBConn.save(Parts.getAllDeployed(), $stateParams.boardId);
   }
-  // 保存テスト用 //TODO:テスト終了後削除
-  /*
-  var bCont = '{parts:[{"partId":"8887"}]}';
-  var bId = '1430626351000';
-  DBConn.save(bCont, bId);
-  */
-
-  // 読込テスト用 //TODO: テスト終了後削除
-  /*var bId = '1430626357000';
-  DBConn.load(bId).then(function(boardData){
-    console.debug(boardData);
-    // board.htmlで使用できるようにバインドする
-    $scope.boardData = boardData;
-  });*/
 })
 
 //Parts操作用のコントローラー
