@@ -7,15 +7,15 @@
 -->
 <ion-view view-title="{{board.name}}">
   <ion-nav-buttons side="right">
+    <button class="button button-icon icon ion-android-archive" ng-click="save()"></button>
     <button menu-toggle="right" class="button button-icon icon ion-android-color-palette"></button>
   </ion-nav-buttons>
   <ion-content ng-controller="PartsCtrl" has-header="false" style="background: url({{board.img}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" ng-click="click($event)">
 
-    <div ng-repeat="deployedPart in deployedParts">
+    <div ng-repeat="deployedPart in deployedParts track by $index">
       <img ng-src={{deployedPart.image}} style="position: absolute; width: 100px; height: 100px; left: {{deployedPart.position.x}}px; top: {{deployedPart.position.y}}px;">
     </div>
 
-    <button ng-click="save()">save</button>
   <!-- 読込テスト用 TODO: テスト終了後削除 -->
   <!--
     boardDataにはcontrollers.jsの56行目で読み込んだデータがバインドされている。
