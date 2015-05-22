@@ -1,7 +1,6 @@
-
 // モジュールを登録(mainApp)
-// 依存するモジュールを指定(ionic.mainApp.controllers,mainApp.services)
-angular.module('mainApp', ['ionic', 'mainApp.controllers', 'mainApp.services', 'mainApp.dbConnector'])
+// 依存するモジュールを指定(ionic, mainApp.controllers)
+angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
