@@ -48,6 +48,7 @@ angular.module('mainApp.controllers', [])
   DBConn.save(bCont, bId);
   */
 
+  /*
   // 読込テスト用 //TODO: テスト終了後削除
   var bId = '1430626357000';
   DBConn.load(bId).then(function(boardData){
@@ -55,6 +56,7 @@ angular.module('mainApp.controllers', [])
     // board.htmlで使用できるようにバインドする
     $scope.boardData = boardData;
   });
+  */
 })
 
 //Parts操作用のコントローラー
