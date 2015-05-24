@@ -50,7 +50,7 @@ angular.module('mainApp.controllers', [])
   $scope.board = Boards.get($stateParams.boardId);
   // 保存処理
   $scope.save = function(){
-    DBConn.save(Parts.getAllDeployed(), $stateParams.boardId);
+    DBConn.save(Parts.getAllDeployed(), "wall paper!", $stateParams.boardId);
   }
 })
 
