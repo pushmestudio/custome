@@ -280,6 +280,38 @@ angular.module('mainApp.dbConnector', [])
       return deferred.promise;
     }
 
+
+    /**
+     * オブジェクトストアに登録されている項目を更新する。
+     * @return {Promise} 同期処理を行うためのオブジェクト
+     */
+    module.getAllMyBoards = function() {
+      module.debug('getAllMyBoards is called');
+
+      var trans = module.db.transaction(module.storeName, 'readonly');
+      var store = trans.objectStore(module.storeName);
+      var deferred = module.q.defer();
+
+      var myBoards = [];
+
+      store.openCursor().onsuccess = function(event) {
+        var data = event.target.result;
+        if(data) { // 取得中の場合
+          myBoards.push(data);
+          data.continue();
+        } else { // 取得が終わった場合
+          module.debug('取得が終了しました');
+          deferred.resolve(myBoards);
+        }
+      };
+      store.openCursor().onerror = function(event) {
+        module.debug('取得に失敗しました');
+        deferred.reject();
+      }
+      return deferred.promise;
+    }
+
+
     /**
      * データベースに作成したオブジェクトストアを削除する
      * onupgradeneeded = module.deleteStoreのように指定して使う
@@ -310,7 +342,7 @@ angular.module('mainApp.dbConnector', [])
     // DBConnとして呼び出し可能(≒public)とするメソッドを下記に定義
     return {
       connect: function(){
-        module.connect();
+        return module.connect();
       }
       , save: function(parts, wallPaper, boardId) {
         module.saveBoardContent(parts, wallPaper, boardId);
@@ -320,6 +352,9 @@ angular.module('mainApp.dbConnector', [])
       }
       , reset: function() {
         module.reset();
+      }
+      , getAll: function() {
+        return module.getAllMyBoards();
       }
     };
   }

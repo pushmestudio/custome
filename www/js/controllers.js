@@ -28,7 +28,16 @@ angular.module('mainApp.controllers', [])
 */
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, Boards, DBConn) {
-  DBConn.connect(); // 使用する前に接続処理を行う
+  $scope.myBoards;
+  DBConn.connect().then(function() {
+    DBConn.getAll().then(function(data) {
+      Boards.myBoards = data;
+      $scope.myBoards = Boards.myBoards;
+    });
+  }); // 使用する前に接続処理を行う
+  //DBConn.getAll();
+  // ここでDBから全Boardsを持ってくる処理を書く
+
   $scope.boards = Boards.all();
   $scope.remove = function(board) {
     Boards.remove(board);
