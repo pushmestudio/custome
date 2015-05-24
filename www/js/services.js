@@ -3,6 +3,7 @@ angular.module('mainApp.services', [])
 
 .factory('Boards', function() {
 
+  // boardのtemplate
   var boards = [{
     id: 0,
     name: 'タスクボード1',
@@ -30,10 +31,19 @@ angular.module('mainApp.services', [])
     img: 'img/taskboard_virt_blue.png'
   }];
 
+  var myBoards = [{
+    id: 1431759653574,
+    name: 'hoge',
+    lastText: '#45テスト用',
+    img: 'img/taskboard_virt_blue.png'
+  }];
+
   return {
     all: function() {
       return boards;
     },
+    myBoards: myBoards
+    ,
     remove: function(board) {
       boards.splice(boards.indexOf(board), 1);
     },
