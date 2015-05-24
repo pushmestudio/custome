@@ -31,18 +31,15 @@ angular.module('mainApp.services', [])
     img: 'img/taskboard_virt_blue.png'
   }];
 
-  var myBoards = [{
-    id: 1431759653574,
-    name: 'hoge',
-    lastText: '#45テスト用',
-    img: 'img/taskboard_virt_blue.png'
-  }];
+  var myBoards = [];
 
   return {
     all: function() {
       return boards;
     },
-    myBoards: myBoards
+    getMyboards: function() {
+      return myBoards;
+    }
     ,
     remove: function(board) {
       boards.splice(boards.indexOf(board), 1);
