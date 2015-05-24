@@ -3,7 +3,7 @@
 angular.module('mainApp.controllers', [])
 
 //InitCtrlは削除予定。
-
+// TODO:不要なら早く消すこと @5/24
 /*
 //1つめのタブ(Init)を選択時に使用するコントローラーを定義する(.controllerはmainApp.controllersというモジュールの短縮表記)
 // コントローラの実態は、AngularJSのスコープオブジェクト($scope)を引数として使用する、JavaScriptのオブジェクト
@@ -30,6 +30,7 @@ angular.module('mainApp.controllers', [])
 .controller('BoardsCtrl', function($scope, Boards, DBConn) {
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
+  // 接続が終わったら取得、取得が終わったら変数に反映
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
       Boards.myBoards = data;
@@ -58,9 +59,13 @@ angular.module('mainApp.controllers', [])
   $scope.board = Boards.get($stateParams.boardId);
 
   // 保存処理
+  // 壁紙を読み込む処理ができていないため、暫定的にハードコードした壁紙を読み込む
+  // TODO:壁紙読み込み処理の実装 @5/24
   $scope.save = function(){
     DBConn.save(Parts.getAllDeployed(), 'img/taskboard_virt_blue.png'
     , $stateParams.boardId).then(function(newBoard) {
+      // save時、新規の場合は新規Objectが返ってくるため、
+      // 新規かどうかをその戻り値によって判断し、新規なら一覧へ反映する
       if(newBoard) {
         Boards.myBoards.push(newBoard);
       }

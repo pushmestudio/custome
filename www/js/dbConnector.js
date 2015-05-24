@@ -2,7 +2,7 @@
  * @fileOverview mainApp.dbConnectorというモジュールの定義。
  * DB関連のCRUD処理などを提供する。
  * @refs IndexedDBのAPI https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore
- * @refs 実装に際して参考にしたライブラリhttps://github.com/webcss/angular-indexeddb/blob/master/src/indexeddb.js
+ * @refs 実装に際して参考にしたライブラリ https://github.com/webcss/angular-indexeddb/blob/master/src/indexeddb.js
  * @copyright PushMe Studio 2015
  */
 angular.module('mainApp.dbConnector', [])
@@ -64,13 +64,10 @@ angular.module('mainApp.dbConnector', [])
       }
 
       // オブジェクトストアを作成、Keypathは所謂Primary Key
-      // TODO:主キーを単なる数字にした場合にはkeyPathと同じ場所で、
-      // autoIncrement: trueの指定ができるがどうするか、要検討
       var store = module.db.createObjectStore(module.storeName, {keyPath: 'boardId'});
 
       // データの構造を変更したら、必ずこのIndexも更新すること
-      // (冨田)KeyPathの値はIndexを作成せずとも参照可能なので、Indexを作成するのは、KeyPath以外の値で何かを参照したいとき
-      // そのため、updateBoardにおけるボードの参照方法を一部修正してます。
+      // KeyPathの値はIndexを作成せずとも参照可能なので、Indexを作成はKeyPath以外の値で何かを参照したいときのみ
       store.createIndex('boardId', 'boardId', {unique: true});
 
       module.createSample(store);
@@ -199,13 +196,10 @@ angular.module('mainApp.dbConnector', [])
       var range = IDBKeyRange.only(boardId);
       var index = store.index('boardId');
       index.openCursor(range).onsuccess = function(event) {
-      ちなみに、indexは上述のとおりKeyPath以外のkey値で参照をかけるときに必要になるので、KeyPathであるboardIDで参照をかけるときは不要です。
       */
       // 名前が一致するデータを取得する
       store.get(boardId).onsuccess = function(event) {
-//        var cursor = event.target.result; // TODO: 現状のソースで問題ないことが確認できたら削除
         var data = event.target.result;
-//        if(cursor) { // TODO: 現状のソースで問題ないことが確認できたら削除
         if(data) { // 該当結果がある場合
           data.boardContent.parts = parts;
           data.boardContent.wallPaper = wallPaper;
@@ -218,12 +212,10 @@ angular.module('mainApp.dbConnector', [])
           request.onerror = function(event) {
             deferred.reject('更新途中で失敗!' + event.message);
           }
-
         } else { // 該当結果がない場合
           module.debug('update対象が見つかりません');
         }
       };
-//      index.openCursor(range).onerror = function(event) { // TODO: 現状のソースで問題ないことが確認できたら削除
       store.get(boardId).onerror = function(event) {
         deferred.reject('request is rejected');
         module.debug('update error:' + event.message);
@@ -264,7 +256,7 @@ angular.module('mainApp.dbConnector', [])
      */
     module.loadBoardContent = function(boardId) {
       module.debug("loadBoardContent is called");
-//      var boardContents = []; // (冨田)配列として返すことも可能(ユニークな値なので不要だと思うが)
+      // var boardContents = []; // (冨田)配列として返すことも可能(ユニークな値なので不要だと思うが)
       var trans = module.db.transaction(module.storeName, "readonly");
       var store = trans.objectStore(module.storeName);
 
@@ -274,8 +266,6 @@ angular.module('mainApp.dbConnector', [])
       store.get(boardId).onsuccess = function(event){
         var data = event.target.result;
         if(data){
-//          boardContents.push(data);
-//          deferred.resolve(boardContents);
           deferred.resolve(data);
         } else { // 該当結果がない場合
           module.debug('load対象が見つかりません');
@@ -289,9 +279,8 @@ angular.module('mainApp.dbConnector', [])
       return deferred.promise;
     }
 
-
     /**
-     * オブジェクトストアに登録されている項目を更新する。
+     * オブジェクトストアに登録されているすべてのボードを取得する。
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.getAllMyBoards = function() {
@@ -305,6 +294,9 @@ angular.module('mainApp.dbConnector', [])
 
       store.openCursor().onsuccess = function(event) {
         var data = event.target.result;
+
+        // data.continue()によって、DBからとってきた結果リストのカーソルの位置を
+        // 一件ずつ先に進めているイメージ、全部取得が終わるとdata=nullとなりelseへ
         if(data) { // 取得中の場合
           myBoards.push(data.value);
           data.continue();
@@ -323,8 +315,6 @@ angular.module('mainApp.dbConnector', [])
 
     /**
      * データベースに作成したオブジェクトストアを削除する
-     * onupgradeneeded = module.deleteStoreのように指定して使う
-     * IDBの仕様上、onup...のコールバック内でしかdeleteできないので注意
      */
     module.reset = function() {
       module.debug('reset is called');

@@ -4,6 +4,7 @@ angular.module('mainApp.services', [])
 .factory('Boards', function() {
 
   // boardのtemplate
+  // TODO:混同しないようにより適切な名前へと要変更
   var boards = [{
     id: 0,
     name: 'タスクボード1',
@@ -24,13 +25,9 @@ angular.module('mainApp.services', [])
     name: 'タスクボード4',
     lastText: '小島ボード4',
     img: 'img/taskboard_virt_orange.png'
-  }, {
-    id: 1431759653574,
-    name: '保存したタスクボード',
-    lastText: '#45テスト用',
-    img: 'img/taskboard_virt_blue.png'
   }];
 
+  // DBに保存したBoard一覧を格納する
   var myBoards = [];
 
   return {
