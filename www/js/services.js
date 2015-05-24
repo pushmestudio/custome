@@ -114,12 +114,12 @@ angular.module('mainApp.services', [])
       partY = $event.y;
       return null;
     },
-    
+
     //DBから読み込んだデータを引数とする
     //ボードに再配置するパーツをまとめるメソッド
     reDeploy: function(boardContent){
       //var reDeployedParts=[];
-      for(part of boardContent){
+      for(part of boardContent.parts){
         //console.debug(part);
         /*var reDeployedPart = {
           partId : part.id,

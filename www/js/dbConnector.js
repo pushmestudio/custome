@@ -127,7 +127,7 @@ angular.module('mainApp.dbConnector', [])
      * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.saveBoardContent = function(boardContent, boardId) {
+    module.saveBoardContent = function(parts, wallPaper, boardId) {
       module.debug('saveBoardContent is called');
       var updateFlag = true; // 更新か新規作成かを判断するためのフラグ
 
@@ -158,13 +158,13 @@ angular.module('mainApp.dbConnector', [])
           module.debug('updateFlag:' + updateFlag);
           // updateFlagの内容に応じ、更新あるいは新規作成をする
           if(updateFlag) { // 更新処理
-            module.updateBoard(boardId, boardContent);
+            module.updateBoard(boardId, parts, wallPaper);
           } else { // 新規作成
-            module.addNewBoard(boardContent);
+            module.addNewBoard(parts, wallPaper);
           }
         }
       } else {
-        module.addNewBoard(boardContent); // DBを確認するまでもなく新規登録の場合
+        module.addNewBoard(parts, wallPaper); // DBを確認するまでもなく新規登録の場合
       }
     }
 
@@ -174,9 +174,8 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.updateBoard = function(boardId, boardContent) {
+    module.updateBoard = function(boardId, parts, wallPaper) {
       module.debug('updateBoard is called');
-      var updateBoard = {boardId: boardId, boardContent: boardContent};
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
@@ -199,7 +198,10 @@ angular.module('mainApp.dbConnector', [])
         var data = event.target.result;
 //        if(cursor) { // TODO: 現状のソースで問題ないことが確認できたら削除
         if(data) { // 該当結果がある場合
-          var request = store.put(updateBoard); // ストアへ更新をかける
+          data.boardContent.parts = parts;
+          data.boardContent.wallPaper = wallPaper;
+
+          var request = store.put(data); // ストアへ更新をかける
           request.onsuccess = function(event) {
             deferred.resolve();
             module.debug('更新完了!');
@@ -225,10 +227,10 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent JSON形式のボードの中身
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.addNewBoard = function(boardContent) {
+    module.addNewBoard = function(parts, wallPaper) {
       module.debug('addNewBoard is called');
       var time = '' +Date.now() +''; // JavascriptのDateでunixtimeを取得し、文字列化
-      var newBoard = {boardId: time, boardContent: boardContent};
+      var newBoard = {boardId: time, boardContent: {parts: parts, wallPaper: wallPaper}};
       module.debug('addNewBoard ID is ' +time);
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
@@ -310,8 +312,8 @@ angular.module('mainApp.dbConnector', [])
       connect: function(){
         module.connect();
       }
-      , save: function(boardContent, boardId) {
-        module.saveBoardContent(boardContent, boardId);
+      , save: function(parts, wallPaper, boardId) {
+        module.saveBoardContent(parts, wallPaper, boardId);
       }
       , load: function(boardId) {
         return module.loadBoardContent(boardId);
