@@ -84,31 +84,31 @@ angular.module('mainApp.dbConnector', [])
       if(!store) return;
 
       var samples = [
-        {boardId: '1430626351000', boardContent: { 'parts': [ { 'partId': '001'}, { 'type': 'button'} ] } },
-        {boardId: '1430626354000', boardContent: { 'parts': [ { 'partId': '002', 'title': 'no2'}, { 'partId': '003'} ] } },
         {boardId: '1430626357000',
          boardContent: {
+          'boardName': 'KojimaBoard-X',
+          'lastText': '冨田くんかっこいいですう！',
           'parts': [
             {
-              'partId': '001',
-              'image': 'path2image',
-              'type': 'post_it',
+              'partId': '0',
+              'image': 'img/part_fusen_yellow.png',
+              'type': 'fusen',
               'position': {
                 'x': 100,
                 'y': 200
               }
             },
             {
-              'partId': '002',
-              'image': 'path2image2',
-              'type': 'button',
+              'partId': '1',
+              'image': 'img/part_fusen_blue.png',
+              'type': 'fusen',
               'position': {
                 'x': 200,
-                'y': 768
+                'y': 468
               }
             }
           ],
-          'wallPaper': 'img/board0.png'
+          'wallPaper': 'img/taskboard_virt_blue.png'
           }
         }
       ];
@@ -141,6 +141,7 @@ angular.module('mainApp.dbConnector', [])
         // DBへの問い合わせ処理を開始するための事前準備
         var trans = module.db.transaction(module.storeName, 'readonly');
         var store = trans.objectStore(module.storeName);
+        var deferred = module.q.defer();
 
         // 名前が一致するデータを取得する
         var range = IDBKeyRange.only(boardId);
@@ -158,14 +159,22 @@ angular.module('mainApp.dbConnector', [])
           module.debug('updateFlag:' + updateFlag);
           // updateFlagの内容に応じ、更新あるいは新規作成をする
           if(updateFlag) { // 更新処理
-            module.updateBoard(boardId, parts, wallPaper);
+            module.updateBoard(boardId, parts, wallPaper).then(function() {
+              deferred.resolve();
+            });
           } else { // 新規作成
-            module.addNewBoard(parts, wallPaper);
+            module.addNewBoard(parts, wallPaper).then(function(newBoard) {
+              deferred.resolve(newBoard);
+            });
           }
         }
       } else {
-        module.addNewBoard(parts, wallPaper); // DBを確認するまでもなく新規登録の場合
+        // DBを確認するまでもなく新規登録の場合
+        module.addNewBoard(parts, wallPaper).then(function(newBoard) {
+          deferred.resolve(newBoard);
+        });
       }
+      return deferred.promise;
     }
 
     /**
@@ -219,7 +228,7 @@ angular.module('mainApp.dbConnector', [])
         deferred.reject('request is rejected');
         module.debug('update error:' + event.message);
       }
-
+      return deferred.promise;
     }
 
     /**
@@ -239,7 +248,7 @@ angular.module('mainApp.dbConnector', [])
 
       var request = store.add(newBoard); // idとcontentから構成したオブジェクトを追加
       request.onsuccess = function(event) {
-        deferred.resolve();
+        deferred.resolve(newBoard);
       };
       request.onerror = function(event) {
         deferred.reject('add request is failed!');
@@ -297,7 +306,7 @@ angular.module('mainApp.dbConnector', [])
       store.openCursor().onsuccess = function(event) {
         var data = event.target.result;
         if(data) { // 取得中の場合
-          myBoards.push(data);
+          myBoards.push(data.value);
           data.continue();
         } else { // 取得が終わった場合
           module.debug('取得が終了しました');
@@ -345,7 +354,7 @@ angular.module('mainApp.dbConnector', [])
         return module.connect();
       }
       , save: function(parts, wallPaper, boardId) {
-        module.saveBoardContent(parts, wallPaper, boardId);
+        return module.saveBoardContent(parts, wallPaper, boardId);
       }
       , load: function(boardId) {
         return module.loadBoardContent(boardId);

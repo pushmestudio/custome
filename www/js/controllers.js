@@ -28,16 +28,16 @@ angular.module('mainApp.controllers', [])
 */
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, Boards, DBConn) {
-  $scope.myBoards;
+  // 使用する前に接続処理を行う
+  // ここでDBから全Boardsを持ってくる処理を書く
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
       Boards.myBoards = data;
       $scope.myBoards = Boards.myBoards;
     });
-  }); // 使用する前に接続処理を行う
-  //DBConn.getAll();
-  // ここでDBから全Boardsを持ってくる処理を書く
+  });
 
+  // テンプレート一覧を読み込む
   $scope.boards = Boards.all();
   $scope.remove = function(board) {
     Boards.remove(board);
@@ -51,15 +51,20 @@ angular.module('mainApp.controllers', [])
   // stateParams = { boardId : 0}となる
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
-    console.debug(boardData);
     // board.htmlで使用できるようにバインドする
     $scope.boardData = boardData;
     Parts.reDeploy(boardData.boardContent);
   });
   $scope.board = Boards.get($stateParams.boardId);
+
   // 保存処理
   $scope.save = function(){
-    DBConn.save(Parts.getAllDeployed(), "wall paper!", $stateParams.boardId);
+    DBConn.save(Parts.getAllDeployed(), 'img/taskboard_virt_blue.png'
+    , $stateParams.boardId).then(function(newBoard) {
+      if(newBoard) {
+        Boards.myBoards.push(newBoard);
+      }
+    });
   }
 })
 
