@@ -33,8 +33,9 @@ angular.module('mainApp.controllers', [])
   // 接続が終わったら取得、取得が終わったら変数に反映
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
-      Boards.myBoards = data;
-      $scope.myBoards = Boards.myBoards;
+      Boards.pushAllMyBoards(data);
+      $scope.myBoards = Boards.getMyBoards();
+      console.log("test");
     });
   });
 
@@ -66,9 +67,7 @@ angular.module('mainApp.controllers', [])
     , $stateParams.boardId).then(function(newBoard) {
       // save時、新規の場合は新規Objectが返ってくるため、
       // 新規かどうかをその戻り値によって判断し、新規なら一覧へ反映する
-      if(newBoard) {
-        Boards.myBoards.push(newBoard);
-      }
+      Boards.pushNewBoard(newBoard);
     });
   }
 })

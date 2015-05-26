@@ -30,14 +30,29 @@ angular.module('mainApp.services', [])
   // DBに保存したBoard一覧を格納する
   var myBoards = [];
 
+  var pushAllMyBoards = function(allMyBoards){
+    myBoards = allMyBoards;
+  };
+
+  var pushNewBoard = function(newBoard){
+    if(newBoard) {
+      myBoards.push(newBoard);
+    }
+  };
+
   return {
     all: function() {
       return boards;
     },
-    getMyboards: function() {
+    getMyBoards: function() {
       return myBoards;
-    }
-    ,
+    },
+    pushAllMyBoards: function(allMyBoards) {
+      pushAllMyBoards(allMyBoards);
+    },
+    pushNewBoard: function(newBoard) {
+      pushNewBoard(newBoard);
+    },
     remove: function(board) {
       boards.splice(boards.indexOf(board), 1);
     },
