@@ -6,6 +6,9 @@
 <ion-view view-title="Select Board">
   <ion-content>
     <ion-list>
+      <div class="item item-divider">
+        My Boards
+      </div>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="board in myBoards track by $index" type="item-text-wrap" href="#/custome/init/{{board.boardId}}">
         <img ng-src="{{board.boardContent.wallPaper}}">
         <h2>{{board.boardContent.boardName}}</h2>
@@ -20,6 +23,9 @@
     </ion-list>
 
     <ion-list>
+      <div class="item item-divider">
+        Templates
+      </div>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="board in boards" type="item-text-wrap" href="#/custome/init/{{board.id}}">
         <img ng-src="{{board.img}}">
         <h2>{{board.name}}</h2>
