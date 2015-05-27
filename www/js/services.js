@@ -30,11 +30,13 @@ angular.module('mainApp.services', [])
   // DBに保存したBoard一覧を格納する
   var myBoards = [];
 
-  var pushAllMyBoards = function(allMyBoards){
+  // 引数として与えられたallMyBoards(DB内のボード一覧)を、メモリ上のmyBoards[]にコピーする
+  var addAllMyBoards = function(allMyBoards){
     myBoards = allMyBoards;
   };
 
-  var pushNewBoard = function(newBoard){
+  // 引数として与えられたnewBoard(新規保存のボード)を、メモリ上のmyBoards[]に加える
+  var addNewBoard = function(newBoard){
     if(newBoard) {
       myBoards.push(newBoard);
     }
@@ -47,11 +49,11 @@ angular.module('mainApp.services', [])
     getMyBoards: function() {
       return myBoards;
     },
-    pushAllMyBoards: function(allMyBoards) {
-      pushAllMyBoards(allMyBoards);
+    addAllMyBoards: function(allMyBoards) {
+      addAllMyBoards(allMyBoards);
     },
-    pushNewBoard: function(newBoard) {
-      pushNewBoard(newBoard);
+    addNewBoard: function(newBoard) {
+      addNewBoard(newBoard);
     },
     remove: function(board) {
       boards.splice(boards.indexOf(board), 1);
