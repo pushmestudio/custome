@@ -33,9 +33,8 @@ angular.module('mainApp.controllers', [])
   // 接続が終わったら取得、取得が終わったら変数に反映
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
-      Boards.pushAllMyBoards(data);
+      Boards.addAllMyBoards(data);
       $scope.myBoards = Boards.getMyBoards();
-      console.log("test");
     });
   });
 
@@ -66,8 +65,8 @@ angular.module('mainApp.controllers', [])
     DBConn.save(Parts.getAllDeployed(), 'img/taskboard_virt_blue.png'
     , $stateParams.boardId).then(function(newBoard) {
       // save時、新規の場合は新規Objectが返ってくるため、
-      // 新規かどうかをその戻り値によって判断し、新規なら一覧へ反映する
-      Boards.pushNewBoard(newBoard);
+      // 新規かどうかをその戻り値によって判断し(service.js内)新規なら一覧へ反映する
+      Boards.addNewBoard(newBoard);
     });
   }
 })
