@@ -42,12 +42,30 @@ angular.module('mainApp.services', [])
     }
   };
 
+  /**
+   * 新規保存後すぐに$stateParams.boardIdに新規boardIdを反映するための関数。
+   * updateのときは$stateParams.boardIdが変わらないようにすることで対応。
+   * @param {String} oldId 関数を呼び出したときのboardId($stateParams.boardId)の値
+   * @param {Object} newBoard save()完了後のボード。undefined(updateの場合)もしくはObject(saveの場合)
+   * @return {String}
+   */
+  var getCurrentBoardId = function(oldId, newBoard){
+    if(newBoard) {
+      return newBoard.boardId;
+    } else {
+      return oldId;
+    }
+  };
+
   return {
     all: function() {
       return boards;
     },
     getMyBoards: function() {
       return myBoards;
+    },
+    getCurrentBoardId: function(oldId, newBoard) {
+      return getCurrentBoardId(oldId, newBoard);
     },
     addAllMyBoards: function(allMyBoards) {
       addAllMyBoards(allMyBoards);
