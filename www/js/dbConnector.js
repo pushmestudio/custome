@@ -269,6 +269,8 @@ angular.module('mainApp.dbConnector', [])
           deferred.resolve(data);
         } else { // 該当結果がない場合
           module.debug('load対象が見つかりません');
+          // resolveに空のデータ構造を渡す。⇒結果としてParts.redeployが呼び出されても特に何も行われない。
+          deferred.resolve({boardId: '', boardContent: {parts: [], wallPaper: ''}})
         }
       };
 
