@@ -64,6 +64,8 @@ angular.module('mainApp.controllers', [])
   $scope.save = function(){
     DBConn.save(Parts.getAllDeployed(), 'img/taskboard_virt_blue.png'
     , $stateParams.boardId).then(function(newBoard) {
+      // sava時、$stateParams.boardIdを上書きするかどうか確認する。update⇒そのまま、addNew⇒上書き
+      $stateParams.boardId = Boards.getCurrentBoardId($stateParams.boardId, newBoard);
       // save時、新規の場合は新規Objectが返ってくるため、
       // 新規かどうかをその戻り値によって判断し(service.js内)新規なら一覧へ反映する
       Boards.addNewBoard(newBoard);
