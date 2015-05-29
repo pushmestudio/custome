@@ -1,6 +1,6 @@
 //これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
 // mainApp.controllersというモジュールを定義する
-angular.module('mainApp.controllers', [])
+angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'])
 
 //InitCtrlは削除予定。
 // TODO:不要なら早く消すこと @5/24
