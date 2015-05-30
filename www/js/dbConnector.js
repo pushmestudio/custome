@@ -2,7 +2,7 @@
  * @fileOverview mainApp.dbConnectorというモジュールの定義。
  * DB関連のCRUD処理などを提供する。
  * @refs IndexedDBのAPI https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore
- * @refs 実装に際して参考にしたライブラリhttps://github.com/webcss/angular-indexeddb/blob/master/src/indexeddb.js
+ * @refs 実装に際して参考にしたライブラリ https://github.com/webcss/angular-indexeddb/blob/master/src/indexeddb.js
  * @copyright PushMe Studio 2015
  */
 angular.module('mainApp.dbConnector', [])
@@ -64,13 +64,10 @@ angular.module('mainApp.dbConnector', [])
       }
 
       // オブジェクトストアを作成、Keypathは所謂Primary Key
-      // TODO:主キーを単なる数字にした場合にはkeyPathと同じ場所で、
-      // autoIncrement: trueの指定ができるがどうするか、要検討
       var store = module.db.createObjectStore(module.storeName, {keyPath: 'boardId'});
 
       // データの構造を変更したら、必ずこのIndexも更新すること
-      // (冨田)KeyPathの値はIndexを作成せずとも参照可能なので、Indexを作成するのは、KeyPath以外の値で何かを参照したいとき
-      // そのため、updateBoardにおけるボードの参照方法を一部修正してます。
+      // KeyPathの値はIndexを作成せずとも参照可能なので、Indexを作成はKeyPath以外の値で何かを参照したいときのみ
       store.createIndex('boardId', 'boardId', {unique: true});
 
       module.createSample(store);
@@ -84,31 +81,31 @@ angular.module('mainApp.dbConnector', [])
       if(!store) return;
 
       var samples = [
-        {boardId: '1430626351000', boardContent: { 'parts': [ { 'partId': '001'}, { 'type': 'button'} ] } },
-        {boardId: '1430626354000', boardContent: { 'parts': [ { 'partId': '002', 'title': 'no2'}, { 'partId': '003'} ] } },
         {boardId: '1430626357000',
          boardContent: {
+          'boardName': 'KojimaBoard-X',
+          'lastText': '冨田くんかっこいいですう！',
           'parts': [
             {
-              'partId': '001',
-              'image': 'path2image',
-              'type': 'post_it',
+              'partId': '0',
+              'image': 'img/part_fusen_yellow.png',
+              'type': 'fusen',
               'position': {
                 'x': 100,
                 'y': 200
               }
             },
             {
-              'partId': '002',
-              'image': 'path2image2',
-              'type': 'button',
+              'partId': '1',
+              'image': 'img/part_fusen_blue.png',
+              'type': 'fusen',
               'position': {
                 'x': 200,
-                'y': 768
+                'y': 468
               }
             }
           ],
-          'wallPaper': 'img/board0.png'
+          'wallPaper': 'img/taskboard_virt_blue.png'
           }
         }
       ];
@@ -127,7 +124,7 @@ angular.module('mainApp.dbConnector', [])
      * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.saveBoardContent = function(boardContent, boardId) {
+    module.saveBoardContent = function(parts, wallPaper, boardId) {
       module.debug('saveBoardContent is called');
       var updateFlag = true; // 更新か新規作成かを判断するためのフラグ
 
@@ -141,6 +138,7 @@ angular.module('mainApp.dbConnector', [])
         // DBへの問い合わせ処理を開始するための事前準備
         var trans = module.db.transaction(module.storeName, 'readonly');
         var store = trans.objectStore(module.storeName);
+        var deferred = module.q.defer();
 
         // 名前が一致するデータを取得する
         var range = IDBKeyRange.only(boardId);
@@ -158,14 +156,22 @@ angular.module('mainApp.dbConnector', [])
           module.debug('updateFlag:' + updateFlag);
           // updateFlagの内容に応じ、更新あるいは新規作成をする
           if(updateFlag) { // 更新処理
-            module.updateBoard(boardId, boardContent);
+            module.updateBoard(boardId, parts, wallPaper).then(function() {
+              deferred.resolve();
+            });
           } else { // 新規作成
-            module.addNewBoard(boardContent);
+            module.addNewBoard(parts, wallPaper).then(function(newBoard) {
+              deferred.resolve(newBoard);
+            });
           }
         }
       } else {
-        module.addNewBoard(boardContent); // DBを確認するまでもなく新規登録の場合
+        // DBを確認するまでもなく新規登録の場合
+        module.addNewBoard(parts, wallPaper).then(function(newBoard) {
+          deferred.resolve(newBoard);
+        });
       }
+      return deferred.promise;
     }
 
     /**
@@ -174,9 +180,8 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.updateBoard = function(boardId, boardContent) {
+    module.updateBoard = function(boardId, parts, wallPaper) {
       module.debug('updateBoard is called');
-      var updateBoard = {boardId: boardId, boardContent: boardContent};
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
@@ -191,15 +196,15 @@ angular.module('mainApp.dbConnector', [])
       var range = IDBKeyRange.only(boardId);
       var index = store.index('boardId');
       index.openCursor(range).onsuccess = function(event) {
-      ちなみに、indexは上述のとおりKeyPath以外のkey値で参照をかけるときに必要になるので、KeyPathであるboardIDで参照をかけるときは不要です。
       */
       // 名前が一致するデータを取得する
       store.get(boardId).onsuccess = function(event) {
-//        var cursor = event.target.result; // TODO: 現状のソースで問題ないことが確認できたら削除
         var data = event.target.result;
-//        if(cursor) { // TODO: 現状のソースで問題ないことが確認できたら削除
         if(data) { // 該当結果がある場合
-          var request = store.put(updateBoard); // ストアへ更新をかける
+          data.boardContent.parts = parts;
+          data.boardContent.wallPaper = wallPaper;
+
+          var request = store.put(data); // ストアへ更新をかける
           request.onsuccess = function(event) {
             deferred.resolve();
             module.debug('更新完了!');
@@ -207,17 +212,15 @@ angular.module('mainApp.dbConnector', [])
           request.onerror = function(event) {
             deferred.reject('更新途中で失敗!' + event.message);
           }
-
         } else { // 該当結果がない場合
           module.debug('update対象が見つかりません');
         }
       };
-//      index.openCursor(range).onerror = function(event) { // TODO: 現状のソースで問題ないことが確認できたら削除
       store.get(boardId).onerror = function(event) {
         deferred.reject('request is rejected');
         module.debug('update error:' + event.message);
       }
-
+      return deferred.promise;
     }
 
     /**
@@ -225,10 +228,11 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent JSON形式のボードの中身
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.addNewBoard = function(boardContent) {
+    module.addNewBoard = function(parts, wallPaper) {
       module.debug('addNewBoard is called');
       var time = '' +Date.now() +''; // JavascriptのDateでunixtimeを取得し、文字列化
-      var newBoard = {boardId: time, boardContent: boardContent};
+      var newBoard = {boardId: time, boardContent: {parts: parts, wallPaper: wallPaper}};
+      module.debug('addNewBoard ID is ' +time);
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
@@ -236,7 +240,7 @@ angular.module('mainApp.dbConnector', [])
 
       var request = store.add(newBoard); // idとcontentから構成したオブジェクトを追加
       request.onsuccess = function(event) {
-        deferred.resolve();
+        deferred.resolve(newBoard);
       };
       request.onerror = function(event) {
         deferred.reject('add request is failed!');
@@ -252,7 +256,7 @@ angular.module('mainApp.dbConnector', [])
      */
     module.loadBoardContent = function(boardId) {
       module.debug("loadBoardContent is called");
-//      var boardContents = []; // (冨田)配列として返すことも可能(ユニークな値なので不要だと思うが)
+      // var boardContents = []; // (冨田)配列として返すことも可能(ユニークな値なので不要だと思うが)
       var trans = module.db.transaction(module.storeName, "readonly");
       var store = trans.objectStore(module.storeName);
 
@@ -262,11 +266,11 @@ angular.module('mainApp.dbConnector', [])
       store.get(boardId).onsuccess = function(event){
         var data = event.target.result;
         if(data){
-//          boardContents.push(data);
-//          deferred.resolve(boardContents);
           deferred.resolve(data);
         } else { // 該当結果がない場合
           module.debug('load対象が見つかりません');
+          // resolveに空のデータ構造を渡す。⇒結果としてParts.redeployが呼び出されても特に何も行われない。
+          deferred.resolve({boardId: '', boardContent: {parts: [], wallPaper: ''}})
         }
       };
 
@@ -278,9 +282,41 @@ angular.module('mainApp.dbConnector', [])
     }
 
     /**
+     * オブジェクトストアに登録されているすべてのボードを取得する。
+     * @return {Promise} 同期処理を行うためのオブジェクト
+     */
+    module.getAllMyBoards = function() {
+      module.debug('getAllMyBoards is called');
+
+      var trans = module.db.transaction(module.storeName, 'readonly');
+      var store = trans.objectStore(module.storeName);
+      var deferred = module.q.defer();
+
+      var myBoards = [];
+
+      store.openCursor().onsuccess = function(event) {
+        var data = event.target.result;
+
+        // data.continue()によって、DBからとってきた結果リストのカーソルの位置を
+        // 一件ずつ先に進めているイメージ、全部取得が終わるとdata=nullとなりelseへ
+        if(data) { // 取得中の場合
+          myBoards.push(data.value);
+          data.continue();
+        } else { // 取得が終わった場合
+          module.debug('取得が終了しました');
+          deferred.resolve(myBoards);
+        }
+      };
+      store.openCursor().onerror = function(event) {
+        module.debug('取得に失敗しました');
+        deferred.reject();
+      }
+      return deferred.promise;
+    }
+
+
+    /**
      * データベースに作成したオブジェクトストアを削除する
-     * onupgradeneeded = module.deleteStoreのように指定して使う
-     * IDBの仕様上、onup...のコールバック内でしかdeleteできないので注意
      */
     module.reset = function() {
       module.debug('reset is called');
@@ -307,16 +343,19 @@ angular.module('mainApp.dbConnector', [])
     // DBConnとして呼び出し可能(≒public)とするメソッドを下記に定義
     return {
       connect: function(){
-        module.connect();
+        return module.connect();
       }
-      , save: function(boardContent, boardId) {
-        module.saveBoardContent(boardContent, boardId);
+      , save: function(parts, wallPaper, boardId) {
+        return module.saveBoardContent(parts, wallPaper, boardId);
       }
       , load: function(boardId) {
         return module.loadBoardContent(boardId);
       }
       , reset: function() {
         module.reset();
+      }
+      , getAll: function() {
+        return module.getAllMyBoards();
       }
     };
   }
