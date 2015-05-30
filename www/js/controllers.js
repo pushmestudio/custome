@@ -3,7 +3,7 @@
 angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'])
 
 //InitCtrlは削除予定。
-
+// TODO:不要なら早く消すこと @5/24
 /*
 //1つめのタブ(Init)を選択時に使用するコントローラーを定義する(.controllerはmainApp.controllersというモジュールの短縮表記)
 // コントローラの実態は、AngularJSのスコープオブジェクト($scope)を引数として使用する、JavaScriptのオブジェクト
@@ -28,7 +28,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'
 */
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, Boards, DBConn) {
-  DBConn.connect(); // 使用する前に接続処理を行う
+  // 使用する前に接続処理を行う
+  // ここでDBから全Boardsを持ってくる処理を書く
+  // 接続が終わったら取得、取得が終わったら変数に反映
+  DBConn.connect().then(function() {
+    DBConn.getAll().then(function(data) {
+      Boards.addAllMyBoards(data);
+      $scope.myBoards = Boards.getMyBoards();
+    });
+  });
+
+  // テンプレート一覧を読み込む
   $scope.boards = Boards.all();
   $scope.remove = function(board) {
     Boards.remove(board);
@@ -42,15 +52,24 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'
   // stateParams = { boardId : 0}となる
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
-    console.debug(boardData);
     // board.htmlで使用できるようにバインドする
     $scope.boardData = boardData;
     Parts.reDeploy(boardData.boardContent);
   });
   $scope.board = Boards.get($stateParams.boardId);
+
   // 保存処理
+  // 壁紙を読み込む処理ができていないため、暫定的にハードコードした壁紙を読み込む
+  // TODO:壁紙読み込み処理の実装 @5/24
   $scope.save = function(){
-    DBConn.save(Parts.getAllDeployed(), $stateParams.boardId);
+    DBConn.save(Parts.getAllDeployed(), 'img/taskboard_virt_blue.png'
+    , $stateParams.boardId).then(function(newBoard) {
+      // sava時、$stateParams.boardIdを上書きするかどうか確認する。update⇒そのまま、addNew⇒上書き
+      $stateParams.boardId = Boards.getCurrentBoardId($stateParams.boardId, newBoard);
+      // save時、新規の場合は新規Objectが返ってくるため、
+      // 新規かどうかをその戻り値によって判断し(service.js内)新規なら一覧へ反映する
+      Boards.addNewBoard(newBoard);
+    });
   }
 })
 

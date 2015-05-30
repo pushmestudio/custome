@@ -3,6 +3,8 @@ angular.module('mainApp.services', [])
 
 .factory('Boards', function() {
 
+  // boardのtemplate
+  // TODO:混同しないようにより適切な名前へと要変更
   var boards = [{
     id: 0,
     name: 'タスクボード1',
@@ -23,16 +25,53 @@ angular.module('mainApp.services', [])
     name: 'タスクボード4',
     lastText: '小島ボード4',
     img: 'img/taskboard_virt_orange.png'
-  }, {
-    id: 1431759653574,
-    name: '保存したタスクボード',
-    lastText: '#45テスト用',
-    img: 'img/taskboard_virt_blue.png'
   }];
+
+  // DBに保存したBoard一覧を格納する
+  var myBoards = [];
+
+  // 引数として与えられたallMyBoards(DB内のボード一覧)を、メモリ上のmyBoards[]にコピーする
+  var addAllMyBoards = function(allMyBoards){
+    myBoards = allMyBoards;
+  };
+
+  // 引数として与えられたnewBoard(新規保存のボード)を、メモリ上のmyBoards[]に加える
+  var addNewBoard = function(newBoard){
+    if(newBoard) {
+      myBoards.push(newBoard);
+    }
+  };
+
+  /**
+   * 新規保存後すぐに$stateParams.boardIdに新規boardIdを反映するための関数。
+   * updateのときは$stateParams.boardIdが変わらないようにすることで対応。
+   * @param {String} oldId 関数を呼び出したときのboardId($stateParams.boardId)の値
+   * @param {Object} newBoard save()完了後のボード。undefined(updateの場合)もしくはObject(saveの場合)
+   * @return {String}
+   */
+  var getCurrentBoardId = function(oldId, newBoard){
+    if(newBoard) {
+      return newBoard.boardId;
+    } else {
+      return oldId;
+    }
+  };
 
   return {
     all: function() {
       return boards;
+    },
+    getMyBoards: function() {
+      return myBoards;
+    },
+    getCurrentBoardId: function(oldId, newBoard) {
+      return getCurrentBoardId(oldId, newBoard);
+    },
+    addAllMyBoards: function(allMyBoards) {
+      addAllMyBoards(allMyBoards);
+    },
+    addNewBoard: function(newBoard) {
+      addNewBoard(newBoard);
     },
     remove: function(board) {
       boards.splice(boards.indexOf(board), 1);
@@ -114,12 +153,12 @@ angular.module('mainApp.services', [])
       partY = $event.y;
       return null;
     },
-    
+
     //DBから読み込んだデータを引数とする
     //ボードに再配置するパーツをまとめるメソッド
     reDeploy: function(boardContent){
       //var reDeployedParts=[];
-      for(part of boardContent){
+      for(part of boardContent.parts){
         //console.debug(part);
         /*var reDeployedPart = {
           partId : part.id,
