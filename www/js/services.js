@@ -27,7 +27,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     img: 'img/taskboard_virt_orange.png'
   }];
 
-
   // 非同期処理のために使う、q.defer()のようにして呼び出す
   var $injector = angular.injector(['ng']);
   q = $injector.get('$q');
@@ -52,6 +51,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     myBoards = allMyBoards;
   };
 
+  // boardの読込時に新規なのか更新なのかを判断し、以降これを見て状態を判断する
   var setUpdateFlag = function(boardId){
     if(boardId) { // undefinedもnullも空文字も一括判定(http://qiita.com/phi/items/723aa59851b0716a87e3)
       updateFlag = true;
@@ -61,33 +61,40 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   }
 
   /**
-   * 
-   * @param {Object} modal 
+   * DBの保存処理を呼ぶ前に、保存が押されたボードが、新規なのか更新（1回目)なのか更新（2回目以降）なのかを判断する
+   * @param {Object} modal controllerで作成したmodal
+   * @param {Array} parts board上のparts
+   * @param {String} wallPaper 壁紙のパス
+   * @param {String} boardId boardの識別番号 
    */
   var openModal = function(modal, parts, wallPaper, boardId){
     console.log(boardId);
     // 更新の場合
     if(updateFlag) {
+      // modalがremoveされていない場合
       if(modal) {
         modal.remove();
-        console.log("remove modal");
       } else {
+        // 更新でかつmodalがremoveされている場合は、2回目以降の更新と判断
         saveBoard(parts, wallPaper, boardId);
       }
-    } else { // 新規の場合、モーダルを表示する
+    } else {
+      // 新規の場合、モーダルを表示する
       modal.show();
     }
   };
 
   /**
-   * 
-   * @param {Array} parts
-   * @param {String} wallPaper
-   * @param {String} boardId
+   * DBに保存処理を依頼し、新規の場合は保存したboardをメモリ上にも追加しておく
+   * @param {Object} modal controllerで作成したmodal
+   * @param {Array} parts board上のparts
+   * @param {String} wallPaper 壁紙のパス
+   * @param {String} boardId boardの識別番号 
    */
   var saveBoard = function(parts, wallPaper, boardId){
     var deferred = q.defer();
     DBConn.save(parts, wallPaper, boardId, boardNames).then(function(newBoard) {
+      // 新規の場合
       if(newBoard) {
         // save時、新規の場合は新規Objectが返ってくるためメモリ上のmyBoards[]に加える
         myBoards.push(newBoard);

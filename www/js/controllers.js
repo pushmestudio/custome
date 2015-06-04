@@ -2,35 +2,12 @@
 // mainApp.controllersというモジュールを定義する
 angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'])
 
-//InitCtrlは削除予定。
-// TODO:不要なら早く消すこと @5/24
-/*
-//1つめのタブ(Init)を選択時に使用するコントローラーを定義する(.controllerはmainApp.controllersというモジュールの短縮表記)
-// コントローラの実態は、AngularJSのスコープオブジェクト($scope)を引数として使用する、JavaScriptのオブジェクト
-.controller('InitCtrl', function($scope, $ionicModal){
-  // modalの定義
-  $ionicModal.fromTemplateUrl('templates/selectboard-modal.html', {
-    scope: $scope,
-    animataion: 'slide-in-up'
-  }).then(function(modal){
-    $scope.modal = modal;
-  });
-
-  $scope.selectBoard = function(){
-    $scope.modal.show();
-  };
-
-  $scope.closeModal = function(){
-    $scope.modal.hide();
-  };
-})
-
-*/
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, Boards, DBConn) {
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
+  // このloadの部分もいずれBoardsサービスに移行したい
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
       Boards.addAllMyBoards(data);
@@ -59,7 +36,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'
     Parts.reDeploy(boardData.boardContent);
   });
 
-  // バインド
+  // binding
   $scope.board = Boards.get($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
   
@@ -73,16 +50,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.dbConnector'
 
   // 保存処理の前段階を実施する関数
   $scope.openModal = function(){
+    // modalのformをclear
+    $scope.boardNames.boardName = '';
+    $scope.boardNames.boardComment = '';
     Boards.openModal($scope.modal, Parts.getAllDeployed(), 'img/taskboard_virt_blue.png', $stateParams.boardId);
-  };
-  // modalの終了
-  $scope.closeModal = function(){
-    $scope.modal.hide();
   };
   // modalの除去(インスタンスそのものをDOMから消すらしい)
   $scope.removeModal = function(){
     $scope.modal.hide();
     $scope.modal.remove();
+    // modalを除去したら、除去されたかどうかの判定のために値をnullにしておく
     $scope.modal = null;
   };
 
