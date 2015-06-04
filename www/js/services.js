@@ -1,7 +1,7 @@
 // mainApp.servicesというモジュールを定義する
-angular.module('mainApp.services', [])
+angular.module('mainApp.services', ['mainApp.dbConnector'])
 
-.factory('Boards', function() {
+.factory('Boards', function(DBConn) {
 
   // boardのtemplate
   // TODO:混同しないようにより適切な名前へと要変更
@@ -27,51 +27,93 @@ angular.module('mainApp.services', [])
     img: 'img/taskboard_virt_orange.png'
   }];
 
+
+  // 非同期処理のために使う、q.defer()のようにして呼び出す
+  var $injector = angular.injector(['ng']);
+  q = $injector.get('$q');
+
   // DBに保存したBoard一覧を格納する
   var myBoards = [];
+
+  // 現在のbordIdを格納するもので、BoardsDetailCtrlとの間でバインドすることを目的としている
+  var boardId = '';
+
+  // modalに入力されるボードの名前と説明文を格納する
+  var boardNames = {
+    boardName : '',
+    boardComment : ''
+  };
+
+  // ボード画面を開いたとき、新規か更新かを判断する
+  var updateFlag = true;
 
   // 引数として与えられたallMyBoards(DB内のボード一覧)を、メモリ上のmyBoards[]にコピーする
   var addAllMyBoards = function(allMyBoards){
     myBoards = allMyBoards;
   };
 
-  // 引数として与えられたnewBoard(新規保存のボード)を、メモリ上のmyBoards[]に加える
-  var addNewBoard = function(newBoard){
-    if(newBoard) {
-      myBoards.push(newBoard);
+  var setUpdateFlag = function(boardId){
+    if(boardId) { // undefinedもnullも空文字も一括判定(http://qiita.com/phi/items/723aa59851b0716a87e3)
+      updateFlag = true;
+    } else {
+      updateFlag = false;
+    }
+  }
+
+  /**
+   * 
+   * @param {Object} modal 
+   */
+  var openModal = function(modal, parts, wallPaper, boardId){
+    console.log(boardId);
+    // 更新の場合
+    if(updateFlag) {
+      if(modal) {
+        modal.remove();
+        console.log("remove modal");
+      } else {
+        saveBoard(parts, wallPaper, boardId);
+      }
+    } else { // 新規の場合、モーダルを表示する
+      modal.show();
     }
   };
 
   /**
-   * 新規保存後すぐに$stateParams.boardIdに新規boardIdを反映するための関数。
-   * updateのときは$stateParams.boardIdが変わらないようにすることで対応。
-   * @param {String} oldId 関数を呼び出したときのboardId($stateParams.boardId)の値
-   * @param {Object} newBoard save()完了後のボード。undefined(updateの場合)もしくはObject(saveの場合)
-   * @return {String}
+   * 
+   * @param {Array} parts
+   * @param {String} wallPaper
+   * @param {String} boardId
    */
-  var getCurrentBoardId = function(oldId, newBoard){
-    if(newBoard) {
-      return newBoard.boardId;
-    } else {
-      return oldId;
-    }
+  var saveBoard = function(parts, wallPaper, boardId){
+    var deferred = q.defer();
+    DBConn.save(parts, wallPaper, boardId, boardNames).then(function(newBoard) {
+      if(newBoard) {
+        // save時、新規の場合は新規Objectが返ってくるためメモリ上のmyBoards[]に加える
+        myBoards.push(newBoard);
+        // 以降保存を押したときは更新処理になるためflagを更新
+        updateFlag = true;
+        deferred.resolve(newBoard.boardId);
+      } else {
+        deferred.resolve(boardId);
+      }
+    });
+    return deferred.promise;
   };
 
   return {
+    boardNames: boardNames,
     all: function() {
       return boards;
     },
-    getMyBoards: function() {
+    getMyBoards: function(){
       return myBoards;
-    },
-    getCurrentBoardId: function(oldId, newBoard) {
-      return getCurrentBoardId(oldId, newBoard);
     },
     addAllMyBoards: function(allMyBoards) {
       addAllMyBoards(allMyBoards);
     },
-    addNewBoard: function(newBoard) {
-      addNewBoard(newBoard);
+    setUpdateFlag: function(boardId){
+      setUpdateFlag(boardId);
     },
     remove: function(board) {
       boards.splice(boards.indexOf(board), 1);
@@ -83,6 +125,12 @@ angular.module('mainApp.services', [])
         }
       }
       return null;
+    },
+    openModal: function(modal, parts, wallPaper, boardId){
+      openModal(modal, parts, wallPaper, boardId);
+    },
+    saveBoard: function(parts, wallPaper, boardId) {
+      return saveBoard(parts, wallPaper, boardId);
     }
   };
 })

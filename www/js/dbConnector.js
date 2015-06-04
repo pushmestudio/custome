@@ -124,7 +124,7 @@ angular.module('mainApp.dbConnector', [])
      * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.saveBoardContent = function(parts, wallPaper, boardId) {
+    module.saveBoardContent = function(parts, wallPaper, boardId, boardNames) {
       module.debug('saveBoardContent is called');
       var updateFlag = true; // 更新か新規作成かを判断するためのフラグ
 
@@ -160,7 +160,7 @@ angular.module('mainApp.dbConnector', [])
               deferred.resolve();
             });
           } else { // 新規作成
-            module.addNewBoard(parts, wallPaper).then(function(newBoard) {
+            module.addNewBoard(parts, wallPaper, boardNames).then(function(newBoard) {
               deferred.resolve(newBoard);
             });
           }
@@ -228,10 +228,11 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent JSON形式のボードの中身
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.addNewBoard = function(parts, wallPaper) {
+    module.addNewBoard = function(parts, wallPaper, boardNames) {
       module.debug('addNewBoard is called');
       var time = '' +Date.now() +''; // JavascriptのDateでunixtimeを取得し、文字列化
-      var newBoard = {boardId: time, boardContent: {parts: parts, wallPaper: wallPaper}};
+      var newBoard = {boardId: time, boardContent: {boardName: boardNames.boardName, boardComment: boardNames.boardComment,
+                      parts: parts, wallPaper: wallPaper}};
       module.debug('addNewBoard ID is ' +time);
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
@@ -270,7 +271,7 @@ angular.module('mainApp.dbConnector', [])
         } else { // 該当結果がない場合
           module.debug('load対象が見つかりません');
           // resolveに空のデータ構造を渡す。⇒結果としてParts.redeployが呼び出されても特に何も行われない。
-          deferred.resolve({boardId: '', boardContent: {parts: [], wallPaper: ''}})
+          deferred.resolve({boardId: '', boardContent: {boardName: '', boardComment: '', parts: [], wallPaper: ''}})
         }
       };
 
@@ -345,8 +346,8 @@ angular.module('mainApp.dbConnector', [])
       connect: function(){
         return module.connect();
       }
-      , save: function(parts, wallPaper, boardId) {
-        return module.saveBoardContent(parts, wallPaper, boardId);
+      , save: function(parts, wallPaper, boardId, boardNames) {
+        return module.saveBoardContent(parts, wallPaper, boardId, boardNames);
       }
       , load: function(boardId) {
         return module.loadBoardContent(boardId);
