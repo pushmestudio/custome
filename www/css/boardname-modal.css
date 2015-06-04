@@ -1,4 +1,22 @@
 /* Empty. Add your own CSS if you like */
+.item-input{
+  position: relative;
+  padding: 5px;
+  width: 96%;
+  left: 2%;
+  right: 2%;
+}
+
+input.ng-invalid.ng-touched {
+  position: relative;
+  /* background-color: #FA787E; */
+}
+
+input.ng-valid.ng-touched {
+  position: relative;
+  /* background-color: #78FA89; */
+}
+
 
 /* ionic.cssのmodalクラスは、680px以下の場合modalを全画面として表示する仕様のため、ここで上書きする */
 @media (max-width: 679px) {
