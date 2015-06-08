@@ -1,6 +1,6 @@
 <ion-view view-title="{{board.name}}">
   <ion-nav-buttons side="right">
-    <button class="button button-icon icon ion-android-archive" ng-click="save()"></button>
+    <button class="button button-icon icon ion-android-archive" ng-click="openModal()"></button>
     <button menu-toggle="right" class="button button-icon icon ion-android-color-palette"></button>
   </ion-nav-buttons>
   <!-- {{board.img}}を{{boardData.boardContent.wallPaper}}にすれば自作ボードの壁紙を読み込めるが、代わりにtemplateの壁紙は読めなくなる。ページを分けるべき？ -->
@@ -8,16 +8,5 @@
     <div ng-repeat="deployedPart in deployedParts track by $index">
       <img ng-src={{deployedPart.image}} style="position: absolute; width: 100px; height: 100px; left: {{deployedPart.position.x}}px; top: {{deployedPart.position.y}}px;">
     </div>
-
-  <!-- 読込テスト用 TODO: テスト終了後削除 -->
-  <!--
-    boardDataにはcontrollers.jsの56行目で読み込んだデータがバインドされている。
-    以下は読出例
-    <div> boardId is : {{boardData.boardId}} </div>
-    <div> boardContent is : {{boardData.boardContent}} </div>
-    <div> first part is : {{boardData.boardContent.parts[0]}} </div>
-    <div> first part's x position is : {{boardData.boardContent.parts[0].position.x}}
-    <div> wallPaper is : {{boardData.boardContent.wallPaper}} </div>
-  -->  
   </ion-content>
 </ion-view>
