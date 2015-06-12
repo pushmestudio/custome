@@ -91,6 +91,11 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     Parts.setCoord($event);//配置先の座標取得
     Parts.deploy();//パーツをボードに配置
   }
+  $scope.remove = function(part) {
+    // deployedPartsにあるpartを削除する
+    // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
+    $scope.deployedParts.splice(part, 1);
+  }
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
