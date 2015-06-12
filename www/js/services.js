@@ -65,7 +65,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
    * @param {Object} modal controllerで作成したmodal
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
-   * @param {String} boardId boardの識別番号 
+   * @param {String} boardId boardの識別番号
    */
   var openModal = function(modal, parts, wallPaper, boardId){
     console.log(boardId);
@@ -89,7 +89,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
    * @param {Object} modal controllerで作成したmodal
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
-   * @param {String} boardId boardの識別番号 
+   * @param {String} boardId boardの識別番号
    */
   var saveBoard = function(parts, wallPaper, boardId){
     var deferred = q.defer();
@@ -165,41 +165,59 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   var partY;
   var deployedParts=[];
 
+  var selectPartsOnPallet = function(partid){
+    for (part of parts) {
+      if (partid === part.id){
+        part.flag='true';
+      }else{
+        part.flag='false';
+      }
+    }
+  }
+
+  var deployPartByClick = function(){
+    for (part of parts) {
+      if(part.flag==='true'){
+        part.counter++;//同じタイプのパーツの配置数//後で消すかも
+        var deployedPart = {
+          'partId' : part.id,
+          'image' : part.img,
+          'type' : part.type,
+          'position' : {
+            x : partX-50,
+            y : partY-100,
+          }
+        };
+        part.flag='false';//パーツを1回デプロイすると，クリックしてもデプロイできなくする
+        deployedParts.push(deployedPart);
+        //return deployedParts;
+      }
+    }
+    return null;
+  }
+
+  var initPartsOnBoard = function(){
+    deployedParts=[];
+    console.log("Cleared!");
+    console.debug("deployedParts : " + deployedParts);
+  }
+
   return {
     all: function() {
       return parts;
     },
     select: function(partid) {
-      for (part of parts) {
-        if (partid === part.id){
-          part.flag='true';
-        }else{
-          part.flag='false';
-        }
-      }
-      return null;
+      selectPartsOnPallet(partid);
     },
     deploy: function() {
-      for (part of parts) {
-        if(part.flag==='true'){
-          part.counter++;//同じタイプのパーツの配置数//後で消すかも
-          var deployedPart = {
-            partId : part.id,
-            image : part.img,
-            type : part.type,
-            position : {
-              x : partX-50,
-              y : partY-100,
-            }
-          };
-          deployedParts.push(deployedPart);//将来，複数のパーツをいっきに配置する際に利用。
-          return deployedParts;
-        }
-      }
-      return null;
+      deployPartByClick();
     },
     //配置されるパーツ(flag=true)をすべて取得
     getAllDeployed: function(){
+      console.debug("deployedParts getAllDeployed: " + deployedParts);
+      //var dep = deployedParts;
+      //deployedParts=[];
+      //return dep;
       return deployedParts;
     },
     //任意の位置をクリックで指定
@@ -212,22 +230,16 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     //DBから読み込んだデータを引数とする
     //ボードに再配置するパーツをまとめるメソッド
     reDeploy: function(boardContent){
-      //var reDeployedParts=[];
+      //initPartsOnBoard(); //deployedPartsの初期化
       for(part of boardContent.parts){
-        //console.debug(part);
-        /*var reDeployedPart = {
-          partId : part.id,
-          image : part.image,
-          type : part.type,
-          position : {
-            x : part.position.x-50,
-            y : part.position.y-100,
-          }
-        };*/
         parts[part.partId].counter++;
         deployedParts.push(part);
       }
+      console.debug("deployedParts redeploy: " + deployedParts);
       return deployedParts;
+    },
+    init: function(){
+      initPartsOnBoard();
     }
   };
 });

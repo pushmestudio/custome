@@ -33,13 +33,15 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     $scope.boardData = boardData;
     // boardIdがなければ、updateFlagをfalseに
     Boards.setUpdateFlag(boardData.boardId);
+    //Parts.init();
     Parts.reDeploy(boardData.boardContent);
+    //$scope.deployedParts = Parts.getAllDeployed();
   });
 
   // binding
   $scope.board = Boards.get($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
-  
+
   // modalの定義
   $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
     scope: $scope,
