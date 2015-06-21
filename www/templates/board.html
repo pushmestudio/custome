@@ -6,7 +6,7 @@
   <!-- {{board.img}}を{{boardData.boardContent.wallPaper}}にすれば自作ボードの壁紙を読み込めるが、代わりにtemplateの壁紙は読めなくなる。ページを分けるべき？ -->
   <ion-content ng-controller="PartsCtrl" scroll="false" has-header="false" style="background: url({{board.img}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" ng-click="click($event)">
     <div ng-repeat="deployedPart in deployedParts track by $index">
-      <img ng-src={{deployedPart.image}} style="position: absolute; width: 100px; height: 100px; left: {{deployedPart.position.x}}px; top: {{deployedPart.position.y}}px; " on-hold="remove($index)" >
+      <img ng-src={{deployedPart.image}} style="position: absolute; width: 100px; height: 100px; left: {{deployedPart.position.x}}px; top: {{deployedPart.position.y}}px; " on-double-tap="remove($index)" on-drag="move(deployedPart, $event)">
     </div>
   </ion-content>
 </ion-view>
