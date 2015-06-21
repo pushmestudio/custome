@@ -39,7 +39,7 @@ angular.module('mainApp.controllers', ['mainApp.services'])
   // binding
   $scope.board = Boards.get($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
-  
+
   // modalの定義
   $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
     scope: $scope,
@@ -95,6 +95,12 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     // deployedPartsにあるpartを削除する
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
     $scope.deployedParts.splice(part, 1);
+  }
+  // $eventに記録された位置情報を配置済のパーツに反映
+  $scope.move = function(part, $event) {
+    // TODO: Parts.setCoordでも使っている-50, -100の謎について斎藤くんに聞く 
+    part.position.x = ($event.gesture.center.pageX - 50);
+    part.position.y = ($event.gesture.center.pageY -100);
   }
 })
 
