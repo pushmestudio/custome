@@ -2,15 +2,15 @@
   var scope;
   beforeEach(module('mainApp.services'));
 
-  describe('Boardsのテスト', function() {
+  describe('getのテスト', function() {
     beforeEach(inject(function(Boards) {
       scope = Boards;
     }));
 
-    xit('To Be Added Some Test', function() {
+    it('boardId:0のname"タスクボード1"が返る', function() {
       // setup
-      var actual = "";
-      var expected = "";
+      var actual = scope.get(0).name;
+      var expected = 'タスクボード1';
 
       // verify
       expect(actual).toEqual(expected);
