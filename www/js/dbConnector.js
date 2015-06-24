@@ -130,6 +130,7 @@ angular.module('mainApp.dbConnector', [])
 
       if(typeof boardId === 'undefined' || boardId === null) {
         updateFlag = false; // 判定結果として、要新規作成
+        console.log("this is null??");
       }
 
       // boardIdに対応するものがDBに保存されてるかを確認する
@@ -314,7 +315,6 @@ angular.module('mainApp.dbConnector', [])
       }
       return deferred.promise;
     }
-
 
     /**
      * データベースに作成したオブジェクトストアを削除する
