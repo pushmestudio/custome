@@ -28,14 +28,15 @@ angular.module('mainApp.controllers', ['mainApp.services'])
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
+
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
     $scope.boardData = boardData;
     // boardIdがなければ、updateFlagをfalseに
     Boards.setUpdateFlag(boardData.boardId);
-    //Parts.init();
     Parts.reDeploy(boardData.boardContent);
-    //$scope.deployedParts = Parts.getAllDeployed();
+    Boards.setUsedWallpaper(boardData.boardContent, $stateParams.boardId);//現在表示するためのwallPaperをセット
+    $scope.usedPaper_nowBoard = Boards.getUsedWallpaper();//board.htmlでwallPaperを描画させるための変数usedPaper_nowBoardにwallPaperのパスを代入
   });
 
   // binding
@@ -55,8 +56,9 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     // modalのformをclear
     $scope.boardNames.boardName = '';
     $scope.boardNames.boardComment = '';
-    Boards.openModal($scope.modal, Parts.getAllDeployed(), 'img/taskboard_virt_blue.png', $stateParams.boardId);
+    Boards.openModal($scope.modal, Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId);
   };
+
   // modalの除去(インスタンスそのものをDOMから消すらしい)
   $scope.removeModal = function(){
     $scope.modal.hide();
@@ -71,27 +73,33 @@ angular.module('mainApp.controllers', ['mainApp.services'])
   $scope.$on('modal.removed', function(){ // とりあえず別枠だけど、↓の$scope.save()を直接呼んでもいい
     $scope.modal = null;
     // sava時、$stateParams.boardIdを上書きするかどうか確認する。update⇒そのまま、addNew⇒上書き
-    Boards.saveBoard(Parts.getAllDeployed(), 'img/taskboard_virt_blue.png', $stateParams.boardId).then(function(boardId){
+    // Boards.getUsedWallpaper()でwallPaperのパス取得
+    Boards.saveBoard(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
     });
   });
 
   // 保存処理
   $scope.save = function(){
-    Boards.saveBoard(Parts.getAllDeployed(), 'img/taskboard_virt_blue.png', $stateParams.boardId);
+    Boards.saveBoard(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId);
   };
-})
+    //'img/taskboard_virt_blue.png'
+    //boardData.boardContent
 
-//Parts操作用のコントローラー
-.controller('PartsCtrl', function($scope, Parts){
-  $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
-  $scope.select = function(part){
-    Parts.select(part);//パレットからボードに配置するパーツを選択
-  }
-  $scope.deployedParts = Parts.getAllDeployed();//配置するパーツをすべて取得
+  $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
     Parts.deploy();//パーツをボードに配置
+  }
+})
+
+// Pallet操作用のコントローラー
+// --> Pallet上のパーツ操作のために使うため，PartsCtrlから名前変更
+// 
+.controller('PalletCtrl', function($scope, Parts){
+  $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
+  $scope.select = function(part){
+    Parts.select(part);//パレットからボードに配置するパーツを選択
   }
 })
 

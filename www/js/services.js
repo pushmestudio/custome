@@ -43,6 +43,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     boardComment : ''
   };
 
+  var usedWallpaper='';
+
   // ボード画面を開いたとき、新規か更新かを判断する
   var updateFlag = true;
 
@@ -108,6 +110,21 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     return deferred.promise;
   };
 
+  /**
+   * 現在表示しているボードのwallPaperをセットするメソッド
+   *
+   */
+  var setUsedWallpaper = function(boardContent, boardId){
+    for (var i = 0; i < boards.length; i++){
+      if (parseInt(boardId) === boards[i].id){
+        usedWallpaper = boards[i].img;
+        return null;
+      }
+    }
+    usedWallpaper = boardContent.wallPaper;
+    return null;
+  };
+
   return {
     boardNames: boardNames,
     all: function() {
@@ -138,6 +155,15 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     saveBoard: function(parts, wallPaper, boardId) {
       return saveBoard(parts, wallPaper, boardId);
+    },
+    getBoardWallpaper: function(boardId){
+      return getUsedWallpaper(boardId);
+    },
+    setUsedWallpaper: function(boardContent, boardId){
+      setUsedWallpaper(boardContent, boardId);
+    },
+    getUsedWallpaper: function(){
+      return usedWallpaper;
     }
   };
 })
@@ -165,6 +191,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   var partY;
   var deployedParts=[];
 
+  /***
+   * パレット上で選択したパーツのフラグを立てるメソッド
+   * 画面にパーツをデプロイする際に使うフラグ用
+   */
   var selectPartsOnPallet = function(partid){
     for (part of parts) {
       if (partid === part.id){
@@ -175,6 +205,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     }
   }
 
+  /***
+   * パレット上のパーツを選択した後に，画面をクリックした時に呼び出されるメソッド
+   * deployedPartsにパーツを追加(push)することで，画面に反映させる
+   */
   var deployPartByClick = function(){
     for (part of parts) {
       if(part.flag==='true'){
@@ -190,16 +224,45 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
         };
         part.flag='false';//パーツを1回デプロイすると，クリックしてもデプロイできなくする
         deployedParts.push(deployedPart);
-        //return deployedParts;
       }
     }
-    return null;
   }
 
+  /***
+   * 配置済のパーツおよび配置されるべきパーツを全て取得するメソッド
+   *
+   */
+  var getAllDeployedParts = function(){
+    return deployedParts;
+  }
+
+  /***
+   * DBからロードしたパーツをdeployedPartsに代入する前に初期化するメソッド
+   * deployedParts=[];ではダメだが，pop()を使えばうまくいった(よくわかっていない)
+   */
   var initPartsOnBoard = function(){
-    deployedParts=[];
-    console.log("Cleared!");
-    console.debug("deployedParts : " + deployedParts);
+    while (deployedParts.length > 0){
+      deployedParts.pop();
+    }
+    return deployedParts;
+  }
+
+  /***
+   * DBからロードしたパーツをdeployedPartsに代入するメソッド
+   *
+   */
+  var reDeployUsingDBdata = function(boardContent){
+    deployedParts = initPartsOnBoard(); //deployedPartsの初期化
+    //パレット上に登録してあるパーツのカウンターを0に初期化
+    for(var i = 0; i < parts.length;i++){
+      parts[i].counter=0;
+    }
+    for(part of boardContent.parts){
+      parts[part.partId].counter++;
+      deployedParts.push(part);
+    }
+    //test
+    console.table(deployedParts);
   }
 
   return {
@@ -212,31 +275,15 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     deploy: function() {
       deployPartByClick();
     },
-    //配置されるパーツ(flag=true)をすべて取得
     getAllDeployed: function(){
-      console.debug("deployedParts getAllDeployed: " + deployedParts);
-      //var dep = deployedParts;
-      //deployedParts=[];
-      //return dep;
-      return deployedParts;
+      return getAllDeployedParts();
     },
-    //任意の位置をクリックで指定
     setCoord: function($event){
       partX = $event.x;
       partY = $event.y;
-      return null;
     },
-
-    //DBから読み込んだデータを引数とする
-    //ボードに再配置するパーツをまとめるメソッド
     reDeploy: function(boardContent){
-      //initPartsOnBoard(); //deployedPartsの初期化
-      for(part of boardContent.parts){
-        parts[part.partId].counter++;
-        deployedParts.push(part);
-      }
-      console.debug("deployedParts redeploy: " + deployedParts);
-      return deployedParts;
+      reDeployUsingDBdata(boardContent);
     },
     init: function(){
       initPartsOnBoard();
