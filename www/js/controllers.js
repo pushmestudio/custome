@@ -39,7 +39,7 @@ angular.module('mainApp.controllers', ['mainApp.services'])
   // binding
   $scope.board = Boards.get($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
-  
+
   // modalの定義
   $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
     scope: $scope,
@@ -95,6 +95,20 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     // deployedPartsにあるpartを削除する
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
     $scope.deployedParts.splice(part, 1);
+  }
+  // $eventに記録された位置情報を配置済のパーツに反映
+  $scope.move = function(part, $event) {
+
+    // 付箋のサイズ100の中央
+    var centerImgX = (100/2);
+
+    // 付箋のサイズ100の中央のはずだが, 挙動として200で扱われている模様
+    // TODO Yのサイズが200として扱われている？と考えられる理由の調査
+    // もしかすると、img=として指定したサイズそのものより、実際の画像のサイズが影響している？
+    var centerImgY = (200/2);
+
+    part.position.x = ($event.gesture.center.pageX - centerImgX);
+    part.position.y = ($event.gesture.center.pageY -centerImgY);
   }
 })
 
