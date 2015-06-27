@@ -94,7 +94,7 @@ angular.module('mainApp.controllers', ['mainApp.services'])
   $scope.remove = function(part) {
     // deployedPartsにあるpartを削除する
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
-    $scope.deployedParts.splice(part, 1);
+    $scope.deployedParts_angular.splice(part, 1);
   }
   // $eventに記録された位置情報を配置済のパーツに反映
   $scope.move = function(part, $event) {
