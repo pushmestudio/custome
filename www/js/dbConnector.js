@@ -84,12 +84,13 @@ angular.module('mainApp.dbConnector', [])
         {boardId: '1430626357000',
          boardContent: {
           'boardName': 'KojimaBoard-X',
-          'lastText': '冨田くんかっこいいですう！',
+          'boardComment': '冨田くんかっこいいですう！',
           'parts': [
             {
               'partId': '0',
               'image': 'img/part_fusen_yellow.png',
               'type': 'fusen',
+              'text': 'T社 -.-',
               'position': {
                 'x': 100,
                 'y': 200
@@ -99,6 +100,7 @@ angular.module('mainApp.dbConnector', [])
               'partId': '1',
               'image': 'img/part_fusen_blue.png',
               'type': 'fusen',
+              'text': 'HZがいいなぁ。交渉しよう',
               'position': {
                 'x': 200,
                 'y': 468
