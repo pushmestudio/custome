@@ -1,6 +1,6 @@
 //これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
 // mainApp.controllersというモジュールを定義する
-angular.module('mainApp.controllers', ['mainApp.services'])
+angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, Boards, DBConn) {
@@ -24,7 +24,7 @@ angular.module('mainApp.controllers', ['mainApp.services'])
 
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, Boards, DBConn, Parts) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, toaster, Boards, DBConn, Parts) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
@@ -76,6 +76,7 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     // Boards.getUsedWallpaper()でwallPaperのパス取得
     Boards.saveBoard(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
+      toaster.pop('success', '', 'Saved!');
     });
   });
 
