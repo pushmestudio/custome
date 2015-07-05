@@ -3,7 +3,7 @@
 angular.module('mainApp.controllers', ['mainApp.services'])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, Boards, DBConn) {
+.controller('BoardsCtrl', function($scope, $ionicPopup, $ionicModal, Boards, DBConn) {
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
@@ -19,6 +19,34 @@ angular.module('mainApp.controllers', ['mainApp.services'])
   $scope.boards = Boards.all();
   $scope.remove = function(board) {
     Boards.remove(board);
+  }
+
+  // modalの定義
+  $ionicModal.fromTemplateUrl('templates/ads-modal.html', {
+    scope: $scope,
+    animataion: 'slide-in-up'
+  }).then(function(modal){
+    $scope.modal = modal;
+  });
+
+  // 広告の表示、ポップアップで表示確認後、モーダルにて表示する
+  $scope.popAd = function() {
+    $ionicPopup.confirm({
+      title: '広告表示確認', // String. The title of the popup.
+      cssClass: '', // String, The custom CSS class name
+      subTitle: '', // String (optional). The sub-title of the popup.
+      template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
+      templateUrl: '', // String (optional). The URL of an html template to place in the popup   body.
+      cancelText: '', // String (default: 'Cancel'). The text of the Cancel button.
+      cancelType: '', // String (default: 'button-default'). The type of the Cancel button.
+      okText: '', // String (default: 'OK'). The text of the OK button.
+      okType: '', // String (default: 'button-positive'). The type of the OK button.
+    }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
+      console.log(res);
+      if(res) { // Okなら表示する
+        $scope.modal.show();
+      }
+    });
   }
 })
 
