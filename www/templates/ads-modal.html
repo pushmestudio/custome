@@ -4,16 +4,23 @@
     <h1 class="title">Ad Space</h1>
   </ion-header-bar>
   <ion-content scroll="false">
-  <p>ad test</p>
-  <!-- サンプル用 -->
-  <script type="text/javascript">
-    var nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
-  </script>
+    <p>ad test</p>
+    <!-- サンプル用 -->
+    <div style="margin:0px;background-color:#3399CC"> // 表示検証用背景
+      <p>サンプル広告</p>
+      <script type="text/javascript">
+        var nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
+      </script>
+    </div>
 
-  <!-- 本番用 -->
-  <script type="text/javascript">
-    var nend_params = {"media":22843,"site":147184,"spot":398567,"type":1,"oriented":3};
-  </script>
+    <!-- 本番用 使用準備が整うまでは原則上記のサンプルを使うこと
+    <div style="margin:0px;background-color:#3399CC"> // 表示検証用背景
+      <p>本番広告</p>
+      <script type="text/javascript">
+        var nend_params = {"media":22843,"site":147184,"spot":398567,"type":1,"oriented":3};
+      </script>
+    </div>
+    -->
 
     <script type="text/javascript" src="http://js1.nend.net/js/nendAdLoader.js"></script>
   </ion-content>
