@@ -1,7 +1,7 @@
 // mainApp.servicesというモジュールを定義する
 angular.module('mainApp.services', ['mainApp.dbConnector'])
 
-.factory('Boards', function(DBConn) {
+.factory('Boards', function(DBConn, toaster) {
 
   // boardのtemplate
   // TODO:混同しないようにより適切な名前へと要変更
@@ -78,7 +78,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
         modal.remove();
       } else {
         // 更新でかつmodalがremoveされている場合は、2回目以降の更新と判断
-        saveBoard(parts, wallPaper, boardId);
+        saveBoard(parts, wallPaper, boardId).then(function(boardId){
+          toaster.pop('success', '', 'Saved!');
+          console.log('toaster pop called');
+        });
       }
     } else {
       // 新規の場合、モーダルを表示する
