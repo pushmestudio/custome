@@ -8,7 +8,7 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
     <!-- AngularJS-Toaster -->
-    <link href="css/toaster.css" rel="stylesheet">
+    <link href="lib/AngularJS-Toaster/css/toaster.css" rel="stylesheet">
 
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
@@ -28,7 +28,7 @@
 
     <!-- AngularJS-Toaster -->
     <script src="lib/ionic/js/angular/angular-animate.js"></script>
-    <script src="js/toaster.js"></script>
+    <script src="lib/AngularJS-Toaster/js/toaster.js"></script>
   </head>
   <body ng-app="mainApp">
     <!--
@@ -39,7 +39,7 @@
     <ion-side-menus>
 
       <ion-side-menu-content drag-content="false">
-        <toaster-container toaster-options="{'time-out': 5000, 'close-button': true, 'animation-class': 'toast-top-center'}"></toaster-container>
+        <toaster-container toaster-options="{'time-out': 3000, 'close-button': true, 'animation-class': 'toast-top-center'}"></toaster-container>
         <ion-nav-bar class="bar-positive">
           <ion-nav-back-button>
           </ion-nav-back-button>
