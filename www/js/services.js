@@ -1,7 +1,7 @@
 // mainApp.servicesというモジュールを定義する
 angular.module('mainApp.services', ['mainApp.dbConnector'])
 
-.factory('Boards', function(DBConn) {
+.factory('Boards', function(DBConn, toaster) {
 
   // boardのtemplate
   // TODO:混同しないようにより適切な名前へと要変更
@@ -64,31 +64,27 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   /**
    * DBの保存処理を呼ぶ前に、保存が押されたボードが、新規なのか更新（1回目)なのか更新（2回目以降）なのかを判断する
-   * @param {Object} modal controllerで作成したmodal
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
    * @param {String} boardId boardの識別番号
    */
-  var openModal = function(modal, parts, wallPaper, boardId){
-    console.log(boardId);
+  var openModal = function(parts, wallPaper, boardId){
+    var deferred = q.defer();
     // 更新の場合
     if(updateFlag) {
-      // modalがremoveされていない場合
-      if(modal) {
-        modal.remove();
-      } else {
-        // 更新でかつmodalがremoveされている場合は、2回目以降の更新と判断
-        saveBoard(parts, wallPaper, boardId);
-      }
+      // 更新でかつmodalがremoveされている場合は、2回目以降の更新と判断
+      saveBoard(parts, wallPaper, boardId).then(function(boardId){
+        deferred.resolve(boardId);
+      });
+    // 新規の場合
     } else {
-      // 新規の場合、モーダルを表示する
-      modal.show();
+      deferred.resolve(null);
     }
+    return deferred.promise;
   };
 
   /**
    * DBに保存処理を依頼し、新規の場合は保存したboardをメモリ上にも追加しておく
-   * @param {Object} modal controllerで作成したmodal
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
    * @param {String} boardId boardの識別番号
@@ -150,8 +146,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       }
       return null;
     },
-    openModal: function(modal, parts, wallPaper, boardId){
-      openModal(modal, parts, wallPaper, boardId);
+    openModal: function(parts, wallPaper, boardId){
+      return openModal(parts, wallPaper, boardId);
     },
     saveBoard: function(parts, wallPaper, boardId) {
       return saveBoard(parts, wallPaper, boardId);

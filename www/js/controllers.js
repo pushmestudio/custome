@@ -1,6 +1,6 @@
 //これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
 // mainApp.controllersというモジュールを定義する
-angular.module('mainApp.controllers', ['mainApp.services'])
+angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, Boards, DBConn) {
@@ -24,7 +24,7 @@ angular.module('mainApp.controllers', ['mainApp.services'])
 
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, Boards, DBConn, Parts) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, toaster, Boards, DBConn, Parts) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
@@ -56,35 +56,27 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     // modalのformをclear
     $scope.boardNames.boardName = '';
     $scope.boardNames.boardComment = '';
-    Boards.openModal($scope.modal, Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId);
+    Boards.openModal(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId).then(function(result){
+      if(result){
+        toaster.pop('success', '', 'Saved!');
+        $scope.$apply();
+      } else {
+        $scope.modal.show();
+      }
+    });
   };
 
-  // modalの除去(インスタンスそのものをDOMから消すらしい)
-  $scope.removeModal = function(){
+  // 新規作成時の保存処理
+  $scope.save = function(){
     $scope.modal.hide();
     $scope.modal.remove();
-    // modalを除去したら、除去されたかどうかの判定のために値をnullにしておく
     $scope.modal = null;
-  };
 
-  // modalが除去されたら（保存する準備ができたら)保存処理を呼ぶ
-  // 壁紙を読み込む処理ができていないため、暫定的にハードコードした壁紙を読み込む
-  // TODO:壁紙読み込み処理の実装 @5/24
-  $scope.$on('modal.removed', function(){ // とりあえず別枠だけど、↓の$scope.save()を直接呼んでもいい
-    $scope.modal = null;
-    // sava時、$stateParams.boardIdを上書きするかどうか確認する。update⇒そのまま、addNew⇒上書き
-    // Boards.getUsedWallpaper()でwallPaperのパス取得
     Boards.saveBoard(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
+      toaster.pop('success', '', 'Saved!');
     });
-  });
-
-  // 保存処理
-  $scope.save = function(){
-    Boards.saveBoard(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId);
   };
-    //'img/taskboard_virt_blue.png'
-    //boardData.boardContent
 
   $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
   $scope.click = function($event){
