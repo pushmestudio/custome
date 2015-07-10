@@ -79,16 +79,26 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 
   $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
+  $scope.tmpReservedParts = []; // 削除したパーツを一時保存しUNDOできるようにする
+
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
     Parts.deploy();//パーツをボードに配置
   }
-  $scope.remove = function(part) {
-    // deployedPartsにあるpartを削除する
+  $scope.remove = function(partIndex) {
+    // deployedPartsにあるpartを削除し、削除したパーツを一時保存用配列に退避
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
-    $scope.deployedParts_angular.splice(part, 1);
-    toaster.pop('warning', "", "Parts Deleted");
+    $scope.tmpReservedParts = $scope.deployedParts_angular.splice(partIndex, 1);
+
+    // body内でUndoを呼び出し可能なリンクを表示、bodyOutputType指定によりhtmlをparseする
+    toaster.pop({
+      type: 'warning',
+      title: '',
+      body: 'Parts Deleted <a class="undo" ng-click="undo()">UNDO</a>',
+      bodyOutputType: 'trustedHtml'
+    });
   }
+
   // $eventに記録された位置情報を配置済のパーツに反映
   $scope.move = function(part, $event) {
 
@@ -102,6 +112,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
     part.position.x = ($event.gesture.center.pageX - centerImgX);
     part.position.y = ($event.gesture.center.pageY -centerImgY);
+  }
+
+  $scope.undo = function() {
+    var undoPart = $scope.tmpReservedParts.pop();
+    $scope.deployedParts_angular.push(undoPart);
+    console.log('undo is called');
   }
 })
 
