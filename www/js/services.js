@@ -192,7 +192,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
    * 画面にパーツをデプロイする際に使うフラグ用
    */
   var selectPartsOnPallet = function(partid){
-    for (part of parts) {
+    for (part in parts) {
       if (partid === part.id){
         part.flag='true';
       }else{
@@ -206,7 +206,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
    * deployedPartsにパーツを追加(push)することで，画面に反映させる
    */
   var deployPartByClick = function(){
-    for (part of parts) {
+    for (part in parts) {
       if(part.flag==='true'){
         part.counter++;//同じタイプのパーツの配置数//後で消すかも
         var deployedPart = {
@@ -253,7 +253,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     for(var i = 0; i < parts.length;i++){
       parts[i].counter=0;
     }
-    for(part of boardContent.parts){
+    for(part in boardContent.parts){
       parts[part.partId].counter++;
       deployedParts.push(part);
     }
