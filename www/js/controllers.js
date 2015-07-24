@@ -24,7 +24,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, toaster, Boards, DBConn, Parts) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $timeout, toaster, Boards, DBConn, Parts) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
@@ -90,13 +90,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
     $scope.tmpReservedParts = $scope.deployedParts_angular.splice(partIndex, 1);
 
-    // body内でUndoを呼び出し可能なリンクを表示、bodyOutputType指定によりhtmlをparseする
-    toaster.pop({
-      type: 'warning',
-      title: '',
-      body: 'Parts Deleted <a class="undo" ng-click="undo()">UNDO</a>',
-      bodyOutputType: 'trustedHtml'
-    });
+    // undo表示ON
+    $scope.undoSwitch = true;
+
+    $timeout(function () {
+      $scope.undoSwitch = false;
+    }, 3000);
   }
 
   // $eventに記録された位置情報を配置済のパーツに反映
@@ -115,9 +114,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }
 
   $scope.undo = function() {
+    $scope.undoSwitch = false; // UNDO表示OFF
     var undoPart = $scope.tmpReservedParts.pop();
     $scope.deployedParts_angular.push(undoPart);
-    console.log('undo is called');
   }
 })
 

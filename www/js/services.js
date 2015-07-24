@@ -257,8 +257,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       parts[part.partId].counter++;
       deployedParts.push(part);
     }
-    //test
-    console.table(deployedParts);
   }
 
   return {
