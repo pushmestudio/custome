@@ -319,7 +319,7 @@ angular.module('mainApp.dbConnector', [])
     }
 
     /**
-     * データベースに作成したオブジェクトストアを削除する
+     * データベースに作成したオブジェクトストアの中身をクリアする
      */
     module.reset = function() {
       module.debug('reset is called');
