@@ -7,7 +7,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
-  // このloadの部分もいずれBoardsサービスに移行したい
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
       Boards.addAllMyBoards(data);
@@ -25,10 +24,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       okType: 'button-assertive'
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // ポップアップでOkなら削除する
-        // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
-        // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
-        $scope.myBoards.splice(boardIndex, 1);
-        toaster.pop('success', '', 'Deleted!');
+        DBConn.delete($scope.myBoards[boardIndex].boardId).then(function(){
+          // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
+          // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
+          $scope.myBoards.splice(boardIndex, 1);
+          toaster.pop('success', '', 'Deleted!');
+        });
       }
     });
   }

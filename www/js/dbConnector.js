@@ -286,6 +286,32 @@ angular.module('mainApp.dbConnector', [])
     }
 
     /**
+     * オブジェクトストアに登録されているボードを削除する。
+     * @param {String} boardId 削除したいボードのID
+     * @return {Promise} 同期処理を行うためのオブジェクト
+     */
+    module.deleteBoard = function(boardId) {
+      module.debug("deleteBoard is called");
+      var trans = module.db.transaction(module.storeName, "readwrite");
+      var store = trans.objectStore(module.storeName);
+
+      var deferred = module.q.defer();
+
+      // boardIDが一致するデータを削除する
+      store.delete(boardId).onsuccess = function(event){
+        var data = event.target.result;
+       　module.debug("delete board");
+        deferred.resolve()
+      };
+
+      store.delete(boardId).onerror = function(event){
+        deferred.reject('request is rejected');
+        module.debug('delete error:' + event.message);
+      };
+      return deferred.promise;
+    }
+
+    /**
      * オブジェクトストアに登録されているすべてのボードを取得する。
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -353,6 +379,9 @@ angular.module('mainApp.dbConnector', [])
       }
       , load: function(boardId) {
         return module.loadBoardContent(boardId);
+      }
+      , delete: function(boardId){
+        return module.deleteBoard(boardId);
       }
       , reset: function() {
         module.reset();
