@@ -3,11 +3,10 @@
 angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, Boards, DBConn) {
+.controller('BoardsCtrl', function($scope, $ionicPopup, toaster, Boards, DBConn) {
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
-  // このloadの部分もいずれBoardsサービスに移行したい
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
       Boards.addAllMyBoards(data);
@@ -17,10 +16,25 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   // テンプレート一覧を読み込む
   $scope.boards = Boards.all();
-  $scope.remove = function(board) {
-    Boards.remove(board);
+  $scope.listCanSwipe = true; // リストに対してスワイプ操作を可能にする
+
+  $scope.remove = function(boardIndex) {
+    $ionicPopup.confirm({
+      template: '選択したボードを削除しますか？(この操作は取り消せません)', // String (optional). The html template to place in the popup body.
+      okType: 'button-assertive'
+    }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
+      if(res) { // ポップアップでOkなら削除する
+        DBConn.delete($scope.myBoards[boardIndex].boardId).then(function(){
+          // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
+          // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
+          $scope.myBoards.splice(boardIndex, 1);
+          toaster.pop('success', '', 'Deleted!');
+        });
+      }
+    });
   }
 })
+
 
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
