@@ -2,6 +2,13 @@
 // mainApp.controllersというモジュールを定義する
 angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
+// undo()を含んだトーストを表示するためのdirective
+.directive('partDeleteToaster', [function() {
+  return {
+    template: 'Part Deleted.<a class="undo" ng-click="undo()">UNDO</a>'
+  };
+}])
+
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, $ionicPopup, toaster, Boards, DBConn) {
   // 使用する前に接続処理を行う
@@ -103,13 +110,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     // deployedPartsにあるpartを削除し、削除したパーツを一時保存用配列に退避
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
     $scope.tmpReservedParts = $scope.deployedParts_angular.splice(partIndex, 1);
-
-    // undo表示ON
-    $scope.undoSwitch = true;
-
-    $timeout(function () {
-      $scope.undoSwitch = false;
-    }, 3000);
+    
+    // ng-showをtoast-containerに付与することで対応も可能だが、
+    //　現在のバージョンだと複数のtoast-containerがあった場合"type"の指定が無視されてしまう。
+    // トーストを表示
+    toaster.pop({
+      type: 'warning',
+      title: '',
+      body: 'part-delete-toaster',
+      bodyOutputType: 'localDirective'
+    });
   }
 
   // $eventに記録された位置情報を配置済のパーツに反映
@@ -128,7 +138,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }
 
   $scope.undo = function() {
-    $scope.undoSwitch = false; // UNDO表示OFF
+    // トーストを削除
+    toaster.clear('*');
     var undoPart = $scope.tmpReservedParts.pop();
     $scope.deployedParts_angular.push(undoPart);
   }
