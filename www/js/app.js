@@ -66,6 +66,8 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
   //アプリ起動時の初期画面
   //タスクボード一覧を表示(暫定的)
   .state('custome.init', {
+    // 2015/8/4 トーストを正常に表示させるため暫定的にCache無効 別の解決策が見つかれば削除予定
+    cache: false,
     url: '/init',
     views: {
       'custome-init': { // viewの名前
@@ -76,6 +78,8 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
   })
 
   .state('custome.board', {
+    // 2015/8/4 トーストを正常に表示させるため暫定的にCache無効 別の解決策が見つかれば削除予定
+    cache: false,
     url: '/init/:boardId',
     views: {
       'custome-init': {

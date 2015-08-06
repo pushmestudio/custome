@@ -2,12 +2,18 @@
 // mainApp.controllersというモジュールを定義する
 angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
+// undo()を含んだトーストを表示するためのdirective
+.directive('partDeleteToaster', [function() {
+  return {
+    template: 'Part Deleted.<a class="undo" ng-click="undo()">UNDO</a>'
+  };
+}])
+
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, Boards, DBConn) {
+.controller('BoardsCtrl', function($scope, $ionicPopup, toaster, Boards, DBConn) {
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
-  // このloadの部分もいずれBoardsサービスに移行したい
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
       Boards.addAllMyBoards(data);
@@ -17,14 +23,29 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   // テンプレート一覧を読み込む
   $scope.boards = Boards.all();
-  $scope.remove = function(board) {
-    Boards.remove(board);
+  $scope.listCanSwipe = true; // リストに対してスワイプ操作を可能にする
+
+  $scope.remove = function(boardIndex) {
+    $ionicPopup.confirm({
+      template: '選択したボードを削除しますか？(この操作は取り消せません)', // String (optional). The html template to place in the popup body.
+      okType: 'button-assertive'
+    }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
+      if(res) { // ポップアップでOkなら削除する
+        DBConn.delete($scope.myBoards[boardIndex].boardId).then(function(){
+          // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
+          // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
+          $scope.myBoards.splice(boardIndex, 1);
+          toaster.pop('success', '', 'Deleted!');
+        });
+      }
+    });
   }
 })
 
+
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, toaster, Boards, DBConn, Parts) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $timeout, toaster, Boards, DBConn, Parts) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
@@ -79,16 +100,28 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 
   $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
+  $scope.tmpReservedParts = []; // 削除したパーツを一時保存しUNDOできるようにする
+
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
     Parts.deploy();//パーツをボードに配置
   }
-  $scope.remove = function(part) {
-    // deployedPartsにあるpartを削除する
+  $scope.remove = function(partIndex) {
+    // deployedPartsにあるpartを削除し、削除したパーツを一時保存用配列に退避
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
-    $scope.deployedParts_angular.splice(part, 1);
-    toaster.pop('warning', "", "Parts Deleted");
+    $scope.tmpReservedParts = $scope.deployedParts_angular.splice(partIndex, 1);
+    
+    // ng-showをtoast-containerに付与することで対応も可能だが、
+    //　現在のバージョンだと複数のtoast-containerがあった場合"type"の指定が無視されてしまう。
+    // トーストを表示
+    toaster.pop({
+      type: 'warning',
+      title: '',
+      body: 'part-delete-toaster',
+      bodyOutputType: 'localDirective'
+    });
   }
+
   // $eventに記録された位置情報を配置済のパーツに反映
   $scope.move = function(part, $event) {
 
@@ -102,6 +135,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
     part.position.x = ($event.gesture.center.pageX - centerImgX);
     part.position.y = ($event.gesture.center.pageY -centerImgY);
+  }
+
+  $scope.undo = function() {
+    // トーストを削除
+    toaster.clear('*');
+    var undoPart = $scope.tmpReservedParts.pop();
+    $scope.deployedParts_angular.push(undoPart);
   }
 })
 
