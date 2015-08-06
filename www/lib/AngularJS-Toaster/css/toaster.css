@@ -74,10 +74,12 @@ button.toast-close-button {
   left: 12px;
 }
 .toast-top-center {
-  top: 12px;
+  /* default: 12px */
+  top: 100px;
 }
 .toast-top-right {
-  top: 12px;
+  /* default: 12px */
+  top: 100px;
   right: 12px;
 }
 .toast-bottom-right {
