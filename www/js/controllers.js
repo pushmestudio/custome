@@ -1,13 +1,19 @@
 //これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
 // mainApp.controllersというモジュールを定義する
-angular.module('mainApp.controllers', ['mainApp.services'])
+angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
+
+// undo()を含んだトーストを表示するためのdirective
+.directive('partDeleteToaster', [function() {
+  return {
+    template: 'Part Deleted.<a class="undo" ng-click="undo()">UNDO</a>'
+  };
+}])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $ionicPopup, $ionicModal, Boards, DBConn) {
+.controller('BoardsCtrl', function($scope, $ionicPopup, $ionicModal, toaster, Boards, DBConn) {
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
-  // このloadの部分もいずれBoardsサービスに移行したい
   DBConn.connect().then(function() {
     DBConn.getAll().then(function(data) {
       Boards.addAllMyBoards(data);
@@ -17,8 +23,22 @@ angular.module('mainApp.controllers', ['mainApp.services'])
 
   // テンプレート一覧を読み込む
   $scope.boards = Boards.all();
-  $scope.remove = function(board) {
-    Boards.remove(board);
+  $scope.listCanSwipe = true; // リストに対してスワイプ操作を可能にする
+
+  $scope.remove = function(boardIndex) {
+    $ionicPopup.confirm({
+      template: '選択したボードを削除しますか？(この操作は取り消せません)', // String (optional). The html template to place in the popup body.
+      okType: 'button-assertive'
+    }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
+      if(res) { // ポップアップでOkなら削除する
+        DBConn.delete($scope.myBoards[boardIndex].boardId).then(function(){
+          // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
+          // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
+          $scope.myBoards.splice(boardIndex, 1);
+          toaster.pop('success', '', 'Deleted!');
+        });
+      }
+    });
   }
 
   // modalの定義
@@ -50,9 +70,10 @@ angular.module('mainApp.controllers', ['mainApp.services'])
   }
 })
 
+
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, Boards, DBConn, Parts) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $timeout, toaster, Boards, DBConn, Parts) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
@@ -84,46 +105,51 @@ angular.module('mainApp.controllers', ['mainApp.services'])
     // modalのformをclear
     $scope.boardNames.boardName = '';
     $scope.boardNames.boardComment = '';
-    Boards.openModal($scope.modal, Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId);
+    Boards.openModal(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId).then(function(result){
+      if(result){
+        toaster.pop('success', '', 'Saved!');
+        $scope.$apply();
+      } else {
+        $scope.modal.show();
+      }
+    });
   };
 
-  // modalの除去(インスタンスそのものをDOMから消すらしい)
-  $scope.removeModal = function(){
+  // 新規作成時の保存処理
+  $scope.save = function(){
     $scope.modal.hide();
     $scope.modal.remove();
-    // modalを除去したら、除去されたかどうかの判定のために値をnullにしておく
     $scope.modal = null;
-  };
 
-  // modalが除去されたら（保存する準備ができたら)保存処理を呼ぶ
-  // 壁紙を読み込む処理ができていないため、暫定的にハードコードした壁紙を読み込む
-  // TODO:壁紙読み込み処理の実装 @5/24
-  $scope.$on('modal.removed', function(){ // とりあえず別枠だけど、↓の$scope.save()を直接呼んでもいい
-    $scope.modal = null;
-    // sava時、$stateParams.boardIdを上書きするかどうか確認する。update⇒そのまま、addNew⇒上書き
-    // Boards.getUsedWallpaper()でwallPaperのパス取得
     Boards.saveBoard(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
+      toaster.pop('success', '', 'Saved!');
     });
-  });
-
-  // 保存処理
-  $scope.save = function(){
-    Boards.saveBoard(Parts.getAllDeployed(), Boards.getUsedWallpaper(), $stateParams.boardId);
   };
-    //'img/taskboard_virt_blue.png'
-    //boardData.boardContent
 
   $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
+  $scope.tmpReservedParts = []; // 削除したパーツを一時保存しUNDOできるようにする
+
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
     Parts.deploy();//パーツをボードに配置
   }
-  $scope.remove = function(part) {
-    // deployedPartsにあるpartを削除する
+  $scope.remove = function(partIndex) {
+    // deployedPartsにあるpartを削除し、削除したパーツを一時保存用配列に退避
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
-    $scope.deployedParts_angular.splice(part, 1);
+    $scope.tmpReservedParts = $scope.deployedParts_angular.splice(partIndex, 1);
+
+    // ng-showをtoast-containerに付与することで対応も可能だが、
+    //　現在のバージョンだと複数のtoast-containerがあった場合"type"の指定が無視されてしまう。
+    // トーストを表示
+    toaster.pop({
+      type: 'warning',
+      title: '',
+      body: 'part-delete-toaster',
+      bodyOutputType: 'localDirective'
+    });
   }
+
   // $eventに記録された位置情報を配置済のパーツに反映
   $scope.move = function(part, $event) {
 
@@ -137,6 +163,13 @@ angular.module('mainApp.controllers', ['mainApp.services'])
 
     part.position.x = ($event.gesture.center.pageX - centerImgX);
     part.position.y = ($event.gesture.center.pageY -centerImgY);
+  }
+
+  $scope.undo = function() {
+    // トーストを削除
+    toaster.clear('*');
+    var undoPart = $scope.tmpReservedParts.pop();
+    $scope.deployedParts_angular.push(undoPart);
   }
 })
 
