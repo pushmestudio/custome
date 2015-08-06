@@ -1,4 +1,11 @@
 /* Empty. Add your own CSS if you like */
+.undo {
+  padding-left: 10px;
+  color: gray;
+  font-weight: bold;
+  text-decoration: underline;
+}
+/* 未使用？
 #undo {
   z-index: 999999;
 
@@ -41,3 +48,4 @@
   text-decoration: underline;
   padding-left: 40px;
 }
+*/
