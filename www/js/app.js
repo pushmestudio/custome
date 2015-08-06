@@ -75,6 +75,16 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
     }
   })
 
+  .state('custome.templates', {
+    url: '/init/templates',
+    views: {
+      'custome-init': { // viewの名前
+        templateUrl: 'templates/boardTemplates.html',
+        controller: 'BoardsCtrl'
+      }
+    }
+  })
+
   .state('custome.board', {
     url: '/init/:boardId',
     views: {

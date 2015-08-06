@@ -19,23 +19,8 @@
           <i class="icon ion-trash-a"></i>
         </ion-option-button>
       </ion-item>
-    </ion-list>
-
-    <ion-list>
-      <div class="item item-divider">
-        Templates
-      </div>
-      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="board in boards" type="item-text-wrap" href="#/custome/init/{{board.id}}">
-        <img ng-src="{{board.img}}">
-        <h2>{{board.name}}</h2>
-        <p>{{board.lastText}}</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-
-        <button ng-click="remove(board)">
-          削除
-        </button>
-
-      </ion-item>
-    </ion-list>
+    </ion-list>    
+    <!-- 作成済ボード一覧画面で，プラスボタン押下するとテンプレート一覧の画面に遷移 -->
+    <a href="#/custome/init/templates"><img ng-src="img/plusIcon.png"></a>
   </ion-content>
 </ion-view>
