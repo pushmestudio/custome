@@ -110,7 +110,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     // deployedPartsにあるpartを削除し、削除したパーツを一時保存用配列に退避
     // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
     $scope.tmpReservedParts = $scope.deployedParts_angular.splice(partIndex, 1);
-    
+
     // ng-showをtoast-containerに付与することで対応も可能だが、
     //　現在のバージョンだと複数のtoast-containerがあった場合"type"の指定が無視されてしまう。
     // トーストを表示

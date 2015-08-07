@@ -70,7 +70,7 @@ angular.module('mainApp.dbConnector', [])
       // KeyPathの値はIndexを作成せずとも参照可能なので、Indexを作成はKeyPath以外の値で何かを参照したいときのみ
       store.createIndex('boardId', 'boardId', {unique: true});
 
-      module.createSample(store);
+      // module.createSample(store);
     }
 
     /**
@@ -113,7 +113,7 @@ angular.module('mainApp.dbConnector', [])
       ];
 
       // サンプルデータを一件ずつ追加する
-      for(sample of samples) {
+      for(sample in samples) {
         store.add(sample);
         module.debug(sample + 'is added');
       }
