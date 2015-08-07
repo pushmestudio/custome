@@ -99,6 +99,16 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
     }
   })
 
+  .state('custome.pallet', {
+    url: '/palletEdit',
+    views: {
+      'custome-init': { // viewの名前
+        templateUrl: 'templates/boardPallet.html',
+        controller: 'PalletCtrl'
+      }
+    }
+  })
+
 /*
   // initタブ内でboardの詳細を表示するために一時的に追加
   .state('custome.tab-init-board', {
