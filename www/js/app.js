@@ -77,6 +77,16 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
     }
   })
 
+  .state('custome.templates', {
+    url: '/init/templates',
+    views: {
+      'custome-init': { // viewの名前
+        templateUrl: 'templates/boardTemplates.html',
+        controller: 'BoardsCtrl'
+      }
+    }
+  })
+
   .state('custome.board', {
     // 2015/8/4 トーストを正常に表示させるため暫定的にCache無効 別の解決策が見つかれば削除予定
     cache: false,
@@ -85,6 +95,16 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
       'custome-init': {
         templateUrl: 'templates/board.html',
         controller: 'BoardsDetailCtrl'
+      }
+    }
+  })
+
+  .state('custome.pallet', {
+    url: '/palletEdit',
+    views: {
+      'custome-init': { // viewの名前
+        templateUrl: 'templates/boardPallet.html',
+        controller: 'PalletCtrl'
       }
     }
   })
