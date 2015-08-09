@@ -10,7 +10,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 }])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $ionicPopup, $ionicModal, toaster, Boards, DBConn) {
+.controller('BoardsCtrl', function($scope, $ionicPopup, toaster, Boards, DBConn) {
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
@@ -39,35 +39,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
         });
       }
     });
-  }
-
-  // modalの定義
-  $ionicModal.fromTemplateUrl('templates/ads-modal.html', {
-    scope: $scope,
-    animataion: 'slide-in-up'
-  }).then(function(modal){
-    $scope.modal = modal;
-  });
-
-  // 広告の表示、ポップアップで表示確認後、モーダルにて表示する
-  $scope.popAd = function() {
-    $ionicPopup.confirm({
-      title: '広告表示確認', // String. The title of the popup.
-      cssClass: '', // String, The custom CSS class name
-      subTitle: '', // String (optional). The sub-title of the popup.
-      template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
-      templateUrl: '', // String (optional). The URL of an html template to place in the popup   body.
-      cancelText: '', // String (default: 'Cancel'). The text of the Cancel button.
-      cancelType: '', // String (default: 'button-default'). The type of the Cancel button.
-      okText: '', // String (default: 'OK'). The text of the OK button.
-      okType: '', // String (default: 'button-positive'). The type of the OK button.
-    }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
-      console.log(res);
-      if(res) { // Okなら表示する
-        $scope.modal.show();
-      }
-    });
-  }
+  };
 })
 
 
@@ -181,6 +153,62 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.select = function(part){
     Parts.select(part);//パレットからボードに配置するパーツを選択
   }
+  $scope.nend = function() {
+    nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
+  };
+})
+
+// 広告表示用のコントローラ
+.controller('AdsCtrl', function($scope, $ionicModal, $ionicPopup) {
+  const FREQ_POP_AD = 0.5; // 広告の表示量、1で常に表示、0で常に非表示
+  $scope.flagAd = Math.random() <= FREQ_POP_AD;
+
+  // modalの定義、このmodal内に広告を表示する
+  $ionicModal.fromTemplateUrl('templates/ads-modal.html', {
+    scope: $scope,
+    animataion: 'slide-in-up'
+  }).then(function(modal){
+    $scope.modal = modal;
+  });
+
+  // 別ページに移ったタイミングなどでモーダルを破壊する
+  $scope.$on('$destroy', function() {
+    $scope.modal.remove();
+  });
+
+  $scope.showUpAd = function() {
+    /*
+     * 広告表示するモーダル内の要素
+     * 'adspace'はモーダル内にあるため、モーダルを読み込むまでは存在しない
+     * 不必要な処理を減らすため、読み込み後(adspaceがnullじゃなくなったとき)のみ広告取得の処理をする
+     */
+    var adspace = document.getElementById('adspace');
+    if(adspace) {
+      // index.html内で広告が表示されるのを防ぐためのhiddenクラスを排除する
+      adspace.className = '';
+
+      // 広告が読み込めていれば、nens_adsplace...がDOMに追加される。nendの広告表示jsの仕様に依存している点に注意。
+      if(document.getElementById('nend_adspace_' + nend_params.site + '_' + nend_params.spot)) {
+        var nend = document.getElementById('nend'); // index.html内で事前に読み込んだ広告を取得
+        adspace.replaceChild(nend, adspace.firstChild); // 広告モーダル内に設置
+      } else {
+        // 広告が取得できない(ネットワークの問題やブラウザで見てる場合)ときはテキストを表示する
+        adspace.replaceChild(document.createTextNode('Temporaly not available.'), adspace.firstChild);
+      }
+    }
+  };
+
+  // 広告の表示、ポップアップで表示確認後、モーダルにて表示する
+  $scope.popAd = function() {
+    $ionicPopup.confirm({
+      title: '広告表示確認', // String. The title of the popup.
+      template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
+    }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
+      if(res) { // Okなら表示する
+        $scope.modal.show();
+      }
+    });
+  };
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
