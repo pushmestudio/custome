@@ -184,16 +184,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
      */
     var adspace = document.getElementById('adspace');
     if(adspace) {
-      // index.html内で広告が表示されるのを防ぐためのhiddenクラスを排除する
-      adspace.className = '';
-
       // 広告が読み込めていれば、nens_adsplace...がDOMに追加される。nendの広告表示jsの仕様に依存している点に注意。
       if(document.getElementById('nend_adspace_' + nend_params.site + '_' + nend_params.spot)) {
         var nend = document.getElementById('nend'); // index.html内で事前に読み込んだ広告を取得
         adspace.replaceChild(nend, adspace.firstChild); // 広告モーダル内に設置
+        // index.html内で広告が表示されるのを防ぐために付してあるhiddenクラスを排除する
+        adspace.firstChild.className = '';
       } else {
         // 広告が取得できない(ネットワークの問題やブラウザで見てる場合)ときはテキストを表示する
         adspace.replaceChild(document.createTextNode('Temporaly not available.'), adspace.firstChild);
+        // index.html内で広告が表示されるのを防ぐために付してあるhiddenクラスを排除する
+        adspace.firstChild.className = '';
       }
     }
   };
