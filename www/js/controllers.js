@@ -11,6 +11,59 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, $ionicPopup, toaster, Boards, DBConn) {
+
+  document.addEventListener("deviceready", onDeviceReady, false);
+  
+  function onDeviceReady(){
+    console.log("applicationDirectory is: ");
+    console.table(cordova.file);
+    console.log(cordova.file.applicationDirectory);
+    console.log(cordova.file.applicationStorageDirectory);
+
+//    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail);
+    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/img", gotDIR, fail);
+  }
+
+  function gotFS(fileSystem){
+    console.log("fileSystem is: ");
+    console.table(fileSystem);
+  }
+
+  function toArray(list){
+    return Array.prototype.slice.call(list || [], 0);
+  }
+
+  function listResults(entries){
+    // var fragment = document.createDocumentFragment();
+    entries.forEach(function(entry, i){
+      console.log(entry.name);
+    });
+  }
+
+  function gotDIR(dirEntry){
+    console.table(dirEntry);
+
+    var dirReader = dirEntry.createReader();
+    var entries = [];
+
+    var readEntries = function(){
+      dirReader.readEntries(function(results){
+        if(!results.length){
+          listResults(entries.sort());
+        } else {
+          entries = entries.concat(toArray(results));
+          readEntries();
+        }
+      }, fail);
+    };
+
+    readEntries();
+  }
+
+  function fail(event){
+    console.log(event.target.error.code);
+  }
+
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
