@@ -82,7 +82,8 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
     views: {
       'custome-init': { // viewの名前
         templateUrl: 'templates/boardTemplates.html',
-        controller: 'BoardsCtrl'
+        //controller: 'BoardsCtrl'
+        controller: 'WallpaperCtrl'
       }
     }
   })

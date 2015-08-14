@@ -1,20 +1,28 @@
-<ion-view view-title="Select Template">
+<ion-view view-title="Select Wallpaper">
   <ion-content>
     <ion-list>
       <div class="item item-divider">
         Templates
       </div>
-      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="board in boards" type="item-text-wrap" href="#/custome/init/{{board.id}}">
-        <img ng-src="{{board.img}}">
-        <h2>{{board.name}}</h2>
-        <p>{{board.lastText}}</p>
+      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="wallpaper in wallpaperParams.wallpaperPaths" type="item-text-wrap" ng-href="#/custome/init/{{newBoardId}}" ng-click="selectWallpaper(wallpaper)">
+        <img ng-src="{{wallpaper}}">
         <i class="icon ion-chevron-right icon-accessory"></i>
-
-        <button ng-click="remove(board)">
-          削除
-        </button>
-
       </ion-item>
     </ion-list>
   </ion-content>
 </ion-view>
+
+<!--
+<ion-view view-title="Select Wallpaper">
+  <ion-content>
+    <div class="row responsive-md" ng-repeat="wallpaper in wallpaperParams.wallpaperPaths" ng-if="$index % 2 === 0">
+      <div class="col col-50" ng-if="$index < wallpaperParams.wallpaperPaths.length" ng-href="#/custome/init/{{newBoardId}}" ng-click="selectWallpaper(wallpaperParams.wallpaperPaths[$index])">
+        <img ng-src="{{wallpaperParams.wallpaperPaths[$index]}}" width="100%" />
+      </div>
+      <div class="col col-50" ng-if="$index + 1 < wallpaperParams.wallpaperPaths.length" ng-href="#/custome/init/{{newBoardId}}" ng-click="selectWallpaper(wallpaperParams.wallpaperPaths[$index + 1])">
+        <img ng-src="{{wallpaperParams.wallpaperPaths[$index + 1]}}" width="100%" />
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
+-->

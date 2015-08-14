@@ -54,6 +54,10 @@
         <ion-header-bar aligh-title="center" class="bar-balanced">
           <h1 class="title">Palette</h1>
         </ion-header-bar>
+        <!-- index.html内であればどこでもよいが、自作ボードも壁紙もDBまたはフォルダから読み込むのは起動時の一度だけにしたいので、ここでng-initを使用して初期化している
+        ちなみに、ng-controllerを使用してはいるがこの1行のみしかスコープにはならないので、他に影響はないはず -->
+        <div ng-controller="BoardsCtrl" ng-init="init()"/>
+        <div ng-controller="WallpaperCtrl" ng-init="init()"/>
         <!-- //test //PartsCtrlをBoardsDetailCtrlに移行 -->
         <ion-content class="has-header" ng-controller="PalletCtrl">
           <ion-list>
