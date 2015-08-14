@@ -107,7 +107,7 @@ angular.module('mainApp.dbConnector', [])
               }
             }
           ],
-          'wallPaper': 'img/taskboard_virt_blue.png'
+          'wallpaper': 'img/wallpaper/taskboard_virt_blue.png'
           }
         }
       ];
@@ -126,7 +126,7 @@ angular.module('mainApp.dbConnector', [])
      * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.saveBoardContent = function(parts, wallPaper, boardId, boardNames) {
+    module.saveBoardContent = function(parts, wallpaper, boardId, boardNames) {
       module.debug('saveBoardContent is called');
       var updateFlag = true; // 更新か新規作成かを判断するためのフラグ
 
@@ -159,18 +159,18 @@ angular.module('mainApp.dbConnector', [])
           module.debug('updateFlag:' + updateFlag);
           // updateFlagの内容に応じ、更新あるいは新規作成をする
           if(updateFlag) { // 更新処理
-            module.updateBoard(boardId, parts, wallPaper).then(function() {
+            module.updateBoard(boardId, parts, wallpaper).then(function() {
               deferred.resolve();
             });
           } else { // 新規作成
-            module.addNewBoard(parts, wallPaper, boardNames).then(function(newBoard) {
+            module.addNewBoard(parts, wallpaper, boardNames).then(function(newBoard) {
               deferred.resolve(newBoard);
             });
           }
         }
       } else {
         // DBを確認するまでもなく新規登録の場合
-        module.addNewBoard(parts, wallPaper).then(function(newBoard) {
+        module.addNewBoard(parts, wallpaper).then(function(newBoard) {
           deferred.resolve(newBoard);
         });
       }
@@ -183,7 +183,7 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.updateBoard = function(boardId, parts, wallPaper) {
+    module.updateBoard = function(boardId, parts, wallpaper) {
       module.debug('updateBoard is called');
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
@@ -205,7 +205,7 @@ angular.module('mainApp.dbConnector', [])
         var data = event.target.result;
         if(data) { // 該当結果がある場合
           data.boardContent.parts = parts;
-          data.boardContent.wallPaper = wallPaper;
+          data.boardContent.wallpaper = wallpaper;
 
           var request = store.put(data); // ストアへ更新をかける
           request.onsuccess = function(event) {
@@ -231,11 +231,11 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent JSON形式のボードの中身
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.addNewBoard = function(parts, wallPaper, boardNames) {
+    module.addNewBoard = function(parts, wallpaper, boardNames) {
       module.debug('addNewBoard is called');
       var time = '' +Date.now() +''; // JavascriptのDateでunixtimeを取得し、文字列化
       var newBoard = {boardId: time, boardContent: {boardName: boardNames.boardName, boardComment: boardNames.boardComment,
-                      parts: parts, wallPaper: wallPaper}};
+                      parts: parts, wallpaper: wallpaper}};
       module.debug('addNewBoard ID is ' +time);
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
@@ -274,7 +274,7 @@ angular.module('mainApp.dbConnector', [])
         } else { // 該当結果がない場合
           module.debug('load対象が見つかりません');
           // resolveに空のデータ構造を渡す。⇒結果としてParts.redeployが呼び出されても特に何も行われない。
-          deferred.resolve({boardId: '', boardContent: {boardName: '', boardComment: '', parts: [], wallPaper: ''}})
+          deferred.resolve({boardId: '', boardContent: {boardName: '', boardComment: '', parts: [], wallpaper: ''}})
         }
       };
 
@@ -374,8 +374,8 @@ angular.module('mainApp.dbConnector', [])
       connect: function(){
         return module.connect();
       }
-      , save: function(parts, wallPaper, boardId, boardNames) {
-        return module.saveBoardContent(parts, wallPaper, boardId, boardNames);
+      , save: function(parts, wallpaper, boardId, boardNames) {
+        return module.saveBoardContent(parts, wallpaper, boardId, boardNames);
       }
       , load: function(boardId) {
         return module.loadBoardContent(boardId);
