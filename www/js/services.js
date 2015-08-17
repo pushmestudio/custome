@@ -142,7 +142,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     getTemplate: function(boardId) {
       for (var i = 0; i < templates.length; i++) {
-        if (templates[i].id === parseInt(templates)) {
+        if (templates[i].id === parseInt(boardId)) {
           return templates[i];
         }
       }
