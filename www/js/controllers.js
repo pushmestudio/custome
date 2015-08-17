@@ -26,7 +26,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   $scope.myBoards = Boards.getMyBoards();
   // テンプレート一覧を読み込む
-  $scope.boards = Boards.all();
+  $scope.templates = Boards.getAllTemplates();
   $scope.listCanSwipe = true; // リストに対してスワイプ操作を可能にする
   // 詳細画面移行時に現在の壁紙を上書き
   $scope.selectWallpaper = function(selectedWallpaperPath){
@@ -64,12 +64,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     // boardIdがなければ、updateFlagをfalseに
     Boards.setUpdateFlag(boardData.boardId);
     Parts.reDeploy(boardData.boardContent);
+    /* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
     Boards.setUsedWallpaper(boardData.boardContent, $stateParams.boardId);//現在表示するためのwallPaperをセット
     $scope.usedPaper_nowBoard = Boards.getUsedWallpaper();//board.htmlでwallPaperを描画させるための変数usedPaper_nowBoardにwallPaperのパスを代入
+    */
   });
 
   // binding
-  // $scope.board = Boards.get($stateParams.boardId);
+  $scope.tempalte = Boards.getTemplate($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
   $scope.wallpaper = Wallpapers.getCurrentWallpaper();
 
@@ -105,6 +107,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     Boards.saveBoard(Parts.getAllDeployed(), $scope.wallpaper, $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
       toaster.pop('success', '', 'Saved!');
+      $scope.$apply();
     });
   };
 

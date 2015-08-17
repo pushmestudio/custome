@@ -5,7 +5,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   // boardのtemplate
   // TODO:混同しないようにより適切な名前へと要変更
-  var boards = [{
+  var templates = [{
     id: 0,
     name: 'タスクボード1',
     lastText: '小島ボード1',
@@ -43,7 +43,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     boardComment : ''
   };
 
-  var usedWallpaper='';
+  // var usedWallpaper='';
 
   // ボード画面を開いたとき、新規か更新かを判断する
   var updateFlag = true;
@@ -107,24 +107,26 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   };
 
   /**
-   * 現在表示しているボードのwallPaperをセットするメソッド
+   * 現在表示しているボードのwallpaperをセットするメソッド
    *
    */
+  /* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
   var setUsedWallpaper = function(boardContent, boardId){
-    for (var i = 0; i < boards.length; i++){
-      if (parseInt(boardId) === boards[i].id){
-        usedWallpaper = boards[i].img;
+    for (var i = 0; i < templates.length; i++){
+      if (parseInt(boardId) === templates[i].id){
+        usedWallpaper = templates[i].img;
         return null;
       }
     }
-    usedWallpaper = boardContent.wallPaper;
+    usedWallpaper = boardContent.wallpaper;
     return null;
   };
+  */
 
   return {
     boardNames: boardNames,
-    all: function() {
-      return boards;
+    getAllTemplates: function() {
+      return templates;
     },
     getMyBoards: function(){
       return myBoards;
@@ -136,12 +138,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       setUpdateFlag(boardId);
     },
     remove: function(board) {
-      boards.splice(boards.indexOf(board), 1);
+      templates.splice(templates.indexOf(board), 1);
     },
-    get: function(boardId) {
-      for (var i = 0; i < myBoards.length; i++) {
-        if (myBoards[i].id === parseInt(boardId)) {
-          return myBoards[i];
+    getTemplate: function(boardId) {
+      for (var i = 0; i < templates.length; i++) {
+        if (templates[i].id === parseInt(templates)) {
+          return templates[i];
         }
       }
       return null;
@@ -151,7 +153,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     saveBoard: function(parts, wallPaper, boardId) {
       return saveBoard(parts, wallPaper, boardId);
-    },
+    }/* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
     getBoardWallpaper: function(boardId){
       return getUsedWallpaper(boardId);
     },
@@ -160,7 +162,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     getUsedWallpaper: function(){
       return usedWallpaper;
-    }
+    }*/
   };
 })
 
