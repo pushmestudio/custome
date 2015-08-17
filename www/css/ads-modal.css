@@ -19,18 +19,18 @@ input.ng-valid.ng-touched {
 
 
 /* ionic.cssのmodalクラスは、680px以下の場合modalを全画面として表示する仕様のため、ここで上書きする
- * nendの広告サイズは300*250なので、それより少し大きいサイズを最小サイズとする
+ * nendの広告サイズは300*250なので、当該サイズを最小とする
  */
-@media {
+@media (max-width: 679px) {
   .modal {
     top: 10%;
-    right: 5%;
+    right: 2%;
     bottom: 10%;
-    left: 5%;
+    left: 2%;
     overflow: visible;
-    width: 320px;
-    height: 280px;
-  }
+    min-height: 250px;
+    min-width: 300px;
+    width: 96%; }
   .modal.ng-leave-active {
     bottom: 0; }
   .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) {
