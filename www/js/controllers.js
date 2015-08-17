@@ -71,7 +71,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   });
 
   // binding
-  $scope.tempalte = Boards.getTemplate($stateParams.boardId);
+  $scope.template = Boards.getTemplate($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
   $scope.wallpaper = Wallpapers.getCurrentWallpaper();
 

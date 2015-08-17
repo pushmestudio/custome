@@ -1,0 +1,21 @@
+<ion-header-bar aligh-title="center" class="bar-balanced">
+  <h1 class="title">Palette</h1>
+</ion-header-bar>
+<!-- //test //PartsCtrlをBoardsDetailCtrlに移行 -->
+<ion-content class="has-header" ng-controller="PalletCtrl">
+  <ion-list>
+    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap">
+      <img ng-src="{{part.img}}">
+      <h2>{{part.title}}</h2>
+      <p>{{part.type}}</p>
+      <button menu-close ng-click="select(part.id)">
+        select
+      </button>
+      <p>{{part.counter}}個</p>
+      <p>配置しています</p>
+    </ion-item>
+  </ion-list>
+  <div>
+    <a href="#/custome/palletEdit" menu-close><img ng-src="img/plusButton.png" ></a>
+  </div>
+</ion-content>
