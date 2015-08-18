@@ -10,16 +10,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 }])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $ionicPopup, toaster, Boards, DBConn, Wallpapers) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, toaster, Boards, DBConn, Wallpapers) {
   
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
   $scope.init = function(){
-    console.log("myBoard init is called");
     DBConn.connect().then(function() {
       DBConn.getAll().then(function(data) {
-        Boards.addAllMyBoards(data);
+        $timeout(function(){
+          Boards.addAllMyBoards(data);
+        });
       });
     });
   }
@@ -43,7 +44,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
           // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
           // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
           $scope.myBoards.splice(boardIndex, 1);
-          toaster.pop('success', '', 'Deleted!');
+          $timeout(function(){
+            toaster.pop('success', '', 'Deleted!');
+          });
         });
       }
     });
@@ -57,13 +60,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
-
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
     $scope.boardData = boardData;
     // boardIdがなければ、updateFlagをfalseに
     Boards.setUpdateFlag(boardData.boardId);
-    Parts.reDeploy(boardData.boardContent);
+    $timeout(function(){
+      Parts.reDeploy(boardData.boardContent);
+    });
     /* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
     Boards.setUsedWallpaper(boardData.boardContent, $stateParams.boardId);//現在表示するためのwallPaperをセット
     $scope.usedPaper_nowBoard = Boards.getUsedWallpaper();//board.htmlでwallPaperを描画させるための変数usedPaper_nowBoardにwallPaperのパスを代入
@@ -93,8 +97,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       if(boardId){
         // boardsList.htmlで表示されるthumbnail画像を変更する
         Boards.updateMyBoardValuesOnMemory(boardId, Wallpapers.getCurrentWallpaper());
-        toaster.pop('success', '', 'Saved!');
-        $scope.$apply();
+        $timeout(function(){
+          toaster.pop('success', '', 'Saved!');
+        });
       } else {
         $scope.modal.show();
       }
@@ -109,8 +114,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
     Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
-      toaster.pop('success', '', 'Saved!');
-      $scope.$apply();
+      $timeout(function(){
+        toaster.pop('success', '', 'Saved!');
+      });
     });
   };
 
@@ -183,19 +189,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   });
 
   $scope.init = function(){
-    console.log("wallpaper init is called");
-
     document.addEventListener("deviceready", onDeviceReady, false); 
     function onDeviceReady(){
-      console.log("onDeviceReady called");
       Wallpapers.loadWallpapers().then(function(){
-        console.log("loadWallpapers completed");
       })
     }
   };
 
   $scope.selectWallpaper = function(selectedWallpaperPath){
-    console.log("selectWallpaper is called");
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
     if($scope.modal.isShown()){
       $scope.modal.hide();
