@@ -38,8 +38,8 @@
     -->
   <!-- 2015/8/17(tomit)index.html内であればどこでもよいが、自作ボードも壁紙もDBまたはフォルダから読み込むのは起動時の一度だけにしたいので、ここで初期化している
   ちなみに、ng-controllerを使用してはいるがこの1行のみしかスコープにはならないので、他に影響はないはず -->
-  <div ng-controller="BoardsCtrl" ng-init="init()"/>
-  <div ng-controller="WallpaperCtrl" ng-init="init()"/>
+  <div ng-controller="BoardsCtrl" ng-init="init()"></div>
+  <div ng-controller="WallpaperCtrl" ng-init="init()"></div>
     <ion-side-menus>
       <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-positive">

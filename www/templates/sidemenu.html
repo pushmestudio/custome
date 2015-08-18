@@ -14,6 +14,13 @@
       <p>{{part.counter}}個</p>
       <p>配置しています</p>
     </ion-item>
+    <ion-item class="item-avatar item-icon-right" type="item-text-wrap" ng-controller="WallpaperCtrl">
+      <img ng-src="{{wallpaperParams.currentWallpaperPath}}">
+      <h2> Current Wallpaper </h2>
+      <button ng-click="showWallpaperList()">
+        Change Wallpaper
+      </button>
+    </ion-item>
   </ion-list>
   <div>
     <a href="#/custome/palletEdit" menu-close><img ng-src="img/plusButton.png" ></a>
