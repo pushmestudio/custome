@@ -5,7 +5,7 @@
     <button menu-toggle="right" class="button button-icon icon ion-android-color-palette"></button>
   </ion-nav-buttons>
 
-  <ion-content scroll="false" has-header="false" style="background: url({{wallpaper}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" ng-click="click($event)">
+  <ion-content scroll="false" has-header="false" style="background: url({{wallpaperParams.currentWallpaperPath}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" ng-click="click($event)">
     <div ng-repeat="deployedPart in deployedParts_angular track by $index">
       <img ng-src={{deployedPart.image}} style="position: absolute; width: 100px; height: 100px; left: {{deployedPart.position.x}}px; top: {{deployedPart.position.y}}px; " on-double-tap="remove($index)" on-drag="move(deployedPart, $event)">
     </div>

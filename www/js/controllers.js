@@ -73,7 +73,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   // binding
   $scope.template = Boards.getTemplate($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
-  $scope.wallpaper = Wallpapers.getCurrentWallpaper();
+  // $scope.wallpaper = Wallpapers.getCurrentWallpaper();
+  $scope.wallpaperParams = Wallpapers.getWallpaperParams();
 
   // modalの定義
   $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
@@ -88,8 +89,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     // modalのformをclear
     $scope.boardNames.boardName = '';
     $scope.boardNames.boardComment = '';
-    Boards.openModal(Parts.getAllDeployed(), $scope.wallpaper, $stateParams.boardId).then(function(result){
-      if(result){
+    Boards.openModal(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
+      if(boardId){
+        // boardsList.htmlで表示されるthumbnail画像を変更する
+        Boards.updateMyBoardValuesOnMemory(boardId, Wallpapers.getCurrentWallpaper());
         toaster.pop('success', '', 'Saved!');
         $scope.$apply();
       } else {
@@ -104,7 +107,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.modal.remove();
     $scope.modal = null;
 
-    Boards.saveBoard(Parts.getAllDeployed(), $scope.wallpaper, $stateParams.boardId).then(function(boardId){
+    Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
       toaster.pop('success', '', 'Saved!');
       $scope.$apply();
@@ -167,7 +170,18 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }
 })
 
-.controller('WallpaperCtrl', function($scope, Wallpapers) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers) {
+  $scope.wallpaperParams = Wallpapers.getWallpaperParams();
+  $scope.newBoardId = 0;
+
+    // modalの定義
+  $ionicModal.fromTemplateUrl('templates/wallpaperList.html', {
+    scope: $scope,
+    animataion: 'slide-in-up'
+  }).then(function(modal){
+    $scope.modal = modal;
+  });
+
   $scope.init = function(){
     console.log("wallpaper init is called");
 
@@ -180,12 +194,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     }
   };
 
-  $scope.wallpaperParams = Wallpapers.getWallpaperParams();
-  $scope.newBoardId = 0;
-
   $scope.selectWallpaper = function(selectedWallpaperPath){
     console.log("selectWallpaper is called");
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
+    if($scope.modal.isShown()){
+      $scope.modal.hide();
+    }
+  };
+
+  $scope.showWallpaperList = function(){
+    $scope.modal.show();
   };
 })
 
