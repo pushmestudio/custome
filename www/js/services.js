@@ -109,14 +109,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   };
 
   var updateMyBoardValuesOnMemory = function(boardId, wallpaper){
-    console.log("updateMyBoardValuesOnMemory is called");
-    console.log(boardId);
-    console.log(wallpaper);
-    console.log(myBoards);
     for (var i = 0; i < myBoards.length; i++) {
       if (myBoards[i].boardId === boardId) {
         myBoards[i].boardContent.wallpaper = wallpaper;
-        console.log("update values!");
         return;
       }
     }
@@ -330,21 +325,18 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   var listResults = function(entries){
     entries.forEach(function(entry, i){
       // 最終的にディレクトリ内のファイル一覧を表示する場所がここ
-      console.log("img/wallpaper/" + entry.name);
       wallpaperParams.wallpaperPaths.push("img/wallpaper/" + entry.name);
     });
   }
 
   var loadWallpapers = function(){
     var deferred = q.defer();
-    console.log("Loaded Directory is: ");
 
     // resolveLocalFileSystemURL()は、DirectoryEntryもしくはFileEntryを、ローカルのURL(第1引数)を指定して取得する(第2引数)
     // ここでは、cordova.file.applicationDirectory = "file:///android_asset/" (つまり"custome/platforms/android/assets/")である
     window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/img/wallpaper", gotDIR, fail);
 
     function gotDIR(dirEntry){
-
       var dirReader = dirEntry.createReader();
       var entries = [];
 
@@ -369,7 +361,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       console.log(event.target.error.code);
       deferred.reject();
     }
-
     return deferred.promise;
   }
 
