@@ -171,11 +171,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.modal = modal;
   });
 
-  // 別ページに移ったタイミングなどでモーダルを破壊する
-  $scope.$on('$destroy', function() {
-    $scope.modal.remove();
-  });
-
   $scope.showUpAd = function() {
     /*
      * 広告表示するモーダル内の要素
