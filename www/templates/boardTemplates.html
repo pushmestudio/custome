@@ -4,10 +4,10 @@
       <div class="item item-divider">
         Templates
       </div>
-      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="board in boards" type="item-text-wrap" href="#/custome/init/{{board.id}}">
-        <img ng-src="{{board.img}}">
-        <h2>{{board.name}}</h2>
-        <p>{{board.lastText}}</p>
+      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="template in templates" type="item-text-wrap" ng-href="#/custome/init/{{template.id}}" ng-click="selectWallpaper(template.img)">
+        <img ng-src="{{template.img}}">
+        <h2>{{template.name}}</h2>
+        <p>{{template.lastText}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
         <button ng-click="remove(board)">

@@ -41,7 +41,6 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
   // tabs.htmlの中で、タブ内で使用する画像や、文字列なども指定している
   // 新しいタブを作ったり、タブそのものを変更する場合は、tabs.htmlをを弄る。
 
-
   .state('custome', {
     url: "/custome",
     abstract: true,
