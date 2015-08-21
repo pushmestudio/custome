@@ -36,6 +36,10 @@
       サイドバーは全画面に共通の部品として用意するが、サイドバーを呼び出すボタンをboard.htmlにしか配置しないことで対応
       ドラッグしてサイドバーを引き出せるようにする場合、全ての画面でサイドバーを引き出せてしまうので、一旦無効化している
     -->
+  <!-- 2015/8/17(tomit)index.html内であればどこでもよいが、自作ボードも壁紙もDBまたはフォルダから読み込むのは起動時の一度だけにしたいので、ここで初期化している
+  ちなみに、ng-controllerを使用してはいるがこの1行のみしかスコープにはならないので、他に影響はないはず -->
+  <div ng-controller="BoardsCtrl" ng-init="init()"></div>
+  <div ng-controller="WallpaperCtrl" ng-init="init()"></div>
     <ion-side-menus>
       <ion-side-menu-content drag-content="false">
         <ion-nav-bar class="bar-positive">
@@ -50,28 +54,10 @@
         <ion-nav-view></ion-nav-view>
       </ion-side-menu-content>
 
+      <!-- 2015/8/17 サイドメニューの中身をsidemenu.htmlに移行しました -->
+      <!-- 今後スコープの問題が発生したときは qiita.com/ukyo/items/0aa47142020c07874415 を参照 -->
       <ion-side-menu side="right">
-        <ion-header-bar aligh-title="center" class="bar-balanced">
-          <h1 class="title">Palette</h1>
-        </ion-header-bar>
-        <!-- //test //PartsCtrlをBoardsDetailCtrlに移行 -->
-        <ion-content class="has-header" ng-controller="PalletCtrl">
-          <ion-list>
-            <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap">
-              <img ng-src="{{part.img}}">
-              <h2>{{part.title}}</h2>
-              <p>{{part.type}}</p>
-              <button menu-close ng-click="select(part.id)">
-                select
-              </button>
-              <p>{{part.counter}}個</p>
-              <p>配置しています</p>
-            </ion-item>
-          </ion-list>
-          <div>
-            <a href="#/custome/palletEdit" menu-close><img ng-src="img/plusButton.png" ></a>
-          </div>
-        </ion-content>
+        <ng-include src="'templates/sidemenu.html'"></ng-include>
       </ion-side-menu>
     </ion-side-menus>
 
