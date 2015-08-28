@@ -42,6 +42,7 @@ angular.module('mainApp.dbConnector', [])
       request.onupgradeneeded = module.init;
       request.onsuccess = function(event) {
         module.db = event.target.result;
+        console.log('connect is finished');
         deferred.resolve();
       };
       request.onerror = function(event) {
@@ -70,7 +71,7 @@ angular.module('mainApp.dbConnector', [])
       // KeyPathの値はIndexを作成せずとも参照可能なので、Indexを作成はKeyPath以外の値で何かを参照したいときのみ
       store.createIndex('boardId', 'boardId', {unique: true});
 
-      // module.createSample(store);
+      module.createSample(store);
     }
 
     /**
@@ -81,8 +82,8 @@ angular.module('mainApp.dbConnector', [])
       if(!store) return;
 
       var samples = [
-        {boardId: '1430626357000',
-         boardContent: {
+        {'boardId': '1430626357000',
+         'boardContent': {
           'boardName': 'KojimaBoard-X',
           'boardComment': '冨田くんかっこいいですう！',
           'parts': [
@@ -113,10 +114,11 @@ angular.module('mainApp.dbConnector', [])
       ];
 
       // サンプルデータを一件ずつ追加する
-      for(sample in samples) {
-        store.add(sample);
-        module.debug(sample + 'is added');
-      }
+      samples.forEach(function(entry, i){
+        console.log(entry);
+        store.add(entry);
+        module.debug(entry + 'is added');
+      });
     }
 
     /**
