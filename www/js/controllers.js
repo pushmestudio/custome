@@ -79,15 +79,24 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.boardNames = Boards.boardNames;
   // $scope.wallpaper = Wallpapers.getCurrentWallpaper();
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
+  $scope.selectedPart = Parts.selectedPart;
 
   // modalの定義
   $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
+    id: '1',
     scope: $scope,
     animataion: 'slide-in-up'
   }).then(function(modal){
-    $scope.modal = modal;
+    $scope.saveModal = modal;
   });
 
+  $ionicModal.fromTemplateUrl('templates/textedit-modal.html', {
+    id: '2',
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.editModal = modal;
+  });
   // 保存処理の前段階を実施する関数
   $scope.openModal = function(){
     // modalのformをclear
@@ -101,16 +110,20 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
           toaster.pop('success', '', 'Saved!');
         });
       } else {
-        $scope.modal.show();
+        $scope.saveModal.show();
       }
     });
   };
+  $scope.openEditModal = function(index) {
+    Parts.selectPart(index);
+    $scope.editModal.show();
+  }
 
   // 新規作成時の保存処理
   $scope.save = function(){
-    $scope.modal.hide();
-    $scope.modal.remove();
-    $scope.modal = null;
+    $scope.saveModal.hide();
+    $scope.saveModal.remove();
+    $scope.saveModal = null;
 
     Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
       $stateParams.boardId = boardId;
@@ -118,6 +131,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
         toaster.pop('success', '', 'Saved!');
       });
     });
+  };
+  $scope.closeEditModal = function() {
+    $scope.editModal.hide();
+    Parts.updatePart();
   };
 
   $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
