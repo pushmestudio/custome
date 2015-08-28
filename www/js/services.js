@@ -203,6 +203,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   var flag='false';
   var partX;
   var partY;
+  var text;
   var deployedParts=[];
 
   /***
@@ -232,6 +233,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
         var deployedPart = {
           'partId' : part.id,
           'image' : part.img,
+          'text' : text,
           'type' : part.type,
           'position' : {
             x : partX-50,
@@ -279,6 +281,34 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       deployedParts.push(part);
     }
   }
+  var selectedPart = {
+    index: -1,
+    partId: -1,
+    image:"",
+    text: "",
+    type:"",
+    position:{
+      x: -1,
+      y: -1
+    },
+  }
+  
+  var selectPart = function(index){
+    selectedPart.index = index;
+    selectedPart.partId = deployedParts[selectedPart.index].partId;
+    selectedPart.image = deployedParts[selectedPart.index].image;
+    selectedPart.text = deployedParts[selectedPart.index].text;
+    selectedPart.type = deployedParts[selectedPart.index].type;
+    selectedPart.position = deployedParts[selectedPart.index].position;
+  }
+  
+  var updatePart = function(){
+    deployedParts[selectedPart.index].partId = selectedPart.partId;
+    deployedParts[selectedPart.index].image = selectedPart.image;
+    deployedParts[selectedPart.index].text = selectedPart.text;
+    deployedParts[selectedPart.index].type = selectedPart.type;
+    deployedParts[selectedPart.index].position = selectedPart.position;
+  }
 
   return {
     all: function() {
@@ -297,6 +327,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       partX = $event.x;
       partY = $event.y;
     },
+    selectedPart: selectedPart,
+    selectPart: selectPart,
+    updatePart: updatePart,
     reDeploy: function(boardContent){
       reDeployUsingDBdata(boardContent);
     },
