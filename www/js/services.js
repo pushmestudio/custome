@@ -90,8 +90,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
    * @param {String} boardId boardの識別番号
+   * @param {Object} boardNames boardの名前とコメント
    */
-  var saveBoard = function(parts, wallpaper, boardId){
+  var saveBoard = function(parts, wallpaper, boardId, boardNames){
     var deferred = q.defer();
     DBConn.save(parts, wallpaper, boardId, boardNames).then(function(newBoard) {
       // 新規の場合
@@ -163,8 +164,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     openModal: function(parts, wallPaper, boardId){
       return openModal(parts, wallPaper, boardId);
     },
-    saveBoard: function(parts, wallPaper, boardId) {
-      return saveBoard(parts, wallPaper, boardId);
+    saveBoard: function(parts, wallPaper, boardId, boardNames) {
+      return saveBoard(parts, wallPaper, boardId, boardNames);
     },
     // メモリ上に保存されているボード(myBoards)のデータ(ひとまず壁紙のみ)を更新する
     updateMyBoardValuesOnMemory: function(boardId, wallpaper){
@@ -292,7 +293,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       y: -1
     },
   }
-  
+
   var selectPart = function(index){
     selectedPart.index = index;
     selectedPart.partId = deployedParts[selectedPart.index].partId;
@@ -301,7 +302,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     selectedPart.type = deployedParts[selectedPart.index].type;
     selectedPart.position = deployedParts[selectedPart.index].position;
   }
-  
+
   var updatePart = function(){
     deployedParts[selectedPart.index].partId = selectedPart.partId;
     deployedParts[selectedPart.index].image = selectedPart.image;
@@ -416,4 +417,3 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     }
   };
 })
-
