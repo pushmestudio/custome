@@ -61,13 +61,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.saveModal = modal;
   });
 
+  // モーダル画面の入力欄とバインド
   $scope.boardNames = Boards.boardNames;
   $scope.currentBoard;
 
-  // BoardsDetailCtrlとほぼ同様
+  // BoardsDetailCtrlとほぼ同様の実装方法
   $scope.openModal = function(board){
-    // modalのformをclear
+    // 選択中のボードを保持する
     $scope.currentBoard = board;
+
+    // 引数のボードの名前とコメントをModalに反映した状態で表示する
     $scope.boardNames.boardName = board.boardContent.boardName;
     $scope.boardNames.boardComment = board.boardContent.boardComment;
 
@@ -76,8 +79,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   // ボードの名前及びコメント保存時の処理
   $scope.save = function(){
+    // 保存後再度編集画面を開かれたときに表示できなくなってしまうので、remove, null代入はしない
     $scope.saveModal.hide();
 
+    // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
     $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
 
