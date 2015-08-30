@@ -4,6 +4,14 @@
     <h1 class="title">[PR]</h1>
   </ion-header-bar>
   <ion-content scroll="false">
-    <div id="adspace">{{showUpAd()}}</div>
+    <div id="adspace">
+      <div class="list card" ng-show="showAlterAd">
+        <a class="item item-thumbnail-left item-text-wrap" href="https://play.google.com/store/apps/details?id=jp.pushme">
+          <img ng-src="img/icon_pushme96.png">
+          <h2>PushMe! by PushMe Studioをダウンロード！</h2>
+          <p>候補は出たけど絞りきれない...そんなときあなたの背中をひと押しします！</p>
+        </a>
+      </div>
+    </div>
   </ion-content>
 </ion-modal-view>
