@@ -10,8 +10,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 }])
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, toaster, Boards, DBConn, Wallpapers) {
-  
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, toaster, Boards, DBConn, Wallpapers) {
+
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
   // 接続が終わったら取得、取得が終わったら変数に反映
@@ -51,6 +51,47 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       }
     });
   }
+
+  // modalの定義, BoardsDetailCtrlと同じものを使用
+  $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
+    id: '1',
+    scope: $scope,
+    animataion: 'slide-in-up'
+  }).then(function(modal){
+    $scope.saveModal = modal;
+  });
+
+  // モーダル画面の入力欄とバインド
+  $scope.boardNames = Boards.boardNames;
+  $scope.currentBoard;
+
+  // BoardsDetailCtrlとほぼ同様の実装方法
+  $scope.openModal = function(board){
+    // 選択中のボードを保持する
+    $scope.currentBoard = board;
+
+    // 引数のボードの名前とコメントをModalに反映した状態で表示する
+    $scope.boardNames.boardName = board.boardContent.boardName;
+    $scope.boardNames.boardComment = board.boardContent.boardComment;
+
+    $scope.saveModal.show();
+  };
+
+  // ボードの名前及びコメント保存時の処理
+  $scope.save = function(){
+    // 保存後再度編集画面を開かれたときに表示できなくなってしまうので、remove, null代入はしない
+    $scope.saveModal.hide();
+
+    // 変更結果をボード一覧上に反映
+    $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
+    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
+
+    Boards.saveBoard($scope.currentBoard.boardContent.parts, $scope.currentBoard.boardContent.wallpaper, $scope.currentBoard.boardId, $scope.boardNames).then(function(boardId){
+      $timeout(function(){
+        toaster.pop('success', '', 'Saved!');
+      });
+    });
+  };
 })
 
 
@@ -125,7 +166,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.saveModal.remove();
     $scope.saveModal = null;
 
-    Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
+    Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId, $scope.boardNames).then(function(boardId){
       $stateParams.boardId = boardId;
       $timeout(function(){
         toaster.pop('success', '', 'Saved!');
@@ -206,7 +247,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   });
 
   $scope.init = function(){
-    document.addEventListener("deviceready", onDeviceReady, false); 
+    document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady(){
       Wallpapers.loadWallpapers().then(function(){
       })
