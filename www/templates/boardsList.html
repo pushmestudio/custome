@@ -16,6 +16,9 @@
         <p>{{board.boardContent.boardComment}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
+        <ion-option-button class="button-balanced" ng-click="openModal(board)">
+          <i class="icon ion-edit"></i>
+        </ion-option-button>
         <ion-option-button class="button-assertive" ng-click="remove($index)">
           <i class="icon ion-trash-a"></i>
         </ion-option-button>
