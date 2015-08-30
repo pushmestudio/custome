@@ -273,7 +273,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
         adspace.firstChild.className = '';
       }
     } else {
-      $scope.showAlterAd = false;
+      // 広告が取得できない(ネットワークの問題やブラウザで見てる場合)ときはPushMe!の広告を表示する
+      $scope.showAlterAd = true;
     }
   };
 
