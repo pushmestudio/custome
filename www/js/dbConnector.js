@@ -79,6 +79,7 @@ angular.module('mainApp.dbConnector', [])
      * @param store サンプルデータ作成先
      */
     module.createSample = function(store) {
+      module.debug('createSample is called.');
       if(!store) return;
 
       var samples = [
@@ -114,11 +115,10 @@ angular.module('mainApp.dbConnector', [])
       ];
 
       // サンプルデータを一件ずつ追加する
-      samples.forEach(function(entry, i){
-        console.log(entry);
+      samples.forEach(function(entry, i) {
         store.add(entry);
-        module.debug(entry + 'is added');
       });
+      module.debug('finish to create samples.');
     }
 
     /**
@@ -161,7 +161,7 @@ angular.module('mainApp.dbConnector', [])
           module.debug('updateFlag:' + updateFlag);
           // updateFlagの内容に応じ、更新あるいは新規作成をする
           if(updateFlag) { // 更新処理
-            module.updateBoard(boardId, parts, wallpaper).then(function() {
+            module.updateBoard(boardId, parts, wallpaper, boardNames).then(function() {
               deferred.resolve();
             });
           } else { // 新規作成
@@ -185,7 +185,7 @@ angular.module('mainApp.dbConnector', [])
      * @param {String} boardContent 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
-    module.updateBoard = function(boardId, parts, wallpaper) {
+    module.updateBoard = function(boardId, parts, wallpaper, boardNames) {
       module.debug('updateBoard is called');
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
@@ -208,6 +208,12 @@ angular.module('mainApp.dbConnector', [])
         if(data) { // 該当結果がある場合
           data.boardContent.parts = parts;
           data.boardContent.wallpaper = wallpaper;
+
+          // モーダルを使用した更新を実施しない場合、boardNamesは未定義となる
+          if(typeof boardNames !== 'undefined' && boardNames.boardName != '' && boardNames.boardComment != ''){
+            data.boardContent.boardName = boardNames.boardName;
+            data.boardContent.boardComment = boardNames.boardComment;
+          }
 
           var request = store.put(data); // ストアへ更新をかける
           request.onsuccess = function(event) {
@@ -235,7 +241,7 @@ angular.module('mainApp.dbConnector', [])
      */
     module.addNewBoard = function(parts, wallpaper, boardNames) {
       module.debug('addNewBoard is called');
-      var time = '' +Date.now() +''; // JavascriptのDateでunixtimeを取得し、文字列化
+      var time = '' + Date.now() + ''; // JavascriptのDateでunixtimeを取得し、文字列化
       var newBoard = {boardId: time, boardContent: {boardName: boardNames.boardName, boardComment: boardNames.boardComment,
                       parts: parts, wallpaper: wallpaper}};
       module.debug('addNewBoard ID is ' +time);
