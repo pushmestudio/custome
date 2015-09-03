@@ -234,7 +234,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }
 })
 
-.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera) {
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.newBoardId = 0;
 
@@ -264,6 +264,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.showWallpaperList = function(){
     $scope.modal.show();
   };
+  $scope.addImage2WallpaperList = function(){
+    $scope.ksTest = "ksTest";
+    Camera.getPicture();
+  }
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー
