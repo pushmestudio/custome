@@ -226,11 +226,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.openMenu = function(partIndex) {
     var hideSheet = $ionicActionSheet.show({
       buttons: [
-        { text: 'Edit' } // index=0
+        { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
         //, { text: 'Copy' } // index=1 今は使わない
       ],
-      destructiveText: 'Delete',
-      cancelText: 'Cancel',
+      destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
+      cancelText: '<i class="icon ion-close-round"></i>Cancel',
       buttonClicked: function(menuIndex) {
         if (menuIndex == 0) {
           $scope.openEditModal(partIndex);
