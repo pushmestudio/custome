@@ -25,11 +25,10 @@
       </ion-item>
     </ion-list>
     <!-- 作成済ボード一覧画面で，プラスボタン押下するとテンプレート一覧の画面に遷移 -->
-    <div>
-      <a href="#/templates"><img ng-src="img/plusButton.png" ></a>
-    </div>
+    <a href="#/templates">
+      <button class="button button-clear button-full button-large">
+        <i class="icon ion-plus-circled positive"></i>
+      </button>
+    </a>
   </ion-content>
-  <div ng-controller="AdsCtrl">
-    <div class="ads-trigger" ng-show="flagAd"><img ng-src=img/icon_pushme.png ng-click="popAd()" /></div>
-  </div>
 </ion-view>
