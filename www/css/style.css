@@ -1,4 +1,3 @@
-/* Empty. Add your own CSS if you like */
 .undo {
   padding-left: 10px;
   color: gray;
@@ -6,10 +5,43 @@
   text-decoration: underline;
 }
 
-/* 広告表示するかを問うためのアイコン表示に使用*/
+/* 広告表示するかを問うためのアイコン表示に使用 */
 .ads-trigger {
   position: fixed;
   bottom: 50px;
   right: 10px;
   z-index: 999;
 }
+
+/* Hacked $ionicActionSheet
+ * 既存のアクションシートはiOS向けのみ用意されている
+ * Ionic TeamとしてはAndroid向けはMaterial Design対応しない方針であるため、現状は非常にシンプルになっているとのこと(シンプルすぎるだろ！)
+ * なので、対応方法として各ボタンにアイコンを加え(on JS)、真ん中寄せ等々に変更した
+ * refs: http://forum.ionicframework.com/t/actionsheets-android-ugly-styling-need-help/18462
+ */
+.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
+  text-align: center; /* hacked left->center */
+  border-color: transparent;
+  font-size: 16px;
+  color: inherit; }
+.platform-android .action-sheet-cancel {
+  display: block; } /* hacked nont->block */
+.platform-android .action-sheet-has-icons .button {
+  padding-left: 0px; } /* hacked 68px->0px */
+
+/* $ionicActionSheetをもっとAndorid向けに変更するなら下記もコメントアウトを外して上書きする
+.platform-android .action-sheet .action-sheet-title {
+  font-size: 14px;
+  padding: 16px;
+  color: #666; }
+.platform-android .action-sheet .button.active, .platform-android .action-sheet .button.activated {
+  background: #e8e8e8; }
+.platform-android .action-sheet-group {
+  margin: 0;
+  border-radius: 0;
+  background-color: #fafafa; }
+.platform-android .action-sheet-backdrop.active {
+  background-color: rgba(0, 0, 0, 0.2); }
+.platform-android .action-sheet {
+  margin: 0; }
+*/
