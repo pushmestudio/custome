@@ -240,7 +240,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 // 広告表示用のコントローラ
 .controller('AdsCtrl', function($scope, $ionicModal, $ionicPopup) {
   const FREQ_POP_AD = 0.5; // 広告の表示量、1で常に表示、0で常に非表示
-  $scope.flagAd = Math.random() <= FREQ_POP_AD;
+  $scope.hidden = true;
+
+  $scope.init = function(){
+    // 広告が読み込めていれば、nens_adsplace...がDOMに追加される。nendの広告表示jsの仕様に依存している点に注意。
+    if(document.getElementById('nend_adspace_' + nend_params.site + '_' + nend_params.spot)) {
+      $scope.flagAd = Math.random() <= FREQ_POP_AD;
+    } else {
+      $scope.flagAd = false;
+    }
+  }
 
   // modalの定義、このmodal内に広告を表示する
   $ionicModal.fromTemplateUrl('templates/ads-modal.html', {
@@ -278,13 +287,20 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     }
   };
 
+  // 広告表示終了
+  $scope.closeAd = function() {
+    $scope.modal.hide();
+    $scope.modal.remove();
+  }
+
   // 広告の表示、ポップアップで表示確認後、モーダルにて表示する
   $scope.popAd = function() {
     $ionicPopup.confirm({
       title: '広告表示確認', // String. The title of the popup.
       template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
-      if(res) { // Okなら表示する
+      if(res) { // Okなら広告を表示する
+        $scope.flagAd = false; // 一度広告表示ボタンを押したら、以降は表示しないようにする
         $scope.modal.show();
         $scope.showUpAd();
       }

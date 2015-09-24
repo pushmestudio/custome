@@ -1,4 +1,8 @@
-/* Empty. Add your own CSS if you like */
+.forced-small {
+  /* footer titleの上書き対応のためimportant付加 */
+  font-size:x-small !important;
+}
+
 .item-input{
   position: relative;
   padding: 5px;
