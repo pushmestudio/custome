@@ -227,7 +227,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     var hideSheet = $ionicActionSheet.show({
       buttons: [
         { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
-        //, { text: 'Copy' } // index=1 今は使わない
+      //  , { text: '<i class="icon ion-clipboard energized"></i>Copy' } // index=1 今は使わない
       ],
       destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
       cancelText: '<i class="icon ion-close-round"></i>Cancel',
@@ -241,10 +241,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
         return true;
       }
     });
-
-    $timeout(function() {
-      hideSheet();
-    }, 3000); // 3秒経ったら閉じる
   }
 })
 
