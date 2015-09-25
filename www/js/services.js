@@ -499,10 +499,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       }, {
         quality: 50,
         //FILEのURIが返ってくるが，androidネイティブのディレクトリをアプリ側から参照できていない？
-        //destinationType: destinationType.FILE_URI,
+        destinationType: destinationType.FILE_URI,
 
         //base64フォーマットでデータ取得(imageURIがbase64で返ってくる)
-        destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
+        //destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
 
         sourceType: pictureSource.PHOTOLIBRARY,//フォトライブラリの画像を使用する場合
         //sourceType: pictureSource.CAMERA //カメラで撮影した画像を使用する場合
