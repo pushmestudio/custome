@@ -4,15 +4,10 @@
 <!-- //test //PartsCtrlをBoardsDetailCtrlに移行 -->
 <ion-content class="has-header" ng-controller="PalletCtrl">
   <ion-list>
-    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap">
+    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
       <img ng-src="{{part.img}}">
       <h2>{{part.title}}</h2>
-      <p>{{part.type}}</p>
-      <button menu-close ng-click="select(part.id)">
-        select
-      </button>
-      <p>{{part.counter}}個</p>
-      <p>配置しています</p>
+      <p>Type: {{part.type}}</p>
     </ion-item>
     <ion-item class="item-avatar item-icon-right" type="item-text-wrap" ng-controller="WallpaperCtrl">
       <img ng-src="{{wallpaperParams.currentWallpaperPath}}">
@@ -21,8 +16,7 @@
         Change Wallpaper
       </button>
     </ion-item>
-  </ion-list>
-  <div>
+  </ion-list>  <div>
     <a href="#/palletEdit" menu-close><img ng-src="img/plusButton.png" ></a>
   </div>
 </ion-content>
