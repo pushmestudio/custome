@@ -86,7 +86,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
     $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
 
-    Boards.saveBoard($scope.currentBoard.boardContent.parts, $scope.currentBoard.boardContent.wallpaper, $scope.currentBoard.boardId, $scope.boardNames).then(function(boardId){
+    Boards.updateBoardNames($scope.currentBoard.boardId, $scope.boardNames).then(function(){
       $timeout(function(){
         toaster.pop('success', '', 'Saved!');
       });
@@ -109,10 +109,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
     });
-    /* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
-    Boards.setUsedWallpaper(boardData.boardContent, $stateParams.boardId);//現在表示するためのwallPaperをセット
-    $scope.usedPaper_nowBoard = Boards.getUsedWallpaper();//board.htmlでwallPaperを描画させるための変数usedPaper_nowBoardにwallPaperのパスを代入
-    */
   });
 
   // binding
@@ -139,6 +135,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }).then(function(modal) {
     $scope.editModal = modal;
   });
+  
   // 保存処理の前段階を実施する関数
   $scope.openModal = function(){
     // modalのformをclear

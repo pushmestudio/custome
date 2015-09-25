@@ -235,6 +235,49 @@ angular.module('mainApp.dbConnector', [])
     }
 
     /**
+     * ボード一覧からの呼び出しにより、オブジェクトストアに登録されているボードの名前とコメントを更新する
+     * @param {String} boardId アップデート対象のボードのID
+     * @param {String} boardNames 更新内容
+     * @return {Promise} 同期処理を行うためのオブジェクト
+     */
+    module.updateBoardNames = function(boardId, boardNames) {
+      module.debug('updateBoardNames is called');
+
+      var trans = module.db.transaction(module.storeName, 'readwrite');
+      var store = trans.objectStore(module.storeName);
+      var deferred = module.q.defer();
+
+      // 名前が一致するデータを取得する
+      store.get(boardId).onsuccess = function(event) {
+        var data = event.target.result;
+        if(data) { // 該当結果がある場合
+          
+          // モーダルを使用した更新を実施しない場合、boardNamesは未定義となる
+          if(typeof boardNames !== 'undefined' && boardNames.boardName != '' && boardNames.boardComment != ''){
+            data.boardContent.boardName = boardNames.boardName;
+            data.boardContent.boardComment = boardNames.boardComment;
+          }
+
+          var request = store.put(data); // ストアへ更新をかける
+          request.onsuccess = function(event) {
+            deferred.resolve();
+            module.debug('更新完了!');
+          }
+          request.onerror = function(event) {
+            deferred.reject('更新途中で失敗!' + event.message);
+          }
+        } else { // 該当結果がない場合
+          module.debug('update対象が見つかりません');
+        }
+      };
+      store.get(boardId).onerror = function(event) {
+        deferred.reject('request is rejected');
+        module.debug('update error:' + event.message);
+      }
+      return deferred.promise;
+    }
+
+    /**
      * 新しくボードを追加する。ボードのidはunixtimeを用いる。
      * @param {String} boardContent JSON形式のボードの中身
      * @return {Promise} 同期処理を行うためのオブジェクト
@@ -384,6 +427,9 @@ angular.module('mainApp.dbConnector', [])
       }
       , save: function(parts, wallpaper, boardId, boardNames) {
         return module.saveBoardContent(parts, wallpaper, boardId, boardNames);
+      }
+      , updateBoardNames: function(boardId, boardNames){
+        return module.updateBoardNames(boardId, boardNames);
       }
       , load: function(boardId) {
         return module.loadBoardContent(boardId);
