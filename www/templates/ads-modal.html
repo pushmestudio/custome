@@ -1,0 +1,23 @@
+<link href="css/ads-modal.css" rel="stylesheet">
+<ion-modal-view>
+  <ion-header-bar align-title="center" class="bar-positive">
+    <h1 class="title">[Advertise]</h1>
+    <button class="button" ng-click="closeAd()">
+      <i class="icon ion-close-round"></i>
+    </button>
+  </ion-header-bar>
+  <ion-content scroll="false">
+    <div id="adspace" class="padding-vertical">
+      <div class="list card" ng-show="showAlterAd">
+        <a class="item item-thumbnail-left item-text-wrap" href="#">
+          <img ng-src="img/icon_pushme96.png">
+          <h2>PushMe! by PushMe Studioをダウンロード！</h2>
+          <p>候補は出たけど絞りきれない...そんなときあなたの背中をひと押しします！まずはGoogle Playで PushMe! を検索♪</p>
+        </a>
+      </div>
+    </div>
+    <div class="bar bar-footer bar-positive">
+      <p class="forced-small title">Thank you for your support! by PushMe Studio<i class="icon ion-ios-flask"></i></p>
+    </div>
+  </ion-content>
+</ion-modal-view>
