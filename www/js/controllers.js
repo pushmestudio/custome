@@ -135,7 +135,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }).then(function(modal) {
     $scope.editModal = modal;
   });
-  
+
   // 保存処理の前段階を実施する関数
   $scope.openModal = function(){
     // modalのformをclear
@@ -251,6 +251,82 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.select = function(part){
     Parts.select(part);//パレットからボードに配置するパーツを選択
   }
+  $scope.nend = function() {
+    nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
+  };
+})
+
+// 広告表示用のコントローラ
+.controller('AdsCtrl', function($scope, $ionicModal, $ionicPopup) {
+  const FREQ_POP_AD = 0.5; // 広告の表示量、1で常に表示、0で常に非表示
+  $scope.hidden = true;
+
+  $scope.init = function(){
+    // 広告が読み込めていれば、nens_adsplace...がDOMに追加される。nendの広告表示jsの仕様に依存している点に注意。
+    if(document.getElementById('nend_adspace_' + nend_params.site + '_' + nend_params.spot)) {
+      $scope.flagAd = Math.random() <= FREQ_POP_AD;
+    } else {
+      $scope.flagAd = false;
+    }
+  }
+
+  // modalの定義、このmodal内に広告を表示する
+  $ionicModal.fromTemplateUrl('templates/ads-modal.html', {
+    scope: $scope,
+    animataion: 'slide-in-up'
+  }).then(function(modal){
+    $scope.modal = modal;
+  });
+
+  $scope.showAlterAd = false;
+  $scope.showUpAd = function() {
+    /*
+     * 広告表示するモーダル内の要素
+     * 'adspace'はモーダル内にあるため、モーダルを読み込むまでは存在しない
+     * 不必要な処理を減らすため、読み込み後(adspaceがnullじゃなくなったとき)のみ広告取得の処理をする
+     */
+    var adspace = document.getElementById('adspace');
+    if(adspace) {
+      // 広告が読み込めていれば、nens_adsplace...がDOMに追加される。nendの広告表示jsの仕様に依存している点に注意。
+      if(document.getElementById('nend_adspace_' + nend_params.site + '_' + nend_params.spot)) {
+        var nend = document.getElementById('nend'); // index.html内で事前に読み込んだ広告を取得
+        adspace.replaceChild(nend, adspace.firstChild); // 広告モーダル内に設置
+        // index.html内で広告が表示されるのを防ぐために付してあるhiddenクラスを排除する
+        $scope.showAlterAd = false;
+        adspace.firstChild.className = '';
+      } else {
+        // 広告が取得できない(ネットワークの問題やブラウザで見てる場合)ときはPushMe!の広告を表示する
+        $scope.showAlterAd = true;
+        // index.html内で広告が表示されるのを防ぐために付してあるhiddenクラスを排除する
+        adspace.firstChild.className = '';
+      }
+    } else {
+      // 広告が取得できない(ネットワークの問題やブラウザで見てる場合)ときはPushMe!の広告を表示する
+      $scope.showAlterAd = true;
+    }
+  };
+
+  // 広告表示終了
+  $scope.closeAd = function() {
+    $scope.modal.hide();
+    $scope.modal.remove();
+  }
+
+  // 広告の表示、ポップアップで表示確認後、モーダルにて表示する
+  $scope.popAd = function() {
+    $ionicPopup.confirm({
+      title: '広告表示確認', // String. The title of the popup.
+      template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
+    }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
+      if(res) { // Okなら広告を表示する
+        $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
+        $scope.modal.show();
+        $scope.showUpAd();
+      } else {
+        $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
+      }
+    });
+  };
 })
 
 .controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers) {
