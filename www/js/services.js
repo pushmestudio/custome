@@ -109,6 +109,14 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     return deferred.promise;
   };
 
+  var updateBoardNames = function(boardId, boardNames){
+    var deferred = q.defer();
+    DBConn.updateBoardNames(boardId, boardNames).then(function(newBoard) {
+      deferred.resolve();
+    });
+    return deferred.promise;
+  }
+
   var updateMyBoardValuesOnMemory = function(boardId, wallpaper){
     for (var i = 0; i < myBoards.length; i++) {
       if (myBoards[i].boardId === boardId) {
@@ -118,23 +126,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     }
     return;
   }
-
-  /**
-   * 現在表示しているボードのwallpaperをセットするメソッド
-   *
-   */
-  /* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
-  var setUsedWallpaper = function(boardContent, boardId){
-    for (var i = 0; i < templates.length; i++){
-      if (parseInt(boardId) === templates[i].id){
-        usedWallpaper = templates[i].img;
-        return null;
-      }
-    }
-    usedWallpaper = boardContent.wallpaper;
-    return null;
-  };
-  */
 
   return {
     boardNames: boardNames,
@@ -175,19 +166,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     saveBoard: function(parts, wallPaper, boardId, boardNames) {
       return saveBoard(parts, wallPaper, boardId, boardNames);
     },
+    updateBoardNames: function(boardId, boardNames){
+      return updateBoardNames(boardId, boardNames);
+    },
     // メモリ上に保存されているボード(myBoards)のデータ(ひとまず壁紙のみ)を更新する
     updateMyBoardValuesOnMemory: function(boardId, wallpaper){
       updateMyBoardValuesOnMemory(boardId, wallpaper);
-    }/* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
-    getBoardWallpaper: function(boardId){
-      return getUsedWallpaper(boardId);
-    },
-    setUsedWallpaper: function(boardContent, boardId){
-      setUsedWallpaper(boardContent, boardId);
-    },
-    getUsedWallpaper: function(){
-      return usedWallpaper;
-    }*/
+    }
   };
 })
 
