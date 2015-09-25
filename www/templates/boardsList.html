@@ -10,7 +10,7 @@
       <div class="item item-divider">
         My Boards
       </div>
-      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="board in myBoards track by $index" type="item-text-wrap" ng-href="#/custome/init/{{board.boardId}}" ng-click="selectWallpaper(board.boardContent.wallpaper)">
+      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="board in myBoards track by $index" type="item-text-wrap" ng-href="#/custome/init/{{board.boardId}}" ng-click="selectWallpaper(board.boardContent.wallpaper)"><!-- ng-click="selectWallpaper()"はなんのためにあるか？-->
         <img ng-src="{{board.boardContent.wallpaper}}">
         <h2>{{board.boardContent.boardName}}</h2>
         <p>{{board.boardContent.boardComment}}</p>

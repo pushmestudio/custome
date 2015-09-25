@@ -45,6 +45,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   // var usedWallpaper='';
 
+  var extWallpaper='';
+
   // ボード画面を開いたとき、新規か更新かを判断する
   var updateFlag = true;
 
@@ -402,6 +404,39 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
+  var loadLocalImage = function(){
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, successGetFS, failResuestFS);
+    function successGetFS(fs){
+      var directoryEntry = fs.root; //DirectoryEntryオブジェクトを取得
+      var directoryReader = directoryEntry.createReader();
+      directoryReader.readEntries(putFileName, failPut);
+
+      //PERSISTENTディレクトリにあるデータをテキスト出力
+      function putFileName(entries){
+        console.log("success put FileName");
+        console.log(entries);
+        for (index = 0; index < entries.length; index++){
+          var listItem = document.createElement('li');
+          listItem.textContent = entries[index].name;
+          console.log(entries[index].name);
+          console.log(entries[index].fullPath);
+          document.getElementById('tempfs_fileList').appendChild(listItem);
+          //$scope.smallImage = document.getElementById('smallImage');
+          //$scope.smallImage.src = entries[0].fullPath;
+
+          //壁紙に設定
+          setCurrentWallpaper(entries[0].fullPath); //実機直パスなので，/名前.pngになってる
+        }
+      }
+      function failPut(error){
+        alert('エラーが発生しました。エラーコード: ' + error.code);
+      }
+    }
+    function failResuestFS(error){
+      alert('requestFileSystemでエラーが発生しました。エラーコード: ' + error.code);
+    }
+  }
+
   return {
     loadWallpapers: function(){
       return loadWallpapers();
@@ -414,16 +449,19 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     getCurrentWallpaper: function(){
       return wallpaperParams.currentWallpaperPath;
+    },
+    loadLoalImage: function(){
+      return loadLocalImage();
     }
   };
 })
-
+/*元
 .factory('Camera', ['$q', function($q) {
 
   return {
     getPicture: function(options) {
       var q = $q.defer();
-
+      //Camera.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
       navigator.camera.getPicture(function(result) {
         // Do any magic you need
         q.resolve(result);
@@ -432,6 +470,53 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       }, options);
 
       return q.promise;
+    }
+  }
+}])
+*/
+.factory('Camera', ['$q', function($q) {
+
+  return {
+    getPicture: function(options) {
+      var pictureSource=navigator.camera.PictureSourceType;
+      var destinationType=navigator.camera.DestinationType;
+      var encodingType=navigator.camera.EncodingType;
+      var q = $q.defer();
+      //Camera.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+      /***
+       * navigator.camera.getPicture(camera_succcess, camerra_error, options)
+       * camera_successはデータ取得成功時に呼び出されるコールバック
+       * 以下では，function(result){}の中で，q.resolveで非同期でresultをControllerにリターンしている。
+       * options : この中で，データ・タイプ，取得元(カメラ撮影なのか，アルバムなどから取得なのか指定)
+       */
+
+      navigator.camera.getPicture(function(result) {
+        // Do any magic you need
+        q.resolve(result);
+        console.log("getPicture() is succeeded");
+      }, function(err) {
+        q.reject(err);
+      }, {
+        quality: 50,
+        //FILEのURIが返ってくるが，androidネイティブのディレクトリをアプリ側から参照できていない？
+        //destinationType: destinationType.FILE_URI,
+
+        //base64フォーマットでデータ取得(imageURIがbase64で返ってくる)
+        destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
+
+        sourceType: pictureSource.PHOTOLIBRARY,//フォトライブラリの画像を使用する場合
+        //sourceType: pictureSource.CAMERA //カメラで撮影した画像を使用する場合
+
+        encodingType: encodingType.PNG
+      });
+
+      return q.promise;
+    },
+
+    add2WallpaperList: function(selectedWallpaper){
+      extWallpaper = selectedWallpaper;
+      console.log("This is extWallpaper Path. --> : " + extWallpaper);
+      return;
     }
   }
 }])

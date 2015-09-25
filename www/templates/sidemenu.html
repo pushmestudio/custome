@@ -1,18 +1,12 @@
 <ion-header-bar aligh-title="center" class="bar-balanced">
   <h1 class="title">Palette</h1>
 </ion-header-bar>
-<!-- //test //PartsCtrlをBoardsDetailCtrlに移行 -->
 <ion-content class="has-header" ng-controller="PalletCtrl">
   <ion-list>
-    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap">
+    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
       <img ng-src="{{part.img}}">
       <h2>{{part.title}}</h2>
-      <p>{{part.type}}</p>
-      <button menu-close ng-click="select(part.id)">
-        select
-      </button>
-      <p>{{part.counter}}個</p>
-      <p>配置しています</p>
+      <p>Type: {{part.type}}</p>
     </ion-item>
     <ion-item class="item-avatar item-icon-right" type="item-text-wrap" ng-controller="WallpaperCtrl">
       <img ng-src="{{wallpaperParams.currentWallpaperPath}}">
@@ -25,7 +19,27 @@
           Add Own Your Pic
         </button>
       </section>
-      <p>my test is --> {{ksTest}}</p>
+      <!-- <p>>my test is ==>  {{ksTest}}</p> -->
+      <p><button ng-click="getLocalImage()">get</button></p>
+      <p><button ng-click="saveLocalImage2PersistentDir()">save</button></p>
+      <div>
+        <h1>File API Test</h1>
+        <ul id="tempfs_fileList"></ul>
+      </div>
+      <p><button ng-click="loadLocalImageFromPersistentDir()">load</button></p>
+      <p><img ng-src="{{localImage}}"></p>
+
+      <p>
+        <button ng-click="getPhoto()" class="button button-block button-primary">Get wallpaper in your device</button>
+        <!--<img ng-src="{{lastPhoto}}" style="max-width: 50%"> -->
+      </p>
+      <p>
+        <img id="smallImage" src="" />
+        <!-- <img id="testimg" src="data:/image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABALDA4MChAODQ4SERA…FFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH/9k=" /> -->
+      </p>
+      <p>
+        <img id="testImage" src="" />
+      </p>
     </ion-item>
   </ion-list>
   <div>
