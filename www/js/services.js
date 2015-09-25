@@ -152,6 +152,14 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       }
       return null;
     },
+    getBoardName: function(boardId){
+      for (var i = 0; i < myBoards.length; i++) {
+        if (myBoards[i].boardId === boardId) {
+          return myBoards[i].boardContent.boardName;
+        }
+      }
+      return 'New Board';
+    },
     openModal: function(parts, wallPaper, boardId){
       return openModal(parts, wallPaper, boardId);
     },
