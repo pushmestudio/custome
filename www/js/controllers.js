@@ -135,7 +135,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }).then(function(modal) {
     $scope.editModal = modal;
   });
-  
+
   // 保存処理の前段階を実施する関数
   $scope.openModal = function(){
     // modalのformをclear
@@ -319,9 +319,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // Okなら広告を表示する
-        $scope.flagAd = false; // 一度広告表示ボタンを押したら、以降は表示しないようにする
+        $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
         $scope.modal.show();
         $scope.showUpAd();
+      } else {
+        $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
       }
     });
   };
