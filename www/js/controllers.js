@@ -117,6 +117,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   // binding
   $scope.template = Boards.getTemplate($stateParams.boardId);
+  $scope.boardName = Boards.getBoardName($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
   // $scope.wallpaper = Wallpapers.getCurrentWallpaper();
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
@@ -168,6 +169,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
     Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId, $scope.boardNames).then(function(boardId){
       $stateParams.boardId = boardId;
+      $scope.boardName = Boards.getBoardName($stateParams.boardId);
       $timeout(function(){
         toaster.pop('success', '', 'Saved!');
       });
