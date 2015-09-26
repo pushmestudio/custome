@@ -86,7 +86,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
     $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
 
-    Boards.saveBoard($scope.currentBoard.boardContent.parts, $scope.currentBoard.boardContent.wallpaper, $scope.currentBoard.boardId, $scope.boardNames).then(function(boardId){
+    Boards.updateBoardNames($scope.currentBoard.boardId, $scope.boardNames).then(function(){
       $timeout(function(){
         toaster.pop('success', '', 'Saved!');
       });
@@ -97,7 +97,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $timeout, toaster, Boards, DBConn, Parts, Wallpapers) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $timeout, toaster, Boards, DBConn, Parts, Wallpapers) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
@@ -109,14 +109,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
     });
-    /* 2015/8/17(tomita) 壁紙処理はWallpaperサービスに移行したので不要
-    Boards.setUsedWallpaper(boardData.boardContent, $stateParams.boardId);//現在表示するためのwallPaperをセット
-    $scope.usedPaper_nowBoard = Boards.getUsedWallpaper();//board.htmlでwallPaperを描画させるための変数usedPaper_nowBoardにwallPaperのパスを代入
-    */
   });
 
   // binding
   $scope.template = Boards.getTemplate($stateParams.boardId);
+  $scope.boardName = Boards.getBoardName($stateParams.boardId);
   $scope.boardNames = Boards.boardNames;
   // $scope.wallpaper = Wallpapers.getCurrentWallpaper();
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
@@ -138,6 +135,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }).then(function(modal) {
     $scope.editModal = modal;
   });
+  
   // 保存処理の前段階を実施する関数
   $scope.openModal = function(){
     // modalのformをclear
@@ -168,6 +166,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
     Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId, $scope.boardNames).then(function(boardId){
       $stateParams.boardId = boardId;
+      $scope.boardName = Boards.getBoardName($stateParams.boardId);
       $timeout(function(){
         toaster.pop('success', '', 'Saved!');
       });
@@ -221,6 +220,26 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     toaster.clear('*');
     var undoPart = $scope.tmpReservedParts.pop();
     $scope.deployedParts_angular.push(undoPart);
+  }
+
+  $scope.openMenu = function(partIndex) {
+    var hideSheet = $ionicActionSheet.show({
+      buttons: [
+        { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
+      //  , { text: '<i class="icon ion-clipboard energized"></i>Copy' } // index=1 今は使わない
+      ],
+      destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
+      cancelText: '<i class="icon ion-close-round"></i>Cancel',
+      buttonClicked: function(menuIndex) {
+        if (menuIndex == 0) {
+          $scope.openEditModal(partIndex);
+        }
+        return true;
+      }, destructiveButtonClicked: function() {
+        $scope.remove(partIndex);
+        return true;
+      }
+    });
   }
 })
 
