@@ -32,6 +32,12 @@
     <!--<script src="http://localhost:8080/target/target-script-min.js"></script>-->
   </head>
   <body ng-app="mainApp">
+    <script>
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady(){
+      console.log(cordova.file);
+    }
+    </script>
     <!--
       The nav bar that will be updated as we navigate between views.
       サイドバーは全画面に共通の部品として用意するが、サイドバーを呼び出すボタンをboard.htmlにしか配置しないことで対応

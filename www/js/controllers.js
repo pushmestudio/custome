@@ -135,7 +135,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   }).then(function(modal) {
     $scope.editModal = modal;
   });
-  
+
   // 保存処理の前段階を実施する関数
   $scope.openModal = function(){
     // modalのformをclear
@@ -283,20 +283,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 
   $scope.showWallpaperList = function(){
-    Camera.getPicture().then(function(imageURI) {
-      /*if (imageURI.substring(0,21)=="content://com.android") {
-        console.log("++++++++++++++++++++++++++++++++++");
-        photo_split=imageURI.split("%3A");
-        imageURI="content://media/external/images/media/"+photo_split[1]+".png";
-        console.log("---------------------------------------");
-      }*/
-      //$compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|ftp|mailto|content):/);
-      //$scope.wallpaperParams.wallpaperPaths.push("data:/image/jpeg;base64" + imageURI);
-      //$scope.wallpaperParams.wallpaperPaths.push(imageURI);
-      $scope.wallpaperParams.wallpaperPaths.push(imageURI);
-      console.log($scope.wallpaperParams.wallpaperPaths);
-      console.log($scope.wallpaperParams.currentWallpaperPath);
-    });
+    // Camera.getPicture().then(function(imageURI) {
+    //   $scope.wallpaperParams.wallpaperPaths.push(imageURI);
+    //   console.log($scope.wallpaperParams.wallpaperPaths);
+    //   console.log($scope.wallpaperParams.currentWallpaperPath);
+    // });
     $scope.modal.show();
   };
 
@@ -305,18 +296,33 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     //Camera.getPicture();
   }
 
+  //ローカルから画像を選択し，壁紙に適用 (base64バージョン)
+  $scope.selectLocalImageAsBase64 = function(){
+    Camera.getPicture(navigator.camera.DestinationType.DATA_URL).then(function(gotBase64) {
+      //console.log(gotBase64);
+      var addMeta2base64 = "data:/image/jpeg;base64,"+gotBase64;
+      Wallpapers.setCurrentWallpaper(addMeta2base64);
+    });
+  }
+
+  //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
+  $scope.selectLocalImageAsFILEURI = function(){
+    Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(fileuri) {
+      //console.log(fileuri);
+      Wallpapers.setCurrentWallpaper(fileuri);
+    });
+  }
+
   $scope.getLocalImage = function(){
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady(){
-      console.log(cordova.file);
-    }
+    // document.addEventListener("deviceready", onDeviceReady, false);
+    // function onDeviceReady(){
+    //   console.log(cordova.file);
+    // }
 
     Camera.getPicture().then(function(imageURI) {
       //sourceTypeの指定で，取得するタイプを決める ==> base64 or FILE URI
       var base64 = imageURI; //base64でimageURIを取得する場合
-      var uri = imageURI; //FILE_URIでimageURIを取得する場合
-
-
+      var uri = imageURI; //FILE_URIでimageURIを取得す
       $scope.saveLocalImage2PersistentDir(base64);
     });
   }
@@ -343,20 +349,20 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       var newFileName = n + ".png";
 
       //PeRSISTENTディレクトリに，上記で作成したファイル名を使用して，base64を保存
-      persistentDir.getFile(newFileName, {create: true}, gotFileEntry_W, fail5);
+      persistentDir.getFile(newFileName, {create: true}, gotFileEntry_W, failSave);
       function gotFileEntry_W(fEntry){
-        fEntry.createWriter(gotFileWriter, fail6);
+        fEntry.createWriter(gotFileWriter, failCreateWriter);
+      }
+      function failCreateWriter(error){
+        alert('CreateWriter作成時にエラーが発生しました。 : ' + error.code);
       }
       function gotFileWriter(writer){
         writer.onwrite = function(evt){
         }
         writer.write(changed_base64);
       }
-      function fail5(error){
-        alert('エラー fail5: ' + error.code);
-      }
-      function fail6(error){
-        alert('エラー fail6: ' + error.code);
+      function failSave(error){
+        alert('PERSISTENT領域に対象画像を保存する際にエラーが発生しました。 : ' + error.code);
       }
 //ここまで
 
