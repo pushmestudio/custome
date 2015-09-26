@@ -2,24 +2,37 @@
   <h1 class="title">Palette</h1>
 </ion-header-bar>
 <ion-content class="has-header" ng-controller="PalletCtrl">
-  <ion-list>
-    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
+  <ion-list ng-controller="WallpaperCtrl">
+    <ion-item class="item-thumbnail-left item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
       <img ng-src="{{part.img}}">
-      <h2>{{part.title}}</h2>
-      <p>Type: {{part.type}}</p>
     </ion-item>
-    <ion-item class="item-avatar item-icon-right" type="item-text-wrap" ng-controller="WallpaperCtrl">
+
+    <section>
+    <ion-item class="item-thumbnail-left item-icon-right" type="item-text-wrap">
       <img ng-src="{{wallpaperParams.currentWallpaperPath}}">
-      <h2> Current Wallpaper </h2>
-      <button ng-click="showWallpaperList()">
-        Change Wallpaper
-      </button>
-      <section>
-        <button ng-click="addImage2WallpaperList()">
-          Add Own Your Pic
-        </button>
-      </section>
-      <!-- <p>>my test is ==>  {{ksTest}}</p> -->
+      <h2> Current</h2>
+    </ion-item>
+    <ion-item menu-close ng-click="showWallpaperList()">
+          Template wallpapers
+    </ion-item>
+
+      <!-- FILE_URI，すなわちローカル画像のパスを取得し背景に反映させるパターン -->
+    <ion-item menu-close ng-click="selectLocalImageAsFILEURI()" type="item-text-wrap">
+        Your Own Pic
+    </ion-item>
+
+    <!-- base64だとかなり処理が重たくなってしまうのでNG -->
+  <!--
+    <ion-item class="item-thumbnail-left" menu-close ng-click="selectLocalImageAsBase64()" type="item-text-wrap">
+      base64(DATA_URL)
+    </ion-item>
+  -->
+
+
+    <!-- 下記はテスト用 -->
+    <ion-item></ion-item>
+    <ion-item>
+      以下テスト
       <p><button ng-click="getLocalImage()">get</button></p>
       <p><button ng-click="saveLocalImage2PersistentDir()">save</button></p>
       <div>
@@ -42,7 +55,4 @@
       </p>
     </ion-item>
   </ion-list>
-  <div>
-    <a href="#/palletEdit" menu-close><img ng-src="img/plusButton.png" ></a>
-  </div>
 </ion-content>

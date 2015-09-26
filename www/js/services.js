@@ -470,7 +470,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 .factory('Camera', ['$q', function($q) {
 
   return {
-    getPicture: function(options) {
+    getPicture: function(destType) {
+      console.log(destType);
+      //destType="FILE_URI";
       var pictureSource=navigator.camera.PictureSourceType;
       var destinationType=navigator.camera.DestinationType;
       var encodingType=navigator.camera.EncodingType;
@@ -492,13 +494,17 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       }, {
         quality: 50,
         //FILEのURIが返ってくるが，androidネイティブのディレクトリをアプリ側から参照できていない？
-        destinationType: destinationType.FILE_URI,
+        //destinationType: destinationType.FILE_URI,
 
         //base64フォーマットでデータ取得(imageURIがbase64で返ってくる)
         //destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
 
+        destinationType: destType,
+
         sourceType: pictureSource.PHOTOLIBRARY,//フォトライブラリの画像を使用する場合
         //sourceType: pictureSource.CAMERA //カメラで撮影した画像を使用する場合
+
+
 
         encodingType: encodingType.PNG
       });
