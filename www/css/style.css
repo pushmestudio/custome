@@ -45,3 +45,17 @@
 .platform-android .action-sheet {
   margin: 0; }
 */
+
+.center {
+  text-align: center;
+}
+
+.palette-items {
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.palette-item {
+  width: 100px;
+  height: 100px;
+}
