@@ -251,14 +251,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.select = function(part){
     Parts.select(part);//パレットからボードに配置するパーツを選択
   }
-  $scope.nend = function() {
-    nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
-  };
 })
 
 // 広告表示用のコントローラ
 .controller('AdsCtrl', function($scope, $ionicModal, $ionicPopup) {
-  const FREQ_POP_AD = 0.5; // 広告の表示量、1で常に表示、0で常に非表示
+  const FREQ_POP_AD = 0.3; // 広告の表示量、1で常に表示、0で常に非表示
   $scope.hidden = true;
 
   $scope.init = function(){
