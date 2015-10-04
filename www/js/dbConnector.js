@@ -42,7 +42,7 @@ angular.module('mainApp.dbConnector', [])
       request.onupgradeneeded = module.init;
       request.onsuccess = function(event) {
         module.db = event.target.result;
-        console.log('connect is finished');
+        module.debug('connect is finished');
         deferred.resolve();
       };
       request.onerror = function(event) {
