@@ -85,27 +85,27 @@ angular.module('mainApp.dbConnector', [])
       var samples = [
         {'boardId': '1430626357000',
          'boardContent': {
-          'boardName': 'KojimaBoard-X',
-          'boardComment': '冨田くんかっこいいですう！',
+          'boardName': 'SampleBoard',
+          'boardComment': 'this is a sample',
           'parts': [
             {
               'partId': '0',
               'image': 'img/part_fusen_yellow.png',
               'type': 'fusen',
-              'text': 'T社 -.-',
+              'text': 'Tap "Wand" icon to put parts.',
               'position': {
-                'x': 100,
-                'y': 200
+                'x': 50,
+                'y': 50
               }
             },
             {
               'partId': '1',
               'image': 'img/part_fusen_blue.png',
               'type': 'fusen',
-              'text': 'HZがいいなぁ。交渉しよう',
+              'text': 'If you like this app, please support us by tapping the Ads.',
               'position': {
                 'x': 200,
-                'y': 468
+                'y': 350
               }
             }
           ],
