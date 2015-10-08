@@ -1,0 +1,61 @@
+.forced-small {
+  /* footer titleの上書き対応のためimportant付加 */
+  font-size:x-small !important;
+}
+
+.item-input{
+  position: relative;
+  padding: 5px;
+  width: 96%;
+  left: 2%;
+  right: 2%;
+}
+
+input.ng-invalid.ng-touched {
+  position: relative;
+  /* background-color: #FA787E; */
+}
+
+input.ng-valid.ng-touched {
+  position: relative;
+  /* background-color: #78FA89; */
+}
+
+
+/* ionic.cssのmodalクラスは、680px以下の場合modalを全画面として表示する仕様のため、ここで上書きする
+ * nendの広告サイズは300*250なので、当該サイズを最小とする
+ */
+@media (max-width: 679px) {
+  .modal {
+    top: 10%;
+    right: 2%;
+    bottom: 10%;
+    left: 2%;
+    overflow: visible;
+    min-height: 250px;
+    min-width: 300px;
+    width: 96%; }
+  .modal.ng-leave-active {
+    bottom: 0; }
+  .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) {
+    height: 44px; }
+  .platform-ios.platform-cordova .modal-wrapper .modal .bar-header:not(.bar-subheader) > * {
+    margin-top: 0; }
+  .platform-ios.platform-cordova .modal-wrapper .modal .tabs-top > .tabs, .platform-ios.platform-cordova .modal-wrapper .modal .tabs.tabs-top {
+    top: 44px; }
+  .platform-ios.platform-cordova .modal-wrapper .modal .has-header, .platform-ios.platform-cordova .modal-wrapper .modal .bar-subheader {
+    top: 44px; }
+  .platform-ios.platform-cordova .modal-wrapper .modal .has-subheader {
+    top: 88px; }
+  .platform-ios.platform-cordova .modal-wrapper .modal .has-tabs-top {
+    top: 93px; }
+  .platform-ios.platform-cordova .modal-wrapper .modal .has-header.has-subheader.has-tabs-top {
+    top: 137px; }
+  .modal-backdrop-bg {
+    -webkit-transition: opacity 300ms ease-in-out;
+    transition: opacity 300ms ease-in-out;
+    background-color: #000;
+    opacity: 0; }
+  .active .modal-backdrop-bg {
+    opacity: 0.5; }
+}

@@ -79,6 +79,7 @@ angular.module('mainApp.dbConnector', [])
      * @param store サンプルデータ作成先
      */
     module.createSample = function(store) {
+      module.debug('createSample is called.');
       if(!store) return;
 
       var samples = [
@@ -114,11 +115,10 @@ angular.module('mainApp.dbConnector', [])
       ];
 
       // サンプルデータを一件ずつ追加する
-      samples.forEach(function(entry, i){
-        console.log(entry);
+      samples.forEach(function(entry, i) {
         store.add(entry);
-        module.debug(entry + 'is added');
       });
+      module.debug('finish to create samples.');
     }
 
     /**
