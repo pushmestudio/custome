@@ -46,6 +46,10 @@
   margin: 0; }
 */
 
+.palette {
+  background: url(../img/palette_background.png);
+}
+
 .center {
   text-align: center;
 }
