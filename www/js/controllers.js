@@ -283,18 +283,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 
   $scope.showWallpaperList = function(){
-    // Camera.getPicture().then(function(imageURI) {
-    //   $scope.wallpaperParams.wallpaperPaths.push(imageURI);
-    //   console.log($scope.wallpaperParams.wallpaperPaths);
-    //   console.log($scope.wallpaperParams.currentWallpaperPath);
-    // });
+    Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(imageURI) {
+       $scope.wallpaperParams.wallpaperPaths.push(imageURI);
+       console.log($scope.wallpaperParams.wallpaperPaths);
+       console.log($scope.wallpaperParams.currentWallpaperPath);
+    });
     $scope.modal.show();
   };
-
-  $scope.addImage2WallpaperList = function(){
-    $scope.ksTest = "ksTest";
-    //Camera.getPicture();
-  }
 
   //ローカルから画像を選択し，壁紙に適用 (base64バージョン)
   $scope.selectLocalImageAsBase64 = function(){
@@ -311,6 +306,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       //console.log(fileuri);
       Wallpapers.setCurrentWallpaper(fileuri);
     });
+  }
+
+  $scope.copyLocalImage = function(){
+    Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(fileuri) {
+      Wallpapers.copyLocalImage(fileuri);
+    });
+  }
+
+  $scope.loadLocalImageFromPersistentDir = function(){
+    Wallpapers.loadLocalImage();
   }
 
   $scope.getLocalImage = function(){
@@ -395,12 +400,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     function fail2(error){
       alert('requestFileSystemでエラーが発生しました。エラーコード: ' + error.code);
     }
-  }
-
-
-
-  $scope.loadLocalImageFromPersistentDir = function(){
-    Wallpapers.loadLoalImage();
   }
 
   $scope.localImage = "";

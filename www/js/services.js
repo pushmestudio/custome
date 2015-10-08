@@ -397,6 +397,26 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
+  var copyLocalImage = function(fileuri){
+      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, succeededGetFileSystem, fail);
+        var persistDir;
+        function succeededGetFileSystem(fs2){
+            console.log("success get FileSystem");
+            var directoryEntry = fs2.root; //DirectoryEntryオブジェクトを取得
+            persistDir=directoryEntry;
+        }
+      window.resolveLocalFileSystemURL(fileuri, copyToPersist, fail);
+        function copyToPersist(entry){
+          entry.copyTo(persistDir, entry.name, success, fail);
+        }
+        function success(entry){
+          console.log("ファイル「" + entry.name + "」をコピーしました。");
+        }
+    function fail(error){
+      alert("エラーコード: " + error.code);
+    }
+  }
+
   var loadLocalImage = function(){
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, successGetFS, failResuestFS);
     function successGetFS(fs){
@@ -417,8 +437,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
           //$scope.smallImage = document.getElementById('smallImage');
           //$scope.smallImage.src = entries[0].fullPath;
 
+          //PERSISTENT_DIRにあるローカル画像を，壁紙一覧に表示させるために，push
+          wallpaperParams.wallpaperPaths.push(entries[index].fullPath);//"cordova.file.dataDirectory" + entries[index].fullPath
+          //ローカルのPERSISTENTのパスをWallpaperParamsにセットしたいが，パス分からず。
+
+
           //壁紙に設定
-          setCurrentWallpaper(entries[0].fullPath); //実機直パスなので，/名前.pngになってる
+          //setCurrentWallpaper(entries[0].fullPath); //実機直パスなので，/名前.pngになってる
         }
       }
       function failPut(error){
@@ -443,7 +468,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     getCurrentWallpaper: function(){
       return wallpaperParams.currentWallpaperPath;
     },
-    loadLoalImage: function(){
+    copyLocalImage: function(fileuri){
+      return copyLocalImage(fileuri);
+    },
+    loadLocalImage: function(){
       return loadLocalImage();
     }
   };
