@@ -7,24 +7,24 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   // TODO:混同しないようにより適切な名前へと要変更
   var templates = [{
     id: 0,
-    name: 'タスクボード1',
-    lastText: '小島ボード1',
-    img: 'img/wallpaper/taskboard_port_blue.png'
-  }, {
-    id: 1,
-    name: 'タスクボード2',
-    lastText: '小島ボード2',
-    img: 'img/wallpaper/taskboard_port_green.png'
-  }, {
-    id: 2,
-    name: 'タスクボード3',
-    lastText: '小島ボード3',
+    name: 'Template1',
+    lastText: 'ToDo',
     img: 'img/wallpaper/taskboard_virt_blue.png'
   }, {
+    id: 1,
+    name: 'Template2',
+    lastText: 'ToDo',
+    img: 'img/wallpaper/template_todo_orange.png'
+  }, {
+    id: 2,
+    name: 'Template3',
+    lastText: 'ToDo. Horizontal direction.',
+    img: 'img/wallpaper/taskboard_port_blue.png'
+  }, {
     id: 3,
-    name: 'タスクボード4',
-    lastText: '小島ボード4',
-    img: 'img/wallpaper/taskboard_virt_orange.png'
+    name: 'Template4',
+    lastText: 'Weekly Calender',
+    img: 'img/wallpaper/template_calender_weekly.png'
   }];
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
