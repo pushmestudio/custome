@@ -45,3 +45,36 @@
 .platform-android .action-sheet {
   margin: 0; }
 */
+
+.palette {
+  background: url(../img/palette_background.png);
+}
+
+.center {
+  text-align: center;
+}
+
+.back-layer-img{
+  position: relative;
+  width: 100px;
+  top: 3px;
+  left: 15px;
+}
+
+.front-layer-img{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  right: 25px;
+  top: 25px;
+}
+
+.palette-items {
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.palette-item {
+  width: 100px;
+  height: 100px;
+}

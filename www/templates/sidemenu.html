@@ -1,65 +1,40 @@
 <ion-header-bar aligh-title="center" class="bar-balanced">
   <h1 class="title">Palette</h1>
 </ion-header-bar>
-<ion-content class="has-header" ng-controller="PalletCtrl">
-
-<!--
-  <ion-list ng-controller="WallpaperCtrl">
-    <ion-item class="item-thumbnail-left item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
-      <img ng-src="{{part.img}}">
--->
-  <ion-list>
-    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
-      <img ng-src="{{part.img}}">
-      <h2>{{part.title}}</h2>
-      <p>Type: {{part.type}}</p>
-    </ion-item>
-
-    <section>
-    <ion-item class="item-thumbnail-left item-icon-right" type="item-text-wrap">
-      <img ng-src="{{wallpaperParams.currentWallpaperPath}}">
-      <h2> Current</h2>
-    </ion-item>
-    <ion-item menu-close ng-click="showWallpaperList()">
-          Template wallpapers
-    </ion-item>
-
-      <!-- FILE_URI，すなわちローカル画像のパスを取得し背景に反映させるパターン -->
+    <!-- FILE_URI，すなわちローカル画像のパスを取得し背景に反映させるパターン -->
+    <!--
     <ion-item menu-close ng-click="selectLocalImageAsFILEURI()" type="item-text-wrap">
         Your Own Pic
     </ion-item>
+    -->
 
-    <!-- base64だとかなり処理が重たくなってしまうのでNG -->
+    <!--
     <ion-item class="item-thumbnail-left" menu-close ng-click="selectLocalImageAsBase64()" type="item-text-wrap">
       base64(DATA_URL)
     </ion-item>
-
-    <!-- 下記はテスト用 -->
-    <ion-item></ion-item>
-    <ion-item>
-      以下テスト
-      <p><button ng-click="copyLocalImage()">copy</button></p>
-      <p><button ng-click="loadLocalImageFromPersistentDir()">load</button></p>
-
-      <p><button ng-click="getLocalImage()">get</button></p>
-      <p><button ng-click="saveLocalImage2PersistentDir()">save</button></p>
-      <div>
-        <h1>File API Test</h1>
-        <ul id="tempfs_fileList"></ul>
+  -->
+<!-- //test //PartsCtrlをBoardsDetailCtrlに移行 -->
+<ion-content class="has-header palette" ng-controller="PalletCtrl">
+  <ion-list>
+    <div class="item item-divider">
+      Sticky note
+    </div>
+    <div class="row palette-items">
+      <div class="col col-50" ng-repeat="part in parts">
+        <div class="center">
+          <img ng-src="{{part.img}}" menu-close ng-click="select(part.id)">
+        </div>
       </div>
-      <p><img ng-src="{{localImage}}"></p>
-      <p>
-        <button ng-click="getPhoto()" class="button button-block button-primary">Get wallpaper in your device</button>
-        <!--<img ng-src="{{lastPhoto}}" style="max-width: 50%"> -->
-      </p>
-      <p><img id="smallImage" src="" /></p>
-      <p><img id="testImage" src="" /></p>
-    </ion-item>
-<<<<<<< HEAD
+    </div>
+
+    <div class="item item-divider">
+      Wallpaper
+    </div>
+    <div class="col col-50" ng-controller="WallpaperCtrl">
+      <div class="back-layer-img">
+        <img ng-src="{{wallpaperParams.currentWallpaperPath}}" ng-click="showWallpaperList()" class="palette-item ">
+        <img ng-src="img/ios7-refresh.png" ng-click="showWallpaperList()" class="front-layer-img">
+      </div>
+    </div>
   </ion-list>
-=======
-  </ion-list>  <div>
-    <a href="#/palletEdit" menu-close><img ng-src="img/plusButton.png" ></a>
-  </div>
->>>>>>> feature-changeSidemenu
 </ion-content>
