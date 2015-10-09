@@ -7,24 +7,24 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   // TODO:混同しないようにより適切な名前へと要変更
   var templates = [{
     id: 0,
-    name: 'タスクボード1',
-    lastText: '小島ボード1',
-    img: 'img/wallpaper/taskboard_port_blue.png'
-  }, {
-    id: 1,
-    name: 'タスクボード2',
-    lastText: '小島ボード2',
-    img: 'img/wallpaper/taskboard_port_green.png'
-  }, {
-    id: 2,
-    name: 'タスクボード3',
-    lastText: '小島ボード3',
+    name: 'Template1',
+    lastText: 'ToDo',
     img: 'img/wallpaper/taskboard_virt_blue.png'
   }, {
+    id: 1,
+    name: 'Template2',
+    lastText: 'ToDo',
+    img: 'img/wallpaper/template_todo_orange.png'
+  }, {
+    id: 2,
+    name: 'Template3',
+    lastText: 'ToDo. Horizontal direction.',
+    img: 'img/wallpaper/taskboard_port_blue.png'
+  }, {
     id: 3,
-    name: 'タスクボード4',
-    lastText: '小島ボード4',
-    img: 'img/wallpaper/taskboard_virt_orange.png'
+    name: 'Template4',
+    lastText: 'Weekly Calender',
+    img: 'img/wallpaper/template_calender_weekly.png'
   }];
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
@@ -397,64 +397,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
-  var copyLocalImage = function(fileuri){
-      window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, succeededGetFileSystem, fail);
-        var persistDir;
-        function succeededGetFileSystem(fs2){
-            console.log("success get FileSystem");
-            var directoryEntry = fs2.root; //DirectoryEntryオブジェクトを取得
-            persistDir=directoryEntry;
-        }
-      window.resolveLocalFileSystemURL(fileuri, copyToPersist, fail);
-        function copyToPersist(entry){
-          entry.copyTo(persistDir, entry.name, success, fail);
-        }
-        function success(entry){
-          console.log("ファイル「" + entry.name + "」をコピーしました。");
-        }
-    function fail(error){
-      alert("エラーコード: " + error.code);
-    }
-  }
-
-  var loadLocalImage = function(){
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, successGetFS, failResuestFS);
-    function successGetFS(fs){
-      var directoryEntry = fs.root; //DirectoryEntryオブジェクトを取得
-      var directoryReader = directoryEntry.createReader();
-      directoryReader.readEntries(putFileName, failPut);
-
-      //PERSISTENTディレクトリにあるデータをテキスト出力
-      function putFileName(entries){
-        console.log("success put FileName");
-        console.log(entries);
-        for (index = 0; index < entries.length; index++){
-          var listItem = document.createElement('li');
-          listItem.textContent = entries[index].name;
-          console.log(entries[index].name);
-          console.log(entries[index].fullPath);
-          document.getElementById('tempfs_fileList').appendChild(listItem);
-          //$scope.smallImage = document.getElementById('smallImage');
-          //$scope.smallImage.src = entries[0].fullPath;
-
-          //PERSISTENT_DIRにあるローカル画像を，壁紙一覧に表示させるために，push
-          wallpaperParams.wallpaperPaths.push(entries[index].fullPath);//"cordova.file.dataDirectory" + entries[index].fullPath
-          //ローカルのPERSISTENTのパスをWallpaperParamsにセットしたいが，パス分からず。
-
-
-          //壁紙に設定
-          //setCurrentWallpaper(entries[0].fullPath); //実機直パスなので，/名前.pngになってる
-        }
-      }
-      function failPut(error){
-        alert('エラーが発生しました。エラーコード: ' + error.code);
-      }
-    }
-    function failResuestFS(error){
-      alert('requestFileSystemでエラーが発生しました。エラーコード: ' + error.code);
-    }
-  }
-
   return {
     loadWallpapers: function(){
       return loadWallpapers();
@@ -467,52 +409,19 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     getCurrentWallpaper: function(){
       return wallpaperParams.currentWallpaperPath;
-    },
-    copyLocalImage: function(fileuri){
-      return copyLocalImage(fileuri);
-    },
-    loadLocalImage: function(){
-      return loadLocalImage();
     }
   };
 })
-/*元
-.factory('Camera', ['$q', function($q) {
 
-  return {
-    getPicture: function(options) {
-      var q = $q.defer();
-      //Camera.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
-      navigator.camera.getPicture(function(result) {
-        // Do any magic you need
-        q.resolve(result);
-      }, function(err) {
-        q.reject(err);
-      }, options);
-
-      return q.promise;
-    }
-  }
-}])
-*/
 .factory('Camera', ['$q', function($q) {
 
   return {
     getPicture: function(destType) {
       console.log(destType);
-      //destType="FILE_URI";
       var pictureSource=navigator.camera.PictureSourceType;
       var destinationType=navigator.camera.DestinationType;
       var encodingType=navigator.camera.EncodingType;
       var q = $q.defer();
-      //Camera.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
-      /***
-       * navigator.camera.getPicture(camera_succcess, camerra_error, options)
-       * camera_successはデータ取得成功時に呼び出されるコールバック
-       * 以下では，function(result){}の中で，q.resolveで非同期でresultをControllerにリターンしている。
-       * options : この中で，データ・タイプ，取得元(カメラ撮影なのか，アルバムなどから取得なのか指定)
-       */
-
       navigator.camera.getPicture(function(result) {
         // Do any magic you need
         q.resolve(result);
@@ -521,29 +430,14 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
         q.reject(err);
       }, {
         quality: 50,
-        //FILEのURIが返ってくるが，androidネイティブのディレクトリをアプリ側から参照できていない？
         //destinationType: destinationType.FILE_URI,
-
-        //base64フォーマットでデータ取得(imageURIがbase64で返ってくる)
         //destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
-
         destinationType: destType,
-
         sourceType: pictureSource.PHOTOLIBRARY,//フォトライブラリの画像を使用する場合
         //sourceType: pictureSource.CAMERA //カメラで撮影した画像を使用する場合
-
-
-
         encodingType: encodingType.PNG
       });
-
       return q.promise;
-    },
-
-    add2WallpaperList: function(selectedWallpaper){
-      extWallpaper = selectedWallpaper;
-      console.log("This is extWallpaper Path. --> : " + extWallpaper);
-      return;
     }
   }
 }])

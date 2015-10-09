@@ -10,9 +10,18 @@
       </div>
       <ion-item class="item-remove-animate item-thumbnail-left item-icon-right" ng-repeat="wallpaper in wallpaperParams.wallpaperPaths" type="item-text-wrap" ng-click="selectWallpaper(wallpaper)">
         <img ng-src="{{wallpaper}}">
-        <!-- <img ng-src="{{wallpaper}}"> -->
-        <!-- angularのセキュリティの問題でunsafeになるので，普通のsrc指定にしてみる -->
+      </ion-item>
+      <ion-item class="button button-icon icon ion-images" ng-click="selectLocalImageAsBase64()">
       </ion-item>
     </ion-list>
+    <!--
+    <button menu-toggle="left" class="button button-icon icon ion-images" ng-click="selectLocalImageAsBase64()">
+    </button>-->
+
+<!--
+    <ion-list>
+      <ion-item class="item-remove-animate item-thumbnail-left item-icon-right"  type="item-text-wrap" ng-click="selectLocalImageAsBase64()">
+      </ion-item>
+    </ion-list>-->
   </ion-content>
 </ion-modal-view>
