@@ -9,17 +9,17 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     id: 0,
     name: 'Template1',
     lastText: 'ToDo',
-    img: 'img/wallpaper/taskboard_port_blue.png'
+    img: 'img/wallpaper/taskboard_virt_blue.png'
   }, {
     id: 1,
     name: 'Template2',
     lastText: 'ToDo',
-    img: 'img/wallpaper/taskboard_virt_blue.png'
+    img: 'img/wallpaper/template_todo_orange.png'
   }, {
     id: 2,
     name: 'Template3',
-    lastText: 'ToDo',
-    img: 'img/wallpaper/template_todo_orange.png'
+    lastText: 'ToDo. Horizontal direction.',
+    img: 'img/wallpaper/taskboard_port_blue.png'
   }, {
     id: 3,
     name: 'Template4',
