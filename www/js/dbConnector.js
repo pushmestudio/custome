@@ -10,7 +10,7 @@ angular.module('mainApp.dbConnector', [])
     var module = this;
 
     // このモジュールのログ出力を調整する、module.debug('出力内容')のように使う
-    module.debugMode = true;
+    module.debugMode = false;
 
     // このモジュールを通じて使いまわすデータベースのオブジェクト
     module.db = null;
@@ -42,7 +42,7 @@ angular.module('mainApp.dbConnector', [])
       request.onupgradeneeded = module.init;
       request.onsuccess = function(event) {
         module.db = event.target.result;
-        console.log('connect is finished');
+        module.debug('connect is finished');
         deferred.resolve();
       };
       request.onerror = function(event) {
@@ -251,7 +251,7 @@ angular.module('mainApp.dbConnector', [])
       store.get(boardId).onsuccess = function(event) {
         var data = event.target.result;
         if(data) { // 該当結果がある場合
-          
+
           // モーダルを使用した更新を実施しない場合、boardNamesは未定義となる
           if(typeof boardNames !== 'undefined' && boardNames.boardName != '' && boardNames.boardComment != ''){
             data.boardContent.boardName = boardNames.boardName;
