@@ -312,8 +312,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   // 広告の表示、ポップアップで表示確認後、モーダルにて表示する
   $scope.popAd = function() {
     $ionicPopup.confirm({
-      title: '広告表示確認', // String. The title of the popup.
-      template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
+      title: '[We need your help!]', // String. The title of the popup.
+      template: 'Our Robo bring a ad. <br>Can I show you it once?<br>(You can help us through tapping ad!)', // String (optional). The html template to place in the popup body.
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // Okなら広告を表示する
         $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
