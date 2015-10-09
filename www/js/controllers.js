@@ -334,7 +334,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.newBoardId = 0;
 
     // modalの定義
-  $ionicModal.fromTemplateUrl('templates/wallpaperList.html', {
+  $ionicModal.fromTemplateUrl('templates/wallpaperList-modal.html', {
     scope: $scope,
     animataion: 'slide-in-up'
   }).then(function(modal){
@@ -368,6 +368,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       //console.log(gotBase64);
       var addMeta2base64 = "data:/image/jpeg;base64,"+gotBase64;
       Wallpapers.setCurrentWallpaper(addMeta2base64);
+      if($scope.modal.isShown()){
+        $scope.modal.hide();
+      }
     });
   }
 
