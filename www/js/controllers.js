@@ -36,7 +36,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   $scope.remove = function(boardIndex) {
     $ionicPopup.confirm({
-      template: '選択したボードを削除しますか？(この操作は取り消せません)', // String (optional). The html template to place in the popup body.
+      template: 'Are you sure to delete this board?<br>(This action cannnot be undone.)', // String (optional). The html template to place in the popup body.
       okType: 'button-assertive'
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // ポップアップでOkなら削除する
@@ -251,14 +251,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $scope.select = function(part){
     Parts.select(part);//パレットからボードに配置するパーツを選択
   }
-  $scope.nend = function() {
-    nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
-  };
 })
 
 // 広告表示用のコントローラ
 .controller('AdsCtrl', function($scope, $ionicModal, $ionicPopup) {
-  const FREQ_POP_AD = 0.5; // 広告の表示量、1で常に表示、0で常に非表示
+  const FREQ_POP_AD = 0.3; // 広告の表示量、1で常に表示、0で常に非表示
   $scope.hidden = true;
 
   $scope.init = function(){
@@ -315,8 +312,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   // 広告の表示、ポップアップで表示確認後、モーダルにて表示する
   $scope.popAd = function() {
     $ionicPopup.confirm({
-      title: '広告表示確認', // String. The title of the popup.
-      template: 'PushMeロボが広告を持ってきたようです。<br>表示しますか？<br>(広告のクリックを通じて開発者を支援することができます)', // String (optional). The html template to place in the popup body.
+      title: '[We need your help!]', // String. The title of the popup.
+      template: 'Our Robo bring an ad. <br>Can I show you it once?<br>(You can help us through tapping an ad!)', // String (optional). The html template to place in the popup body.
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // Okなら広告を表示する
         $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
