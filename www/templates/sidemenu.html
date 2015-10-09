@@ -2,9 +2,17 @@
   <h1 class="title">Palette</h1>
 </ion-header-bar>
 <ion-content class="has-header" ng-controller="PalletCtrl">
+
+<!--
   <ion-list ng-controller="WallpaperCtrl">
     <ion-item class="item-thumbnail-left item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
       <img ng-src="{{part.img}}">
+-->
+  <ion-list>
+    <ion-item class="item-avatar item-icon-right" ng-repeat="part in parts" type="item-text-wrap" menu-close ng-click="select(part.id)">
+      <img ng-src="{{part.img}}">
+      <h2>{{part.title}}</h2>
+      <p>Type: {{part.type}}</p>
     </ion-item>
 
     <section>
@@ -47,5 +55,11 @@
       <p><img id="smallImage" src="" /></p>
       <p><img id="testImage" src="" /></p>
     </ion-item>
+<<<<<<< HEAD
   </ion-list>
+=======
+  </ion-list>  <div>
+    <a href="#/palletEdit" menu-close><img ng-src="img/plusButton.png" ></a>
+  </div>
+>>>>>>> feature-changeSidemenu
 </ion-content>
