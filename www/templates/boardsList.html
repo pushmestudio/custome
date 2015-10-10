@@ -12,6 +12,7 @@
       </div>
       <ion-item class="item-remove-animate item-thumbnail-left item-icon-right item-text-wrap" ng-repeat="board in myBoards track by $index" type="item-text-wrap" ng-href="#/{{board.boardId}}" ng-click="selectWallpaper(board.boardContent.wallpaper)">
         <img ng-src="{{board.boardContent.wallpaper}}">
+        <!--{{board.boardContent.wallpaper}} --><!-- 使用中のWallpaperのパス表示用 -->
         <h2>{{board.boardContent.boardName}}</h2>
         <p>{{board.boardContent.boardComment}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>

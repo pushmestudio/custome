@@ -45,6 +45,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   // var usedWallpaper='';
 
+  var extWallpaper='';
+
   // ボード画面を開いたとき、新規か更新かを判断する
   var updateFlag = true;
 
@@ -410,3 +412,32 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     }
   };
 })
+
+.factory('Camera', ['$q', function($q) {
+
+  return {
+    getPicture: function(destType) {
+      console.log(destType);
+      var pictureSource=navigator.camera.PictureSourceType;
+      var destinationType=navigator.camera.DestinationType;
+      var encodingType=navigator.camera.EncodingType;
+      var q = $q.defer();
+      navigator.camera.getPicture(function(result) {
+        // Do any magic you need
+        q.resolve(result);
+        console.log("getPicture() is succeeded");
+      }, function(err) {
+        q.reject(err);
+      }, {
+        quality: 50,
+        //destinationType: destinationType.FILE_URI,
+        //destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
+        destinationType: destType,
+        sourceType: pictureSource.PHOTOLIBRARY,//フォトライブラリの画像を使用する場合
+        //sourceType: pictureSource.CAMERA //カメラで撮影した画像を使用する場合
+        encodingType: encodingType.PNG
+      });
+      return q.promise;
+    }
+  }
+}])
