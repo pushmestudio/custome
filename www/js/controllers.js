@@ -326,12 +326,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 })
 
-.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera) {
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.newBoardId = 0;
 
     // modalの定義
-  $ionicModal.fromTemplateUrl('templates/wallpaperList.html', {
+  $ionicModal.fromTemplateUrl('templates/wallpaperList-modal.html', {
     scope: $scope,
     animataion: 'slide-in-up'
   }).then(function(modal){
@@ -347,15 +347,38 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 
   $scope.selectWallpaper = function(selectedWallpaperPath){
+    console.log($scope.wallpaperParams.currentWallpaperPath);
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
     if($scope.modal.isShown()){
       $scope.modal.hide();
     }
+    console.log($scope.wallpaperParams.currentWallpaperPath);
   };
 
   $scope.showWallpaperList = function(){
     $scope.modal.show();
   };
+
+  //ローカルから画像を選択し，壁紙に適用 (base64バージョン)
+  $scope.selectLocalImageAsBase64 = function(){
+    Camera.getPicture(navigator.camera.DestinationType.DATA_URL).then(function(gotBase64) {
+      //console.log(gotBase64);
+      var addMeta2base64 = "data:/image/jpeg;base64,"+gotBase64;
+      Wallpapers.setCurrentWallpaper(addMeta2base64);
+      if($scope.modal.isShown()){
+        $scope.modal.hide();
+      }
+    });
+  }
+
+  //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
+  //アルファリリースでは未使用
+  $scope.selectLocalImageAsFILEURI = function(){
+    Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(fileuri) {
+      //console.log(fileuri);
+      Wallpapers.setCurrentWallpaper(fileuri);
+    });
+  }
 })
 
 //3つめのタブ(Sample)を選択時に使用するコントローラー

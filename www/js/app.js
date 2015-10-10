@@ -29,7 +29,18 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
 // Angular JSの外部ツール(AngulatUI Router)を使用したルーティングを記述
 // URLの変更に応じて、呼び出すテンプレート(.html)を指定し、使用するコントローラーを指定
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $compileProvider) {
+  /*
+  $sceDelegateProvider.resourceUrlWhitelist([
+    'self',
+    , 'blob:**'
+    , 'data:**'
+    , 'content:**'
+  ]);*/
+
+  // ローカル画像を読込み，サムネイルや背景などで表示するための設定
+  // この設定でサニタイズしない場合は，angularのセキュリティでUnsafe扱いとなってしまう
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(content|file|data):/);
 
   // 指定されたURLが下記ののいずれにも該当しない場合に表示するURLを指定
   // アプリ起動時には、/custome/init が表示される
