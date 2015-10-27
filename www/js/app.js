@@ -14,16 +14,6 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
-
-    const debugMode = false;
-    // リリース向けにログ出力をなくす
-    // dbConnectorについてはapp.js呼び出しのタイミングに間に合わないため, 別途デバッグモードを使用する
-    if (!debugMode) {
-      window.console = {};
-      window.console.log = function(i) {return};
-      window.console.debug = function(i) {return};
-    }
   });
 })
 

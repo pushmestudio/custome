@@ -10,7 +10,7 @@ angular.module('mainApp.dbConnector', [])
     var module = this;
 
     // このモジュールのログ出力を調整する、module.debug('出力内容')のように使う
-    module.debugMode = false;
+    module.debugMode = true;
 
     // このモジュールを通じて使いまわすデータベースのオブジェクト
     module.db = null;
@@ -411,14 +411,16 @@ angular.module('mainApp.dbConnector', [])
 
     /**
      * debugMode ON時にログを出力させる
-     * @param {String} ログとして出力させたい内容
+     * @refs http://d.hatena.ne.jp/hokaccha/20111216/1324026093
      */
-     // TODO:暫定版なので、今後の仕様/使用については要検討
-    module.debug = function(output) {
+    // TODO: 独立モジュールとして別サービスに切り出して、どのコントローラーやサービスでも使えるようにする
+    module.debug = (function() {
       if(module.debugMode) {
-        console.debug('[d] ' + output);
+        return console.debug.bind(console);
+      } else {
+        return function(){}; // debugMode = falseのときは何も出力しない
       }
-    }
+    })();
 
     // DBConnとして呼び出し可能(≒public)とするメソッドを下記に定義
     return {
