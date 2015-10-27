@@ -326,7 +326,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 })
 
-.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera, d) {
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.newBoardId = 0;
 
@@ -347,12 +347,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 
   $scope.selectWallpaper = function(selectedWallpaperPath){
-    console.log($scope.wallpaperParams.currentWallpaperPath);
+    d.log($scope.wallpaperParams.currentWallpaperPath);
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
     if($scope.modal.isShown()){
       $scope.modal.hide();
     }
-    console.log($scope.wallpaperParams.currentWallpaperPath);
+    d.log($scope.wallpaperParams.currentWallpaperPath);
   };
 
   $scope.showWallpaperList = function(){
@@ -362,7 +362,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   //ローカルから画像を選択し，壁紙に適用 (base64バージョン)
   $scope.selectLocalImageAsBase64 = function(){
     Camera.getPicture(navigator.camera.DestinationType.DATA_URL).then(function(gotBase64) {
-      //console.log(gotBase64);
+      //d.log(gotBase64);
       var addMeta2base64 = "data:/image/jpeg;base64,"+gotBase64;
       Wallpapers.setCurrentWallpaper(addMeta2base64);
       if($scope.modal.isShown()){
@@ -375,7 +375,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   //アルファリリースでは未使用
   $scope.selectLocalImageAsFILEURI = function(){
     Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(fileuri) {
-      //console.log(fileuri);
+      //d.log(fileuri);
       Wallpapers.setCurrentWallpaper(fileuri);
     });
   }

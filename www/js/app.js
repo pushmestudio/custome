@@ -2,7 +2,10 @@
 // 依存するモジュールを指定(ionic, mainApp.controllers)
 angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
+  //デバッグ出力の有無、リリース時はfalseにする
+  $rootScope.debugMode = true;
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
