@@ -5,12 +5,9 @@
  * @refs 実装に際して参考にしたライブラリ https://github.com/webcss/angular-indexeddb/blob/master/src/indexeddb.js
  * @copyright PushMe Studio 2015
  */
-angular.module('mainApp.dbConnector', [])
-  .factory('DBConn', function() {
+angular.module('mainApp.dbConnector', ['mainApp.services'])
+  .factory('DBConn', function(d) {
     var module = this;
-
-    // このモジュールのログ出力を調整する、module.debug('出力内容')のように使う
-    module.debugMode = true;
 
     // このモジュールを通じて使いまわすデータベースのオブジェクト
     module.db = null;
@@ -31,7 +28,7 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.connect =  function() {
-      module.debug('connect is called');
+      d.log('connect is called');
       var deferred = module.q.defer();
 
       /* CustoMeDBという名称のDBを開く、なければ作成する
@@ -42,7 +39,7 @@ angular.module('mainApp.dbConnector', [])
       request.onupgradeneeded = module.init;
       request.onsuccess = function(event) {
         module.db = event.target.result;
-        module.debug('connect is finished');
+        d.log('connect is finished');
         deferred.resolve();
       };
       request.onerror = function(event) {
@@ -58,7 +55,7 @@ angular.module('mainApp.dbConnector', [])
      * @param {Object} event データベースのオープン要求に対する結果のイベント
      */
     module.init = function(event) {
-      module.debug('init is called.');
+      d.log('init is called.');
       module.db = event.target.result;
       if(module.db.objectStoreNames.contains(module.storeName)) {
         module.db.deleteObjectStore(module.storeName);
@@ -79,7 +76,7 @@ angular.module('mainApp.dbConnector', [])
      * @param store サンプルデータ作成先
      */
     module.createSample = function(store) {
-      module.debug('createSample is called.');
+      d.log('createSample is called.');
       if(!store) return;
 
       var samples = [
@@ -118,7 +115,7 @@ angular.module('mainApp.dbConnector', [])
       samples.forEach(function(entry, i) {
         store.add(entry);
       });
-      module.debug('finish to create samples.');
+      d.log('finish to create samples.');
     }
 
     /**
@@ -129,7 +126,7 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.saveBoardContent = function(parts, wallpaper, boardId, boardNames) {
-      module.debug('saveBoardContent is called');
+      d.log('saveBoardContent is called');
       var updateFlag = true; // 更新か新規作成かを判断するためのフラグ
 
       if(typeof boardId === 'undefined' || boardId === null) {
@@ -153,12 +150,12 @@ angular.module('mainApp.dbConnector', [])
         store.openCursor(range).onsuccess = function(event) {
           var cursor = event.target.result; // 取得結果を得る
           if(cursor) {
-            module.debug('boardIdと一致するデータあり');
+            d.log('boardIdと一致するデータあり');
           } else {
             updateFlag = false;
-            module.debug('boardIdと一致するデータが無いため新規作成');
+            d.log('boardIdと一致するデータが無いため新規作成');
           }
-          module.debug('updateFlag:' + updateFlag);
+          d.log('updateFlag:' + updateFlag);
           // updateFlagの内容に応じ、更新あるいは新規作成をする
           if(updateFlag) { // 更新処理
             module.updateBoard(boardId, parts, wallpaper, boardNames).then(function() {
@@ -186,7 +183,7 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.updateBoard = function(boardId, parts, wallpaper, boardNames) {
-      module.debug('updateBoard is called');
+      d.log('updateBoard is called');
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
@@ -218,18 +215,18 @@ angular.module('mainApp.dbConnector', [])
           var request = store.put(data); // ストアへ更新をかける
           request.onsuccess = function(event) {
             deferred.resolve();
-            module.debug('更新完了!');
+            d.log('更新完了!');
           }
           request.onerror = function(event) {
             deferred.reject('更新途中で失敗!' + event.message);
           }
         } else { // 該当結果がない場合
-          module.debug('update対象が見つかりません');
+          d.log('update対象が見つかりません');
         }
       };
       store.get(boardId).onerror = function(event) {
         deferred.reject('request is rejected');
-        module.debug('update error:' + event.message);
+        d.log('update error:' + event.message);
       }
       return deferred.promise;
     }
@@ -241,7 +238,7 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.updateBoardNames = function(boardId, boardNames) {
-      module.debug('updateBoardNames is called');
+      d.log('updateBoardNames is called');
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
@@ -261,18 +258,18 @@ angular.module('mainApp.dbConnector', [])
           var request = store.put(data); // ストアへ更新をかける
           request.onsuccess = function(event) {
             deferred.resolve();
-            module.debug('更新完了!');
+            d.log('更新完了!');
           }
           request.onerror = function(event) {
             deferred.reject('更新途中で失敗!' + event.message);
           }
         } else { // 該当結果がない場合
-          module.debug('update対象が見つかりません');
+          d.log('update対象が見つかりません');
         }
       };
       store.get(boardId).onerror = function(event) {
         deferred.reject('request is rejected');
-        module.debug('update error:' + event.message);
+        d.log('update error:' + event.message);
       }
       return deferred.promise;
     }
@@ -283,11 +280,11 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.addNewBoard = function(parts, wallpaper, boardNames) {
-      module.debug('addNewBoard is called');
+      d.log('addNewBoard is called');
       var time = '' + Date.now() + ''; // JavascriptのDateでunixtimeを取得し、文字列化
       var newBoard = {boardId: time, boardContent: {boardName: boardNames.boardName, boardComment: boardNames.boardComment,
                       parts: parts, wallpaper: wallpaper}};
-      module.debug('addNewBoard ID is ' +time);
+      d.log('addNewBoard ID is ' +time);
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
@@ -299,7 +296,7 @@ angular.module('mainApp.dbConnector', [])
       };
       request.onerror = function(event) {
         deferred.reject('add request is failed!');
-        module.debug('addNewBoard失敗: '+ event.message);
+        d.log('addNewBoard失敗: '+ event.message);
       };
       return deferred.promise;
     }
@@ -310,7 +307,7 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.loadBoardContent = function(boardId) {
-      module.debug("loadBoardContent is called");
+      d.log("loadBoardContent is called");
       // var boardContents = []; // (冨田)配列として返すことも可能(ユニークな値なので不要だと思うが)
       var trans = module.db.transaction(module.storeName, "readonly");
       var store = trans.objectStore(module.storeName);
@@ -323,7 +320,7 @@ angular.module('mainApp.dbConnector', [])
         if(data){
           deferred.resolve(data);
         } else { // 該当結果がない場合
-          module.debug('load対象が見つかりません');
+          d.log('load対象が見つかりません');
           // resolveに空のデータ構造を渡す。⇒結果としてParts.redeployが呼び出されても特に何も行われない。
           deferred.resolve({boardId: '', boardContent: {boardName: '', boardComment: '', parts: [], wallpaper: ''}})
         }
@@ -331,7 +328,7 @@ angular.module('mainApp.dbConnector', [])
 
       store.get(boardId).onerror = function(event){
         deferred.reject('request is rejected');
-        module.debug('load error:' + event.message);
+        d.log('load error:' + event.message);
       };
       return deferred.promise;
     }
@@ -342,7 +339,7 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.deleteBoard = function(boardId) {
-      module.debug("deleteBoard is called");
+      d.log("deleteBoard is called");
       var trans = module.db.transaction(module.storeName, "readwrite");
       var store = trans.objectStore(module.storeName);
 
@@ -351,13 +348,13 @@ angular.module('mainApp.dbConnector', [])
       // boardIDが一致するデータを削除する
       store.delete(boardId).onsuccess = function(event){
         var data = event.target.result;
-       　module.debug("delete board");
+       　d.log("delete board");
         deferred.resolve()
       };
 
       store.delete(boardId).onerror = function(event){
         deferred.reject('request is rejected');
-        module.debug('delete error:' + event.message);
+        d.log('delete error:' + event.message);
       };
       return deferred.promise;
     }
@@ -367,7 +364,7 @@ angular.module('mainApp.dbConnector', [])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.getAllMyBoards = function() {
-      module.debug('getAllMyBoards is called');
+      d.log('getAllMyBoards is called');
 
       var trans = module.db.transaction(module.storeName, 'readonly');
       var store = trans.objectStore(module.storeName);
@@ -384,12 +381,12 @@ angular.module('mainApp.dbConnector', [])
           myBoards.push(data.value);
           data.continue();
         } else { // 取得が終わった場合
-          module.debug('取得が終了しました');
+          d.log('取得が終了しました');
           deferred.resolve(myBoards);
         }
       };
       store.openCursor().onerror = function(event) {
-        module.debug('取得に失敗しました');
+        d.log('取得に失敗しました');
         deferred.reject();
       }
       return deferred.promise;
@@ -399,28 +396,15 @@ angular.module('mainApp.dbConnector', [])
      * データベースに作成したオブジェクトストアの中身をクリアする
      */
     module.reset = function() {
-      module.debug('reset is called');
+      d.log('reset is called');
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
 
       var request = store.clear(); // storeの中身をすべて消す
       request.onsuccess = function(event) {
-        module.debug(module.storeName + ' is cleaned');
+        d.log(module.storeName + ' is cleaned');
       }
     }
-
-    /**
-     * debugMode ON時にログを出力させる
-     * @refs http://d.hatena.ne.jp/hokaccha/20111216/1324026093
-     */
-    // TODO: 独立モジュールとして別サービスに切り出して、どのコントローラーやサービスでも使えるようにする
-    module.debug = (function() {
-      if(module.debugMode) {
-        return console.debug.bind(console);
-      } else {
-        return function(){}; // debugMode = falseのときは何も出力しない
-      }
-    })();
 
     // DBConnとして呼び出し可能(≒public)とするメソッドを下記に定義
     return {
