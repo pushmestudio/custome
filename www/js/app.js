@@ -2,7 +2,10 @@
 // 依存するモジュールを指定(ionic, mainApp.controllers)
 angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
+  //デバッグ出力の有無、リリース時はfalseにする
+  $rootScope.debugMode = true;
+
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -13,16 +16,6 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
-    }
-
-
-    const debugMode = false;
-    // リリース向けにログ出力をなくす
-    // dbConnectorについてはapp.js呼び出しのタイミングに間に合わないため, 別途デバッグモードを使用する
-    if (!debugMode) {
-      window.console = {};
-      window.console.log = function(i) {return};
-      window.console.debug = function(i) {return};
     }
   });
 })
