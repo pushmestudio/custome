@@ -9,6 +9,37 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 }])
 
+// drag可能な要素につける属性を定義したdirective
+.directive('draggablePart', function($ionicGesture, d){
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs){
+      // おまじない。これをしないとAndroid4.4系でdragイベントが正しく動作しない
+      elem.bind("touchstart", function(event){
+        event.preventDefault();
+      });
+
+      var position = scope.deployedPart.position;
+
+      $ionicGesture.on('drag', function(event){
+        deltaX = event.gesture.deltaX;
+        deltaY = event.gesture.deltaY;
+
+        elem.css('left', String(position.x + deltaX) + 'px');
+        elem.css('top', String(position.y + deltaY) + 'px');
+
+        d.log("position = ", position.x + deltaX, position.y + deltaY);
+
+      }, elem);
+
+      $ionicGesture.on('release', function(event){
+        position.x = position.x + event.gesture.deltaX;
+        position.y = position.y + event.gesture.deltaY;
+      }, elem);
+    }
+  }
+})
+
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, toaster, Boards, DBConn, Wallpapers) {
 
