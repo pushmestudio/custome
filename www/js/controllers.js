@@ -25,8 +25,20 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
         deltaX = event.gesture.deltaX;
         deltaY = event.gesture.deltaY;
 
-        elem.css('left', String(position.x + deltaX) + 'px');
-        elem.css('top', String(position.y + deltaY) + 'px');
+//        elem.css('left', '0px');
+//        elem.css('top', '0px');
+
+        // transform3D
+        elem.css('transform', 'translate3D(' + String(position.x + deltaX) + 'px, ' + String(position.y + deltaY) + 'px, 1px)');
+        elem.css('-webkit-transform', 'translate3D(' + String(position.x + deltaX) + 'px, ' + String(position.y + deltaY) + 'px, 1px)');
+
+        // transform
+//      elem.css('transform', 'translate(' + String(position.x + deltaX) + 'px, ' + String(position.y + deltaY) + 'px)');
+//      elem.css('top', String(position.y + deltaY) + 'px');
+
+        // left + top
+//      elem.css('left', String(position.x + deltaX) + 'px');
+//      elem.css('top', String(position.y + deltaY) + 'px');
 
         d.log("position = ", position.x + deltaX, position.y + deltaY);
 

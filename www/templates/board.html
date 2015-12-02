@@ -10,8 +10,10 @@
       <!--
       <div style="position: absolute; width: 100px; overflow:auto; min-height: 100px; max-height: 150px; left: {{deployedPart.position.x}}px; top: {{deployedPart.position.y}}px; background: url({{deployedPart.image}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" on-drag="move(deployedPart, $event)" on-tap="openMenu($index)">
       -->
+      <!--
       <div draggable-part style="position: absolute; width: 100px; overflow:auto; min-height: 100px; max-height: 150px; left: {{deployedPart.position.x}}px; top: {{deployedPart.position.y}}px; background: url({{deployedPart.image}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" on-tap="openMenu($index)">
-
+      -->
+      <div draggable-part style="position: absolute; width: 100px; overflow:auto; min-height: 100px; max-height: 150px; transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); -webkit-transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); background: url({{deployedPart.image}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" on-tap="openMenu($index)">
           <div class="parttext" style="margin: 5px">{{deployedPart.text}}</dev>
         </div>
     </div>
