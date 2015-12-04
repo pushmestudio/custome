@@ -50,6 +50,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
   // ボード画面を開いたとき、新規か更新かを判断する
   var updateFlag = true;
 
+  // オートセーブ機能のpromiseを格納する
+  var autoSavePromise = null;
+
   // 引数として与えられたallMyBoards(DB内のボード一覧)を、メモリ上のmyBoards[]にコピーする
   var addAllMyBoards = function(allMyBoards){
     allMyBoards.forEach(function(myBoard, i){
@@ -131,6 +134,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   return {
     boardNames: boardNames,
+    autoSavePromise: autoSavePromise,
     getMyBoards: function() {
       return myBoards;
     },
@@ -142,6 +146,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     setUpdateFlag: function(boardId){
       setUpdateFlag(boardId);
+    },
+    getUpdateFlag: function(){
+      return updateFlag;
     },
     remove: function(board) {
       templates.splice(templates.indexOf(board), 1);
