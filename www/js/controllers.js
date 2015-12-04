@@ -9,6 +9,36 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 }])
 
+// drag可能な要素につける属性を定義したdirective
+.directive('draggablePart', function($ionicGesture, d){
+  return {
+    restrict: 'A',
+    scope: false,
+    link: function(scope, elem, attrs){
+      // おまじない。これをしないとAndroid4.4系でdragイベントが正しく動作しない
+      elem.bind("touchstart", function(event){
+        event.preventDefault();
+      });
+
+      $ionicGesture.on('drag', function(event){
+        deltaX = event.gesture.deltaX;
+        deltaY = event.gesture.deltaY;
+
+        // transform3D
+        elem.css('transform', 'translate3D(' + String(scope.deployedPart.position.x + deltaX) + 'px, '
+                                             + String(scope.deployedPart.position.y + deltaY) + 'px, 1px)');
+        elem.css('-webkit-transform', 'translate3D(' + String(scope.deployedPart.position.x + deltaX) + 'px, '
+                                                    + String(scope.deployedPart.position.y + deltaY) + 'px, 1px)');
+      }, elem);
+
+      $ionicGesture.on('release', function(event){
+        scope.deployedPart.position.x = scope.deployedPart.position.x + event.gesture.deltaX;
+        scope.deployedPart.position.y = scope.deployedPart.position.y + event.gesture.deltaY;
+      }, elem);
+    }
+  }
+})
+
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $interval, toaster, Boards, DBConn, Wallpapers) {
 
@@ -211,21 +241,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     });
   }
 
-  // $eventに記録された位置情報を配置済のパーツに反映
-  $scope.move = function(part, $event) {
-
-    // 付箋のサイズ100の中央
-    var centerImgX = (100/2);
-
-    // 付箋のサイズ100の中央のはずだが, 挙動として200で扱われている模様
-    // TODO Yのサイズが200として扱われている？と考えられる理由の調査
-    // もしかすると、img=として指定したサイズそのものより、実際の画像のサイズが影響している？
-    var centerImgY = (200/2);
-
-    part.position.x = ($event.gesture.center.pageX - centerImgX);
-    part.position.y = ($event.gesture.center.pageY -centerImgY);
-  }
-
   $scope.undo = function() {
     // トーストを削除
     toaster.clear('*');
@@ -337,7 +352,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 })
 
-.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera, d) {
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.newBoardId = 0;
 
@@ -358,12 +373,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 
   $scope.selectWallpaper = function(selectedWallpaperPath){
-    console.log($scope.wallpaperParams.currentWallpaperPath);
+    d.log($scope.wallpaperParams.currentWallpaperPath);
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
     if($scope.modal.isShown()){
       $scope.modal.hide();
     }
-    console.log($scope.wallpaperParams.currentWallpaperPath);
+    d.log($scope.wallpaperParams.currentWallpaperPath);
   };
 
   $scope.showWallpaperList = function(){
@@ -373,7 +388,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   //ローカルから画像を選択し，壁紙に適用 (base64バージョン)
   $scope.selectLocalImageAsBase64 = function(){
     Camera.getPicture(navigator.camera.DestinationType.DATA_URL).then(function(gotBase64) {
-      //console.log(gotBase64);
+      //d.log(gotBase64);
       var addMeta2base64 = "data:/image/jpeg;base64,"+gotBase64;
       Wallpapers.setCurrentWallpaper(addMeta2base64);
       if($scope.modal.isShown()){
@@ -386,7 +401,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   //アルファリリースでは未使用
   $scope.selectLocalImageAsFILEURI = function(){
     Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(fileuri) {
-      //console.log(fileuri);
+      //d.log(fileuri);
       Wallpapers.setCurrentWallpaper(fileuri);
     });
   }
