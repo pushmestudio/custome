@@ -448,3 +448,26 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     }
   }
 }])
+
+.factory('d', function($rootScope) {
+  /**
+   * DEBUG_MODE ON時にログを出力させる、値の設定はapp.jsにて
+   * @refs http://flabo.io/code/20140926/01-angularjs-application-7-tips/
+   * @refs http://d.hatena.ne.jp/hokaccha/20111216/1324026093
+   */
+  const DEBUG_MODE = $rootScope.debugMode;
+
+  var printDebug;
+  (function() {
+    if(DEBUG_MODE) {
+      printDebug = console.debug.bind(console);
+    } else {
+      printDebug = function(){}; // debugMode = falseのときは何も出力しない
+    }
+  })();
+
+  // DEBUG_MODEがtrueならd.log()で出力、falseなら出力なし
+  return {
+    log: printDebug
+  };
+})
