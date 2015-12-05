@@ -42,7 +42,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 //Boardの一覧を表示したり，一覧から削除するコントローラー
 .controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $interval, toaster, Boards, DBConn, Wallpapers) {
 
-  //オートセーブの停止
+  //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
   if($scope.autoSavePromise){
     $interval.cancel($scope.autoSavePromise);
@@ -143,7 +143,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.boardData = boardData;
     // boardIdがなければ、updateFlagをfalseに
     Boards.setUpdateFlag(boardData.boardId);
-    // オートセーブの開始
+    // 既存ボードの更新を行う際に、オートセーブを開始する
     if(Boards.getUpdateFlag()){
       Boards.autoSavePromise = $interval(function(){$scope.openModal();},30000);
     }
