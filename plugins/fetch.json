@@ -12,5 +12,14 @@
             "url": "https://github.com/apache/cordova-plugin-file.git",
             "subdir": "."
         }
+    },
+    "com.synconset.imagepicker": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/wymsee/cordova-imagePicker.git",
+            "subdir": "."
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
