@@ -40,7 +40,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 })
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, toaster, Boards, DBConn, Wallpapers, d) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $interval, toaster, Boards, DBConn, Wallpapers, d) {
+
+  //オートセーブを行っている場合、オートセーブを停止する。
+  $scope.autoSavePromise = Boards.autoSavePromise;
+  if($scope.autoSavePromise){
+    $interval.cancel($scope.autoSavePromise);
+    Boards.autoSavePromise = null;
+  }
 
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
@@ -127,7 +134,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
 //Board上に操作を加えるコントローラー
 //(as of 4/25では，バックグラウンドに壁紙指定のみ)
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $timeout, toaster, Boards, DBConn, Parts, Wallpapers) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers) {
   // このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
   // stateParams = { boardId : 0}となる
   // パーツの読込
@@ -136,6 +143,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.boardData = boardData;
     // boardIdがなければ、updateFlagをfalseに
     Boards.setUpdateFlag(boardData.boardId);
+    // 既存ボードの更新を行う際に、オートセーブを開始する
+    if(Boards.getUpdateFlag()){
+      Boards.autoSavePromise = $interval(function(){$scope.openModal();},30000);
+    }
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
     });
