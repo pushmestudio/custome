@@ -386,61 +386,32 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       readEntries();
     }
 
-    function fail(event){
+    function fail(event) {
       console.log(event.target.error.code);
       deferred.reject();
     }
     return deferred.promise;
   }
 
-  var setCurrentWallpaper = function(selectedWallpaperPath){
+  var setCurrentWallpaper = function(selectedWallpaperPath) {
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
   return {
-    loadWallpapers: function(){
+    loadWallpapers: function() {
       return loadWallpapers();
     },
-    getWallpaperParams: function(){
+    getWallpaperParams: function() {
       return wallpaperParams;
     },
-    setCurrentWallpaper: function(selectedWallpaperPath){
+    setCurrentWallpaper: function(selectedWallpaperPath) {
       setCurrentWallpaper(selectedWallpaperPath);
     },
-    getCurrentWallpaper: function(){
+    getCurrentWallpaper: function() {
       return wallpaperParams.currentWallpaperPath;
     }
   };
 })
-
-.factory('Camera', ['$q', function($q) {
-
-  return {
-    getPicture: function(destType) {
-      console.log(destType);
-      var pictureSource=navigator.camera.PictureSourceType;
-      var destinationType=navigator.camera.DestinationType;
-      var encodingType=navigator.camera.EncodingType;
-      var q = $q.defer();
-      navigator.camera.getPicture(function(result) {
-        // Do any magic you need
-        q.resolve(result);
-        console.log("getPicture() is succeeded");
-      }, function(err) {
-        q.reject(err);
-      }, {
-        quality: 50,
-        //destinationType: destinationType.FILE_URI,
-        //destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
-        destinationType: destType,
-        sourceType: pictureSource.PHOTOLIBRARY,//フォトライブラリの画像を使用する場合
-        //sourceType: pictureSource.CAMERA //カメラで撮影した画像を使用する場合
-        encodingType: encodingType.PNG
-      });
-      return q.promise;
-    }
-  }
-}])
 
 .factory('d', function($rootScope) {
   /**
