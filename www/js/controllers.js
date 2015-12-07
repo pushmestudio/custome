@@ -40,7 +40,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 })
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, toaster, Boards, DBConn, Wallpapers, d, $cordovaFile, $cordovaImagePicker) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, toaster, Boards, DBConn, Wallpapers, d) {
 
   // 使用する前に接続処理を行う
   // ここでDBから全Boardsを持ってくる処理を書く
@@ -54,51 +54,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
       });
     });
   }
-
-  document.addEventListener('deviceready', function () {
-    $cordovaFile.getFreeDiskSpace().then(function(success) {
-      d.log('hello:'+success);
-    });
-    var options = {
-       maximumImagesCount: 1,
-       width: 800,
-       height: 800,
-       quality: 80
-    };
-
-    $cordovaImagePicker.getPictures(options).then(function (results) {
-      for (var i = 0; i < results.length; i++) {
-        d.log('Image URI: ' + results[i]);
-        var filepath = results[i];
-        var sp = filepath.lastIndexOf("/");
-        $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
-          , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
-            d.log('from');
-            d.log(filepath.substring(0, sp + 1));
-            d.log(filepath.substring(sp + 1));
-            d.log('to');
-            d.log(cordova.file.dataDirectory);
-            d.log(filepath.substring(sp + 1));
-            d.log('we did it!!!');
-            d.log(success);
-
-                $cordovaFile.checkFile(cordova.file.dataDirectory, filepath.substring(sp + 1))
-                  .then(function (success) {
-                    d.log('found it!');
-                    d.log(success);
-                  }, function (error) {
-                    d.log('mmm, are you sure?')
-                  });
-
-          }, function (error) {
-            d.log('fxxxxxxxxk');
-          });
-      }
-    }, function(error) {
-        d.log('hoge');
-      // error getting photos
-    });
-  });
 
   $scope.myBoards = Boards.getMyBoards();
   // テンプレート一覧を読み込む
@@ -386,7 +341,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 })
 
-.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera, d) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, d, $cordovaFile, $cordovaImagePicker) {
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.newBoardId = 0;
 
@@ -419,25 +374,61 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.modal.show();
   };
 
-  //ローカルから画像を選択し，壁紙に適用 (base64バージョン)
-  $scope.selectLocalImageAsBase64 = function(){
-    Camera.getPicture(navigator.camera.DestinationType.DATA_URL).then(function(gotBase64) {
-      //d.log(gotBase64);
-      var addMeta2base64 = "data:/image/jpeg;base64,"+gotBase64;
-      Wallpapers.setCurrentWallpaper(addMeta2base64);
-      if($scope.modal.isShown()){
-        $scope.modal.hide();
-      }
-    });
-  }
-
   //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
   //アルファリリースでは未使用
   $scope.selectLocalImageAsFILEURI = function(){
-    Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(fileuri) {
-      //d.log(fileuri);
-      Wallpapers.setCurrentWallpaper(fileuri);
-    });
+      $scope.imagepath = '';
+      document.addEventListener('deviceready', function () {
+        $cordovaFile.getFreeDiskSpace().then(function(success) {
+          d.log('hello:'+success);
+        });
+
+        var options = {
+           maximumImagesCount: 1,
+           width: 800,
+           height: 800,
+           quality: 80
+        };
+
+        // refs http://ngcordova.com/docs/plugins/imagePicker/
+        // refs http://ngcordova.com/docs/plugins/file/
+        $cordovaImagePicker.getPictures(options).then(function (results) {
+          for (var i = 0; i < results.length; i++) {
+            d.log('Image URI: ' + results[i]);
+            var filepath = results[i];
+            var sp = filepath.lastIndexOf("/");
+            $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
+              , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
+                d.log('from');
+                d.log(filepath.substring(0, sp + 1));
+                d.log(filepath.substring(sp + 1));
+                d.log('to');
+                d.log(cordova.file.dataDirectory);
+                d.log(filepath.substring(sp + 1));
+                d.log('we did it!!!');
+                d.log(success);
+
+                    $cordovaFile.checkFile(cordova.file.dataDirectory, filepath.substring(sp + 1))
+                      .then(function (success) {
+                        d.log('found it!');
+                        d.log(success);
+                        $scope.imagepath = cordova.file.dataDirectory + filepath.substring(sp + 1);
+                        Wallpapers.setCurrentWallpaper($scope.imagepath);
+                        // TODO ここをdeferredに置き換えて、ここに記載している内容をservicesに退避する
+                      }, function (error) {
+                        d.log('mmm, are you sure?')
+                      });
+
+              }, function (error) {
+                d.log('fxxxxxxxxk');
+              });
+          }
+        }, function(error) {
+            d.log('hoge');
+          // error getting photos
+        });
+      });
+      d.log('not ready...');
   }
 })
 
