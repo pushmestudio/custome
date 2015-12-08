@@ -4,7 +4,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 .factory('Boards', function(DBConn, toaster) {
 
   // boardのtemplate
-  // TODO:混同しないようにより適切な名前へと要変更
   var templates = [{
     id: 0,
     name: 'Template1',
@@ -29,7 +28,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
   var $injector = angular.injector(['ng']);
-  q = $injector.get('$q');
+  var q = $injector.get('$q');
 
   // DBに保存したBoard一覧を格納する
   var myBoards = [];
@@ -347,7 +346,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
   var $injector = angular.injector(['ng']);
-  q = $injector.get('$q');
+  var q = $injector.get('$q');
 
   var wallpaperParams = {
     wallpaperPaths: [],
@@ -404,24 +403,34 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
+  /**
+   * ローカル画像を選択し、アプリ内フォルダにコピーします
+   * @see http://ngcordova.com/docs/plugins/imagePicker/
+   * @see http://ngcordova.com/docs/plugins/file/
+   * @return {Promise} resolve後は、アプリ内フォルダのイメージパスを返す
+   */
   var pickAndCopyImage = function() {
+    var deferred = q.defer();
+
     //document.addEventListener('deviceready', function () { // 元々はこの中に処理が書いてあった }); // TODO WallpapersCtrlのInit参考にするか
+    document.addEventListener('deviceready', pickAndCopy, false);
 
-
+    // devicereadyになったら下記を呼ぶ
+    var pickAndCopy = function() {
+      // imagePickerで使用するオプション定義
       var options = {
-         maximumImagesCount: 1,
+         maximumImagesCount: 1, // 同時に選択できるイメージの数
          // width: 800,
          // height: 800,
          quality: 80
       };
+      var imagePath; // 戻り値に使う、アプリ内フォルダのイメージへのパス
 
-      // refs http://ngcordova.com/docs/plugins/imagePicker/
-      // refs http://ngcordova.com/docs/plugins/file/
       $cordovaImagePicker.getPictures(options).then(function (results) {
         for (var i = 0; i < results.length; i++) {
           d.log('Image URI: ' + results[i]);
           var filepath = results[i];
-          var sp = filepath.lastIndexOf("/");
+          var sp = filepath.lastIndexOf("/"); // セパレータ
           $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
             , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
               d.log('from');
@@ -432,25 +441,22 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
               d.log(filepath.substring(sp + 1));
               d.log('we did it!!!');
               d.log(success);
-
-                  $cordovaFile.checkFile(cordova.file.dataDirectory, filepath.substring(sp + 1))
-                    .then(function (success) {
-                      d.log('found it!');
-                      d.log(success);
-                      return cordova.file.dataDirectory + filepath.substring(sp + 1);
-                    }, function (error) {
-                      d.log('mmm, are you sure?')
-                    });
-
+              d.log('found it!');
+              d.log(success);
+              imagePath = cordova.file.dataDirectory + filepath.substring(sp + 1);
+              deferred.resolve(imagePath);
             }, function (error) {
               d.log('fxxxxxxxxk');
+              deferred.reject(error);
             });
         }
       }, function(error) {
           d.log('hoge');
-        // error getting photos
+          deferred.reject(error);
       });
-    d.log('not ready...');
+
+      return deferred.promise();
+    }
   }
 
   return {
