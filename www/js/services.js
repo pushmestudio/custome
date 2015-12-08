@@ -189,30 +189,44 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   var parts = [{
     id: '0',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
-    title: 'note-yellow',//パレット上に表示用
+    title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
-    class: 'sticky-note note-yellow',
+    class: 'sticky-note note-yellow note-normal',
     counter: 0, //パレット上に表示用
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
     id: '1',//付箋(青)
-    title: 'note-blue',
+    title: 'note-blue-normal',
     type: 'fusen',
-    class: 'sticky-note note-blue',
+    class: 'sticky-note note-blue note-normal',
     counter: 0,
     flag : 'false'
   }, {
     id: '2',//横長付箋(黄)
     title: 'note-yellow-wide',
     type: 'fusen',
-    class: 'sticky-note note-yellow-wide',
+    class: 'sticky-note note-yellow note-wide',
     counter: 0,
     flag : 'false'
   }, {
     id: '3',//横長付箋(青)
     title: 'note-blue-wide',
     type: 'fusen',
-    class: 'sticky-note note-blue-wide',
+    class: 'sticky-note note-blue note-wide',
+    counter: 0,
+    flag : 'false'
+  }, {
+    id: '4',//小付箋(黄)
+    title: 'note-yellow-small',
+    type: 'fusen',
+    class: 'sticky-note note-yellow note-small',
+    counter: 0,
+    flag : 'false'
+  }, {
+    id: '5',//小付箋(青)
+    title: 'note-blue-small',
+    type: 'fusen',
+    class: 'sticky-note note-blue note-small',
     counter: 0,
     flag : 'false'
   }];

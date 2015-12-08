@@ -1,3 +1,4 @@
+
 .sticky-note {
   position: absolute;
   word-break: break-all;
@@ -8,29 +9,27 @@
 }
 
 .note-yellow {
-  width: 100px;
-  min-height: 100px;
-  max-height: 150px;
-  background: #f7e999;
-}
-
-.note-yellow-wide {
-  width: 100px;
-  min-height: 50px;
-  max-height: 100px;
   background: #f7e999;
 }
 
 .note-blue {
-  width: 100px;
-  min-height: 100px;
-  max-height: 150px;
   background: #b9dcf4;
 }
 
-.note-blue-wide {
+.note-normal {
+  width: 100px;
+  min-height: 100px;
+  max-height: 150px;
+}
+
+.note-wide {
   width: 100px;
   min-height: 50px;
   max-height: 100px;
-  background: #b9dcf4;
+}
+
+.note-small {
+  width: 50px;
+  min-height: 50px;
+  max-height: 100px;
 }
