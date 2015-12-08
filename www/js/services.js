@@ -1,5 +1,5 @@
 // mainApp.servicesというモジュールを定義する
-angular.module('mainApp.services', ['mainApp.dbConnector'])
+angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
 .factory('Boards', function(DBConn, toaster) {
 
@@ -343,7 +343,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 })
 
   // Wallpapersサービスを定義
-.factory('Wallpapers', function() {
+.factory('Wallpapers', function($cordovaFile, $cordovaImagePicker) {
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
   var $injector = angular.injector(['ng']);
@@ -354,32 +354,32 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     currentWallpaperPath: ''
   };
 
-  var toArray = function(list){
+  var toArray = function(list) {
     return Array.prototype.slice.call(list || [], 0);
   }
 
-  var listResults = function(entries){
-    entries.forEach(function(entry, i){
+  var listResults = function(entries) {
+    entries.forEach(function(entry, i) {
       // 最終的にディレクトリ内のファイル一覧を表示する場所がここ
       wallpaperParams.wallpaperPaths.push("img/wallpaper/" + entry.name);
     });
   }
 
-  var loadWallpapers = function(){
+  var loadWallpapers = function() {
     var deferred = q.defer();
 
     // resolveLocalFileSystemURL()は、DirectoryEntryもしくはFileEntryを、ローカルのURL(第1引数)を指定して取得する(第2引数)
     // ここでは、cordova.file.applicationDirectory = "file:///android_asset/" (つまり"custome/platforms/android/assets/")である
     window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/img/wallpaper", gotDIR, fail);
 
-    function gotDIR(dirEntry){
+    function gotDIR(dirEntry) {
       var dirReader = dirEntry.createReader();
       var entries = [];
 
-      var readEntries = function(){
+      var readEntries = function() {
         // dirReader.readEntriesの第1引数がsuccessCallbackであり、この引数resultsにはFileEntry(もしくはDirectoryEntry)が格納されている
-        dirReader.readEntries(function(results){
-          if(!results.length){
+        dirReader.readEntries(function(results) {
+          if(!results.length) {
             // Array.prototype.sort()は、引数が省略された場合、要素の文字列比較に基づいて辞書順にソートされる
             listResults(entries.sort());
             deferred.resolve();
@@ -404,6 +404,55 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
+  var pickAndCopyImage = function() {
+    //document.addEventListener('deviceready', function () { // 元々はこの中に処理が書いてあった }); // TODO WallpapersCtrlのInit参考にするか
+
+
+      var options = {
+         maximumImagesCount: 1,
+         // width: 800,
+         // height: 800,
+         quality: 80
+      };
+
+      // refs http://ngcordova.com/docs/plugins/imagePicker/
+      // refs http://ngcordova.com/docs/plugins/file/
+      $cordovaImagePicker.getPictures(options).then(function (results) {
+        for (var i = 0; i < results.length; i++) {
+          d.log('Image URI: ' + results[i]);
+          var filepath = results[i];
+          var sp = filepath.lastIndexOf("/");
+          $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
+            , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
+              d.log('from');
+              d.log(filepath.substring(0, sp + 1));
+              d.log(filepath.substring(sp + 1));
+              d.log('to');
+              d.log(cordova.file.dataDirectory);
+              d.log(filepath.substring(sp + 1));
+              d.log('we did it!!!');
+              d.log(success);
+
+                  $cordovaFile.checkFile(cordova.file.dataDirectory, filepath.substring(sp + 1))
+                    .then(function (success) {
+                      d.log('found it!');
+                      d.log(success);
+                      return cordova.file.dataDirectory + filepath.substring(sp + 1);
+                    }, function (error) {
+                      d.log('mmm, are you sure?')
+                    });
+
+            }, function (error) {
+              d.log('fxxxxxxxxk');
+            });
+        }
+      }, function(error) {
+          d.log('hoge');
+        // error getting photos
+      });
+    d.log('not ready...');
+  }
+
   return {
     loadWallpapers: function() {
       return loadWallpapers();
@@ -416,6 +465,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     getCurrentWallpaper: function() {
       return wallpaperParams.currentWallpaperPath;
+    },
+    pickAndCopyImage: function() {
+      return pickAndCopyImage();
     }
   };
 })
