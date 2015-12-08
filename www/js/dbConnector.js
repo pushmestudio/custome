@@ -87,7 +87,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
           'parts': [
             {
               'partId': '0',
-              'class': 'sticky-note note-yellow',
+              'class': 'sticky-note note-yellow note-normal',
               'type': 'fusen',
               'text': 'Tap "Wand" icon to put parts.',
               'position': {
@@ -97,7 +97,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
             },
             {
               'partId': '1',
-              'class': 'sticky-note note-blue',
+              'class': 'sticky-note note-blue note-normal',
               'type': 'fusen',
               'text': 'If you like this app, please support us by tapping the Ads.',
               'position': {
