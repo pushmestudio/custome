@@ -1,6 +1,6 @@
 //これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
 // mainApp.controllersというモジュールを定義する
-angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate', 'ngCordova'])
+angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
 // undo()を含んだトーストを表示するためのdirective
 .directive('partDeleteToaster', [function() {
@@ -352,7 +352,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 })
 
-.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, d, $cordovaFile, $cordovaImagePicker) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, d) {
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.newBoardId = 0;
 
@@ -360,19 +360,18 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $ionicModal.fromTemplateUrl('templates/wallpaperList-modal.html', {
     scope: $scope,
     animataion: 'slide-in-up'
-  }).then(function(modal){
+  }).then(function(modal) {
     $scope.modal = modal;
   });
 
-  $scope.init = function(){
+  $scope.init = function() {
     document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady(){
-      Wallpapers.loadWallpapers().then(function(){
-      })
+    function onDeviceReady() {
+      Wallpapers.loadWallpapers().then(function() {}) // TODO ここ、varの関数ではダメか？
     }
   };
 
-  $scope.selectWallpaper = function(selectedWallpaperPath){
+  $scope.selectWallpaper = function(selectedWallpaperPath) {
     d.log($scope.wallpaperParams.currentWallpaperPath);
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
     if($scope.modal.isShown()){
@@ -387,66 +386,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
   //アルファリリースでは未使用
-  $scope.selectLocalImageAsFILEURI = function(){
-      $scope.imagepath = '';
-      document.addEventListener('deviceready', function () {
-        $cordovaFile.getFreeDiskSpace().then(function(success) {
-          d.log('hello:'+success);
-        });
-
-        var options = {
-           maximumImagesCount: 1,
-           width: 800,
-           height: 800,
-           quality: 80
-        };
-
-        // refs http://ngcordova.com/docs/plugins/imagePicker/
-        // refs http://ngcordova.com/docs/plugins/file/
-        $cordovaImagePicker.getPictures(options).then(function (results) {
-          for (var i = 0; i < results.length; i++) {
-            d.log('Image URI: ' + results[i]);
-            var filepath = results[i];
-            var sp = filepath.lastIndexOf("/");
-            $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
-              , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
-                d.log('from');
-                d.log(filepath.substring(0, sp + 1));
-                d.log(filepath.substring(sp + 1));
-                d.log('to');
-                d.log(cordova.file.dataDirectory);
-                d.log(filepath.substring(sp + 1));
-                d.log('we did it!!!');
-                d.log(success);
-
-                    $cordovaFile.checkFile(cordova.file.dataDirectory, filepath.substring(sp + 1))
-                      .then(function (success) {
-                        d.log('found it!');
-                        d.log(success);
-                        $scope.imagepath = cordova.file.dataDirectory + filepath.substring(sp + 1);
-                        Wallpapers.setCurrentWallpaper($scope.imagepath);
-                        // TODO ここをdeferredに置き換えて、ここに記載している内容をservicesに退避する
-                      }, function (error) {
-                        d.log('mmm, are you sure?')
-                      });
-
-              }, function (error) {
-                d.log('fxxxxxxxxk');
-              });
-          }
-        }, function(error) {
-            d.log('hoge');
-          // error getting photos
-        });
-      });
-      d.log('not ready...');
-  }
-})
-
-//3つめのタブ(Sample)を選択時に使用するコントローラー
-//動作確認や、ノウハウ記録用に使用
-.controller('SampleCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
+  $scope.selectWallpaperLocal = function() {
+    /*
+    Wallpapers.pickAndCopyImage.then(function(imagePath) {
+      Wallpapers.setCurrentWallpaper(imagepath);
+    });
+    */
+    var imagePath = Wallpapers.pickAndCopyImage;
+    Wallpapers.setCurrentWallpaper(imagepath);
   };
 })
