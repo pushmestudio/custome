@@ -1,4 +1,8 @@
-// mainApp.servicesというモジュールを定義する
+/**
+ * @fileOverview mainApp.servicesというモジュールの定義。
+ * DBアクセス系を除いた各種サービスを定義している
+ * @copyright PushMe Studio 2015
+ */
 angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
 .factory('Boards', function(DBConn, toaster) {
@@ -405,6 +409,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   /**
    * ローカル画像を選択し、アプリ内フォルダにコピーします
+   * コピー後は、コピー先のファイルパスを返します
    * @see http://ngcordova.com/docs/plugins/imagePicker/
    * @see http://ngcordova.com/docs/plugins/file/
    * @return {Promise} resolve後は、アプリ内フォルダのイメージパスを返す
@@ -418,32 +423,29 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
        // height: 800,
        quality: 80
     };
-    var imagePath; // 戻り値に使う、アプリ内フォルダのイメージへのパス
+    var appImagePath; // 戻り値に使う、アプリ内フォルダのイメージへのパス
 
     $cordovaImagePicker.getPictures(options).then(function (results) {
+      // ImagePickerでは複数の写真を選ぶことが可能なので、選んだ回数だけループが回る
+      // 1つも選ばない場合は、1回も回らない
       for (var i = 0; i < results.length; i++) {
-        d.log('Image URI: ' + results[i]);
         var filepath = results[i];
-        var sp = filepath.lastIndexOf("/"); // セパレータ
-        $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
-          , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
-            d.log('from');
-            d.log(filepath.substring(0, sp + 1));
-            d.log(filepath.substring(sp + 1));
-            d.log('to');
-            d.log(cordova.file.dataDirectory);
-            d.log(filepath.substring(sp + 1));
-            d.log('we did it!!!');
-            d.log(success);
-            imagePath = cordova.file.dataDirectory + filepath.substring(sp + 1);
-            deferred.resolve(imagePath);
+        d.log('Image URI: ' + filepath); // コピー元のイメージへのパス
+        var sp = filepath.lastIndexOf("/") + 1; // フォルダとファイルの境目
+
+        // copyFile(コピー元フォルダ、コピーファイル名、コピー先フォルダ、コピーファイル名)
+        // dataDirectoryはアプリ内フォルダ
+        $cordovaFile.copyFile(filepath.substring(0, sp), filepath.substring(sp)
+          , cordova.file.dataDirectory, filepath.substring(sp)).then(function (success) {
+            appImagePath = cordova.file.dataDirectory + filepath.substring(sp);
+            deferred.resolve(appImagePath);
           }, function (error) {
-            d.log('fxxxxxxxxk');
+            d.log('fail to copy image');
             deferred.reject(error);
           });
       }
     }, function(error) {
-        d.log('hoge');
+        d.log('fail to pick a image');
         deferred.reject(error);
     });
 

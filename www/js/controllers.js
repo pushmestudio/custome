@@ -1,5 +1,8 @@
-//これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
-// mainApp.controllersというモジュールを定義する
+/**
+ * @fileOverview mainApp.controllersというモジュールの定義。
+ * ビューとモデルをつなぐ各種コントローラを定義している
+ * @copyright PushMe Studio 2015
+ */
 angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
 // undo()を含んだトーストを表示するためのdirective
@@ -366,7 +369,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   $scope.init = function() {
     document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
+    function onDeviceReady() { // loadWallpapersがcordovaのプラグインを使用するため、devicereadyを待つ
       Wallpapers.loadWallpapers().then(function() {});
     }
   };
@@ -386,8 +389,15 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
   $scope.selectWallpaperLocal = function() {
+    if(!window.cordova) { // 実機等のデバイスでない場合は使用できないので呼びださせないので関数呼び出しを抑制
+      d.log('Can not use "selectWallpaperLocal" function via browser');
+      return;
+    }
     Wallpapers.pickAndCopyImage().then(function(imagePath) {
       Wallpapers.setCurrentWallpaper(imagePath);
+      if($scope.modal.isShown()){
+        $scope.modal.hide();
+      }
     });
   };
 })
