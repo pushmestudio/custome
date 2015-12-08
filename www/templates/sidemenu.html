@@ -22,7 +22,11 @@
     <div class="row palette-items">
       <div class="col col-50" ng-repeat="part in parts">
         <div class="center">
+          <div class="{{part.class}}" style="position: relative;" menu-close ng-click="select(part.id)">
+          <!--
           <img ng-src="{{part.img}}" menu-close ng-click="select(part.id)">
+          -->
+          </div>
         </div>
       </div>
     </div>

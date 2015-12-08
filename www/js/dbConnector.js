@@ -87,7 +87,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
           'parts': [
             {
               'partId': '0',
-              'image': 'img/part_fusen_yellow.png',
+              'class': 'sticky-note note-yellow',
               'type': 'fusen',
               'text': 'Tap "Wand" icon to put parts.',
               'position': {
@@ -97,7 +97,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
             },
             {
               'partId': '1',
-              'image': 'img/part_fusen_blue.png',
+              'class': 'sticky-note note-blue',
               'type': 'fusen',
               'text': 'If you like this app, please support us by tapping the Ads.',
               'position': {

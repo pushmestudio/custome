@@ -1,4 +1,3 @@
-<link href="css/stickey-notes.css" rel="stylesheet">
 <ion-view view-title="{{boardName}}">
   <toaster-container toaster-options="{'time-out': 3000, 'close-button': true, 'animation-class': 'toast-top-center', 'tap-to-dismiss': 'false'}"></toaster-container>
   <ion-nav-buttons side="right">
@@ -11,7 +10,7 @@
       <!--
       <div draggable-part style="position: absolute; width: 100px; overflow:auto; min-height: 100px; max-height: 150px; transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); -webkit-transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); background: url({{deployedPart.image}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" on-tap="openMenu($index)">
       -->
-      <div draggable-part class="stickey-note-yellow" style="transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); -webkit-transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px);" on-tap="openMenu($index)">
+      <div draggable-part class="{{deployedPart.class}}" style="transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); -webkit-transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px);" on-tap="openMenu($index)">
         <div style="margin: 5px">{{deployedPart.text}}</div>
       </div>
     </div>

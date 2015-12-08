@@ -182,16 +182,30 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   var parts = [{
     id: '0',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
-    title: 'yellow',//パレット上に表示用
+    title: 'note-yellow',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
-    img: 'img/part_fusen_yellow.png',
+    class: 'sticky-note note-yellow',
     counter: 0, //パレット上に表示用
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
     id: '1',//付箋(青)
-    title: 'blue',
+    title: 'note-blue',
     type: 'fusen',
-    img: 'img/part_fusen_blue.png',
+    class: 'sticky-note note-blue',
+    counter: 0,
+    flag : 'false'
+  }, {
+    id: '2',//横長付箋(黄)
+    title: 'note-yellow-wide',
+    type: 'fusen',
+    class: 'sticky-note note-yellow-wide',
+    counter: 0,
+    flag : 'false'
+  }, {
+    id: '3',//横長付箋(青)
+    title: 'note-blue-wide',
+    type: 'fusen',
+    class: 'sticky-note note-blue-wide',
     counter: 0,
     flag : 'false'
   }];
@@ -228,12 +242,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
         part.counter++;//同じタイプのパーツの配置数//後で消すかも
         var deployedPart = {
           'partId' : part.id,
-          'image' : part.img,
+          'class' : part.class,
           'text' : text,
           'type' : part.type,
           'position' : {
-            x : partX-50,
-            y : partY-100,
+            x : partX,
+            y : partY-50,
           }
         };
         part.flag='false';//パーツを1回デプロイすると，クリックしてもデプロイできなくする
