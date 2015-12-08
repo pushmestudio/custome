@@ -366,8 +366,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   $scope.init = function() {
     document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-      Wallpapers.loadWallpapers().then(function() {}) // TODO ここ、varの関数ではダメか？
+    var onDeviceReady = function() {
+      Wallpapers.loadWallpapers().then(function() {}) // TODO ここ、varの関数ではダメか？試行中
     }
   };
 
@@ -387,12 +387,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
   //アルファリリースでは未使用
   $scope.selectWallpaperLocal = function() {
-    /*
     Wallpapers.pickAndCopyImage.then(function(imagePath) {
       Wallpapers.setCurrentWallpaper(imagepath);
     });
-    */
-    var imagePath = Wallpapers.pickAndCopyImage;
-    Wallpapers.setCurrentWallpaper(imagepath);
   };
 })
