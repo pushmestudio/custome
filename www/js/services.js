@@ -342,7 +342,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 })
 
   // Wallpapersサービスを定義
-.factory('Wallpapers', function($cordovaFile, $cordovaImagePicker) {
+.factory('Wallpapers', function($cordovaFile, $cordovaImagePicker, d) {
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
   var $injector = angular.injector(['ng']);
@@ -411,52 +411,43 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    */
   var pickAndCopyImage = function() {
     var deferred = q.defer();
+    // imagePickerで使用するオプション定義
+    var options = {
+       maximumImagesCount: 1, // 同時に選択できるイメージの数
+       // width: 800,
+       // height: 800,
+       quality: 80
+    };
+    var imagePath; // 戻り値に使う、アプリ内フォルダのイメージへのパス
 
-    //document.addEventListener('deviceready', function () { // 元々はこの中に処理が書いてあった }); // TODO WallpapersCtrlのInit参考にするか
-    document.addEventListener('deviceready', pickAndCopy, false);
+    $cordovaImagePicker.getPictures(options).then(function (results) {
+      for (var i = 0; i < results.length; i++) {
+        d.log('Image URI: ' + results[i]);
+        var filepath = results[i];
+        var sp = filepath.lastIndexOf("/"); // セパレータ
+        $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
+          , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
+            d.log('from');
+            d.log(filepath.substring(0, sp + 1));
+            d.log(filepath.substring(sp + 1));
+            d.log('to');
+            d.log(cordova.file.dataDirectory);
+            d.log(filepath.substring(sp + 1));
+            d.log('we did it!!!');
+            d.log(success);
+            imagePath = cordova.file.dataDirectory + filepath.substring(sp + 1);
+            deferred.resolve(imagePath);
+          }, function (error) {
+            d.log('fxxxxxxxxk');
+            deferred.reject(error);
+          });
+      }
+    }, function(error) {
+        d.log('hoge');
+        deferred.reject(error);
+    });
 
-    // devicereadyになったら下記を呼ぶ
-    var pickAndCopy = function() {
-      // imagePickerで使用するオプション定義
-      var options = {
-         maximumImagesCount: 1, // 同時に選択できるイメージの数
-         // width: 800,
-         // height: 800,
-         quality: 80
-      };
-      var imagePath; // 戻り値に使う、アプリ内フォルダのイメージへのパス
-
-      $cordovaImagePicker.getPictures(options).then(function (results) {
-        for (var i = 0; i < results.length; i++) {
-          d.log('Image URI: ' + results[i]);
-          var filepath = results[i];
-          var sp = filepath.lastIndexOf("/"); // セパレータ
-          $cordovaFile.copyFile(filepath.substring(0, sp + 1), filepath.substring(sp + 1)
-            , cordova.file.dataDirectory, filepath.substring(sp + 1)).then(function (success) {
-              d.log('from');
-              d.log(filepath.substring(0, sp + 1));
-              d.log(filepath.substring(sp + 1));
-              d.log('to');
-              d.log(cordova.file.dataDirectory);
-              d.log(filepath.substring(sp + 1));
-              d.log('we did it!!!');
-              d.log(success);
-              d.log('found it!');
-              d.log(success);
-              imagePath = cordova.file.dataDirectory + filepath.substring(sp + 1);
-              deferred.resolve(imagePath);
-            }, function (error) {
-              d.log('fxxxxxxxxk');
-              deferred.reject(error);
-            });
-        }
-      }, function(error) {
-          d.log('hoge');
-          deferred.reject(error);
-      });
-
-      return deferred.promise();
-    }
+    return deferred.promise;
   }
 
   return {
