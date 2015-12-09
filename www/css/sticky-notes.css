@@ -1,8 +1,8 @@
-
+/* 付箋共通部 */
 .sticky-note {
   position: absolute;
   word-break: break-all;
-  color: #333;
+  color: #222;
   box-shadow: 3px 3px 3px #888;
   -webkit-box-shadow: 3px 3px 3px #888;
   overflow: auto;
@@ -29,7 +29,7 @@
 }
 
 .note-small {
-  width: 50px;
-  min-height: 50px;
+  width: 75px;
+  min-height: 75px;
   max-height: 100px;
 }
