@@ -192,42 +192,60 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
-    counter: 0, //パレット上に表示用
+    size: {
+      width: 100, 
+      height: 100
+    }, 
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
     id: '1',//付箋(青)
     title: 'note-blue-normal',
     type: 'fusen',
     class: 'sticky-note note-blue note-normal',
-    counter: 0,
+    size: {
+      width: 100, 
+      height: 100
+    },
     flag : 'false'
   }, {
     id: '2',//横長付箋(黄)
     title: 'note-yellow-wide',
     type: 'fusen',
     class: 'sticky-note note-yellow note-wide',
-    counter: 0,
+    size: {
+      width: 100, 
+      height: 50
+    },
     flag : 'false'
   }, {
     id: '3',//横長付箋(青)
     title: 'note-blue-wide',
     type: 'fusen',
     class: 'sticky-note note-blue note-wide',
-    counter: 0,
+    size: {
+      width: 100, 
+      height: 50
+    },
     flag : 'false'
   }, {
     id: '4',//小付箋(黄)
     title: 'note-yellow-small',
     type: 'fusen',
     class: 'sticky-note note-yellow note-small',
-    counter: 0,
+    size: {
+      width: 75, 
+      height: 75
+    },
     flag : 'false'
   }, {
     id: '5',//小付箋(青)
     title: 'note-blue-small',
     type: 'fusen',
     class: 'sticky-note note-blue note-small',
-    counter: 0,
+    size: {
+      width: 75, 
+      height: 75
+    },
     flag : 'false'
   }];
 
@@ -267,8 +285,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
           'text' : text,
           'type' : part.type,
           'position' : {
-            x : partX,
-            y : partY-50,
+            'x' : partX - (part.size.width/2),
+            'y' : partY - (part.size.height/2) - 45
           }
         };
         part.flag='false';//パーツを1回デプロイすると，クリックしてもデプロイできなくする
