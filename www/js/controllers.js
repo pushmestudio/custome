@@ -1,7 +1,7 @@
 /**
- * @fileOverview mainApp.controllersというモジュールの定義。
+ * @file mainApp.controllersというモジュールの定義。
  * ビューとモデルをつなぐ各種コントローラを定義している
- * @copyright PushMe Studio 2015
+ * @copyright (c) 2015 PushMe Studio
  */
 angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 

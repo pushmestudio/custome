@@ -1,7 +1,7 @@
 /**
- * @fileOverview メインモジュール(mainApp)、アプリ内の共通設定もここで定義している
+ * @file メインモジュール(mainApp)、アプリ内の共通設定もここで定義している
  * 依存するモジュール(ionic, mainApp.controllers)についても指定している
- * @copyright PushMe Studio 2015
+ * @copyright (c) 2015 PushMe Studio
  */
 angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 

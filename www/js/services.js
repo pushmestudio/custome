@@ -1,7 +1,7 @@
 /**
- * @fileOverview mainApp.servicesというモジュールの定義。
+ * @file mainApp.servicesというモジュールの定義。
  * DBアクセス系を除いた各種サービスを定義している
- * @copyright PushMe Studio 2015
+ * @copyright (c) 2015 PushMe Studio
  */
 angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
