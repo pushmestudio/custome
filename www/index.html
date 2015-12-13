@@ -19,6 +19,7 @@
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
+    <script src="lib/ngCordova/dist/ng-cordova.js"></script>
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
@@ -33,10 +34,6 @@
     <!--<script src="http://localhost:8080/target/target-script-min.js"></script>-->
   </head>
   <body ng-app="mainApp">
-    <script>
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady(){}
-    </script>
     <!--
       The nav bar that will be updated as we navigate between views.
       サイドバーは全画面に共通の部品として用意するが、サイドバーを呼び出すボタンをboard.htmlにしか配置しないことで対応
@@ -73,7 +70,7 @@
         var nend_params = {"media":22843,"site":147184,"spot":398567,"type":1,"oriented":3};
 //sample        var nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
       </script>
-      <script type="text/javascript" src="http://js1.nend.net/js/nendAdLoader.js"></script>
+      <script type="text/javascript" src="https://js1.nend.net/js/nendAdLoader.js"></script>
     </div>
     <div class="ads-trigger" ng-show="flagAd"><img ng-src=img/icon_pushme.png ng-click="popAd()" /></div>
   </div>

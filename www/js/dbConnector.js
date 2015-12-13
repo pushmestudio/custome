@@ -1,9 +1,9 @@
 /**
- * @fileOverview mainApp.dbConnectorというモジュールの定義。
+ * @file mainApp.dbConnectorというモジュールの定義。
  * DB関連のCRUD処理などを提供する。
- * @refs IndexedDBのAPI https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore
- * @refs 実装に際して参考にしたライブラリ https://github.com/webcss/angular-indexeddb/blob/master/src/indexeddb.js
- * @copyright PushMe Studio 2015
+ * @see IndexedDBのAPI https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore
+ * @see 実装に際して参考にしたライブラリ https://github.com/webcss/angular-indexeddb/blob/master/src/indexeddb.js
+ * @copyright (c) 2015 PushMe Studio
  */
 angular.module('mainApp.dbConnector', ['mainApp.services'])
   .factory('DBConn', function(d) {
