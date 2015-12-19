@@ -214,7 +214,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     }];
 
   var parts = [{
-    id: 'a1',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
+    id: '0',
+    id2: 'a1',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
     title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
@@ -224,7 +225,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
-    id: 'b1',//付箋(青)
+    id: '1',//付箋(青)
+    id2: 'b1',
     title: 'note-blue-normal',
     type: 'fusen',
     class: 'sticky-note note-blue note-normal',
@@ -234,7 +236,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     flag : 'false'
   }, {
-    id: 'a2',//横長付箋(黄)
+    id: '2',//横長付箋(黄)
+    id2: 'a2',
     title: 'note-yellow-wide',
     type: 'fusen',
     class: 'sticky-note note-yellow note-wide',
@@ -244,7 +247,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     flag : 'false'
   }, {
-    id: 'b2',//横長付箋(青)
+    id: '3',//横長付箋(青)
+    id2: 'b2',
     title: 'note-blue-wide',
     type: 'fusen',
     class: 'sticky-note note-blue note-wide',
@@ -254,7 +258,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     flag : 'false'
   }, {
-    id: 'a0',//小付箋(黄)
+    id: '4',//小付箋(黄)
+    id2: 'a0',
     title: 'note-yellow-small',
     type: 'fusen',
     class: 'sticky-note note-yellow note-small',
@@ -264,7 +269,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     },
     flag : 'false'
   }, {
-    id: 'b0',//小付箋(青)
+    id: '5',//小付箋(青)
+    id2: 'b0',
     title: 'note-blue-small',
     type: 'fusen',
     class: 'sticky-note note-blue note-small',
@@ -301,7 +307,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
     }
     for (count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
-      if (tgtId === part.id){
+      if (tgtId === part.id2){
         part.flag='true';
       }else{
         part.flag='false';
