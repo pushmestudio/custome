@@ -192,15 +192,15 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   // パーツの大きさ
   var partsSize = [{
-      is: '0', // small
+      is: '1', // small
       class: 'sticky-note note-yellow note-small',
       flag: true // フラグで選択されているか判定
     },{
-      id: '1', // normal
+      id: '2', // normal
       class: 'sticky-note note-yellow note-normal',
       flag: false
     },{
-      id: '2', // wide
+      id: '3', // wide
       class: 'sticky-note note-yellow note-wide',
       flag: false
     }];
@@ -218,7 +218,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   var parts = [{
     id: '0',
-    id2: 'a1',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
+    id2: 'a2',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
     title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
@@ -229,7 +229,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
     id: '1',//付箋(青)
-    id2: 'b1',
+    id2: 'b2',
     title: 'note-blue-normal',
     type: 'fusen',
     class: 'sticky-note note-blue note-normal',
@@ -240,7 +240,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     flag : 'false'
   }, {
     id: '2',//横長付箋(黄)
-    id2: 'a2',
+    id2: 'a3',
     title: 'note-yellow-wide',
     type: 'fusen',
     class: 'sticky-note note-yellow note-wide',
@@ -251,7 +251,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     flag : 'false'
   }, {
     id: '3',//横長付箋(青)
-    id2: 'b2',
+    id2: 'b3',
     title: 'note-blue-wide',
     type: 'fusen',
     class: 'sticky-note note-blue note-wide',
@@ -262,7 +262,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     flag : 'false'
   }, {
     id: '4',//小付箋(黄)
-    id2: 'a0',
+    id2: 'a1',
     title: 'note-yellow-small',
     type: 'fusen',
     class: 'sticky-note note-yellow note-small',
@@ -273,7 +273,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     flag : 'false'
   }, {
     id: '5',//小付箋(青)
-    id2: 'b0',
+    id2: 'b1',
     title: 'note-blue-small',
     type: 'fusen',
     class: 'sticky-note note-blue note-small',
