@@ -1,3 +1,4 @@
+/* (c) 2015 PushMe Studio */
 /* Empty. Add your own CSS if you like */
 .item-input{
   position: relative;
@@ -50,5 +51,5 @@ input.ng-valid.ng-touched {
     background-color: #000;
     opacity: 0; }
   .active .modal-backdrop-bg {
-    opacity: 0.5; } 
+    opacity: 0.5; }
 }

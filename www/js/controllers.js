@@ -1,5 +1,8 @@
-//これは(いったん)、各タブにひもづくコントローラーをまとめた.jsファイル
-// mainApp.controllersというモジュールを定義する
+/**
+ * @file mainApp.controllersというモジュールの定義。
+ * ビューとモデルをつなぐ各種コントローラを定義している
+ * @copyright (c) 2015 PushMe Studio
+ */
 angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
 // undo()を含んだトーストを表示するためのdirective
@@ -40,7 +43,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 })
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $interval, toaster, Boards, DBConn, Wallpapers) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $interval, toaster, Boards, DBConn, Wallpapers, d) {
 
   //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
@@ -376,7 +379,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   };
 })
 
-.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, Camera, d) {
+.controller('WallpaperCtrl', function($scope, $ionicModal, Wallpapers, d) {
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.newBoardId = 0;
 
@@ -384,19 +387,18 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   $ionicModal.fromTemplateUrl('templates/wallpaperList-modal.html', {
     scope: $scope,
     animataion: 'slide-in-up'
-  }).then(function(modal){
+  }).then(function(modal) {
     $scope.modal = modal;
   });
 
-  $scope.init = function(){
+  $scope.init = function() {
     document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady(){
-      Wallpapers.loadWallpapers().then(function(){
-      })
+    function onDeviceReady() { // loadWallpapersがcordovaのプラグインを使用するため、devicereadyを待つ
+      Wallpapers.loadWallpapers().then(function() {});
     }
   };
 
-  $scope.selectWallpaper = function(selectedWallpaperPath){
+  $scope.selectWallpaper = function(selectedWallpaperPath) {
     d.log($scope.wallpaperParams.currentWallpaperPath);
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
     if($scope.modal.isShown()){
@@ -409,32 +411,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     $scope.modal.show();
   };
 
-  //ローカルから画像を選択し，壁紙に適用 (base64バージョン)
-  $scope.selectLocalImageAsBase64 = function(){
-    Camera.getPicture(navigator.camera.DestinationType.DATA_URL).then(function(gotBase64) {
-      //d.log(gotBase64);
-      var addMeta2base64 = "data:/image/jpeg;base64,"+gotBase64;
-      Wallpapers.setCurrentWallpaper(addMeta2base64);
+  //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
+  $scope.selectWallpaperLocal = function() {
+    if(!window.cordova) { // 実機等のデバイスでない場合は使用できないので呼びださせないので関数呼び出しを抑制
+      d.log('Can not use "selectWallpaperLocal" function via browser');
+      return;
+    }
+    Wallpapers.pickAndCopyImage().then(function(imagePath) {
+      Wallpapers.setCurrentWallpaper(imagePath);
       if($scope.modal.isShown()){
         $scope.modal.hide();
       }
     });
-  }
-
-  //ローカルから画像を選択し，壁紙に適用 (ファイルパスバージョン)
-  //アルファリリースでは未使用
-  $scope.selectLocalImageAsFILEURI = function(){
-    Camera.getPicture(navigator.camera.DestinationType.FILE_URI).then(function(fileuri) {
-      //d.log(fileuri);
-      Wallpapers.setCurrentWallpaper(fileuri);
-    });
-  }
-})
-
-//3つめのタブ(Sample)を選択時に使用するコントローラー
-//動作確認や、ノウハウ記録用に使用
-.controller('SampleCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
   };
 })

@@ -1,10 +1,13 @@
-// mainApp.servicesというモジュールを定義する
-angular.module('mainApp.services', ['mainApp.dbConnector'])
+/**
+ * @file mainApp.servicesというモジュールの定義。
+ * DBアクセス系を除いた各種サービスを定義している
+ * @copyright (c) 2015 PushMe Studio
+ */
+angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
 .factory('Boards', function(DBConn, toaster) {
 
   // boardのtemplate
-  // TODO:混同しないようにより適切な名前へと要変更
   var templates = [{
     id: 0,
     name: 'Template1',
@@ -29,7 +32,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
   var $injector = angular.injector(['ng']);
-  q = $injector.get('$q');
+  var q = $injector.get('$q');
 
   // DBに保存したBoard一覧を格納する
   var myBoards = [];
@@ -457,43 +460,43 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
 })
 
   // Wallpapersサービスを定義
-.factory('Wallpapers', function() {
+.factory('Wallpapers', function($cordovaFile, $cordovaImagePicker, d) {
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
   var $injector = angular.injector(['ng']);
-  q = $injector.get('$q');
+  var q = $injector.get('$q');
 
   var wallpaperParams = {
     wallpaperPaths: [],
     currentWallpaperPath: ''
   };
 
-  var toArray = function(list){
+  var toArray = function(list) {
     return Array.prototype.slice.call(list || [], 0);
   }
 
-  var listResults = function(entries){
-    entries.forEach(function(entry, i){
+  var listResults = function(entries) {
+    entries.forEach(function(entry, i) {
       // 最終的にディレクトリ内のファイル一覧を表示する場所がここ
       wallpaperParams.wallpaperPaths.push("img/wallpaper/" + entry.name);
     });
   }
 
-  var loadWallpapers = function(){
+  var loadWallpapers = function() {
     var deferred = q.defer();
 
     // resolveLocalFileSystemURL()は、DirectoryEntryもしくはFileEntryを、ローカルのURL(第1引数)を指定して取得する(第2引数)
     // ここでは、cordova.file.applicationDirectory = "file:///android_asset/" (つまり"custome/platforms/android/assets/")である
     window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/img/wallpaper", gotDIR, fail);
 
-    function gotDIR(dirEntry){
+    function gotDIR(dirEntry) {
       var dirReader = dirEntry.createReader();
       var entries = [];
 
-      var readEntries = function(){
+      var readEntries = function() {
         // dirReader.readEntriesの第1引数がsuccessCallbackであり、この引数resultsにはFileEntry(もしくはDirectoryEntry)が格納されている
-        dirReader.readEntries(function(results){
-          if(!results.length){
+        dirReader.readEntries(function(results) {
+          if(!results.length) {
             // Array.prototype.sort()は、引数が省略された場合、要素の文字列比較に基づいて辞書順にソートされる
             listResults(entries.sort());
             deferred.resolve();
@@ -507,61 +510,80 @@ angular.module('mainApp.services', ['mainApp.dbConnector'])
       readEntries();
     }
 
-    function fail(event){
+    function fail(event) {
       console.log(event.target.error.code);
       deferred.reject();
     }
     return deferred.promise;
   }
 
-  var setCurrentWallpaper = function(selectedWallpaperPath){
+  var setCurrentWallpaper = function(selectedWallpaperPath) {
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
+  /**
+   * ローカル画像を選択し、アプリ内フォルダにコピーします
+   * コピー後は、コピー先のファイルパスを返します
+   * @see http://ngcordova.com/docs/plugins/imagePicker/
+   * @see http://ngcordova.com/docs/plugins/file/
+   * @return {Promise} resolve後は、アプリ内フォルダのイメージパスを返す
+   */
+  var pickAndCopyImage = function() {
+    var deferred = q.defer();
+    // imagePickerで使用するオプション定義
+    var options = {
+       maximumImagesCount: 1, // 同時に選択できるイメージの数
+       // width: 800,
+       // height: 800,
+       quality: 80
+    };
+    var appImagePath; // 戻り値に使う、アプリ内フォルダのイメージへのパス
+
+    $cordovaImagePicker.getPictures(options).then(function (results) {
+      // ImagePickerでは複数の写真を選ぶことが可能なので、選んだ回数だけループが回る
+      // 1つも選ばない場合は、1回も回らない
+      for (var i = 0; i < results.length; i++) {
+        var filepath = results[i];
+        d.log('Image URI: ' + filepath); // コピー元のイメージへのパス
+        var sp = filepath.lastIndexOf("/") + 1; // フォルダとファイルの境目
+
+        // copyFile(コピー元フォルダ、コピーファイル名、コピー先フォルダ、コピーファイル名)
+        // dataDirectoryはアプリ内フォルダ
+        $cordovaFile.copyFile(filepath.substring(0, sp), filepath.substring(sp)
+          , cordova.file.dataDirectory, filepath.substring(sp)).then(function (success) {
+            appImagePath = cordova.file.dataDirectory + filepath.substring(sp);
+            deferred.resolve(appImagePath);
+          }, function (error) {
+            d.log('fail to copy image');
+            deferred.reject(error);
+          });
+      }
+    }, function(error) {
+        d.log('fail to pick a image');
+        deferred.reject(error);
+    });
+
+    return deferred.promise;
+  }
+
   return {
-    loadWallpapers: function(){
+    loadWallpapers: function() {
       return loadWallpapers();
     },
-    getWallpaperParams: function(){
+    getWallpaperParams: function() {
       return wallpaperParams;
     },
-    setCurrentWallpaper: function(selectedWallpaperPath){
+    setCurrentWallpaper: function(selectedWallpaperPath) {
       setCurrentWallpaper(selectedWallpaperPath);
     },
-    getCurrentWallpaper: function(){
+    getCurrentWallpaper: function() {
       return wallpaperParams.currentWallpaperPath;
+    },
+    pickAndCopyImage: function() {
+      return pickAndCopyImage();
     }
   };
 })
-
-.factory('Camera', ['$q', function($q) {
-
-  return {
-    getPicture: function(destType) {
-      console.log(destType);
-      var pictureSource=navigator.camera.PictureSourceType;
-      var destinationType=navigator.camera.DestinationType;
-      var encodingType=navigator.camera.EncodingType;
-      var q = $q.defer();
-      navigator.camera.getPicture(function(result) {
-        // Do any magic you need
-        q.resolve(result);
-        console.log("getPicture() is succeeded");
-      }, function(err) {
-        q.reject(err);
-      }, {
-        quality: 50,
-        //destinationType: destinationType.FILE_URI,
-        //destinationType: destinationType.DATA_URL,//DATAスキーマで取得。base64
-        destinationType: destType,
-        sourceType: pictureSource.PHOTOLIBRARY,//フォトライブラリの画像を使用する場合
-        //sourceType: pictureSource.CAMERA //カメラで撮影した画像を使用する場合
-        encodingType: encodingType.PNG
-      });
-      return q.promise;
-    }
-  }
-}])
 
 .factory('d', function($rootScope) {
   /**
