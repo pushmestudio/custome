@@ -1,5 +1,8 @@
-// モジュールを登録(mainApp)
-// 依存するモジュールを指定(ionic, mainApp.controllers)
+/**
+ * @file メインモジュール(mainApp)、アプリ内の共通設定もここで定義している
+ * 依存するモジュール(ionic, mainApp.controllers)についても指定している
+ * @copyright (c) 2015 PushMe Studio
+ */
 angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
 .run(function($ionicPlatform, $rootScope) {
@@ -7,12 +10,13 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
   $rootScope.debugMode = true;
 
   $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
+    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs)
     // 20150910(tomita)キーボード用のPluginを使う予定はないのでコメントアウト
-    if (window.cordova /* && window.cordova.plugins.Keyboard */) {
-      // cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    /*
+    if (window.cordova && window.cordova.plugins.Keyboard ) {
+       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
+    */
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
@@ -33,7 +37,7 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
   // ローカル画像を読込み，サムネイルや背景などで表示するための設定
   // この設定でサニタイズしない場合は，angularのセキュリティでUnsafe扱いとなってしまう
-  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(content|file|data):/);
+  $compileProvider.imgSrcSanitizationWhitelist(/^\s*(content|file|data|http):/);
 
   // 指定されたURLが下記ののいずれにも該当しない場合に表示するURLを指定
   // アプリ起動時には、/custome/init が表示される
