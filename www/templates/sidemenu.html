@@ -19,17 +19,30 @@
     <div class="item item-divider">
       Sticky note
     </div>
+    <!--
     <div class="row palette-items">
       <div class="col col-50" ng-repeat="part in parts">
         <div class="center">
           <div class="{{part.class}}" style="position: relative;" menu-close ng-click="select(part.id)">
+    -->
           <!--
           <img ng-src="{{part.img}}" menu-close ng-click="select(part.id)">
           -->
+    <!--
           </div>
         </div>
       </div>
     </div>
+    -->
+    <!-- 付箋を選択するためのモーダルを起動 -->
+    <div class="col col-50">
+      <div class="back-layer-img">
+        <img ng-src="img/part_fusen_yellow.png" ng-click="showStickyNoteList()" class="palette-item ">
+        <img ng-src="img/ios7-refresh.png" ng-click="showStickyNoteList()" class="front-layer-img">
+      </div>
+    </div>
+
+
 
     <div class="item item-divider">
       Wallpaper

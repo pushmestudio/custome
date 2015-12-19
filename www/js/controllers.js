@@ -272,10 +272,34 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 // Pallet操作用のコントローラー
 // --> Pallet上のパーツ操作のために使うため，PartsCtrlから名前変更
 //
-.controller('PalletCtrl', function($scope, Parts){
+.controller('PalletCtrl', function($scope, $ionicModal, Parts){
+  $scope.partsSize = Parts.getSize();
+  $scope.partsColor = Parts.getColor();
   $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
-  $scope.select = function(part){
-    Parts.select(part);//パレットからボードに配置するパーツを選択
+
+  // modalの定義　使用する付箋の選択を行うためのmodalを設定
+  $ionicModal.fromTemplateUrl('templates/stickyNoteList-modal.html', {
+    scope: $scope,
+    animataion: 'slide-in-up'
+  }).then(function(modal){
+    $scope.modal = modal;
+  });
+
+  // modalの呼び出し
+  $scope.showStickyNoteList = function(){
+    $scope.modal.show();
+  };
+
+  // 選択したパーツのサイズ、色の情報を保持する
+  $scope.setPart = function(variable, selectedType){
+    Parts.setPart(variable, selectedType);
+  };
+
+  $scope.select = function(){
+    Parts.select();//パレットからボードに配置するパーツを選択
+    if($scope.modal.isShown()){
+      $scope.modal.hide();
+    }
   }
 })
 

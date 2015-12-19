@@ -33,3 +33,9 @@
   min-height: 75px;
   max-height: 100px;
 }
+
+/* 付箋の色選択時のサンプル */
+.note-sample {
+  width: 43px;
+  height: 43px;
+}
