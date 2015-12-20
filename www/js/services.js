@@ -190,19 +190,97 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
 .factory('Parts', function() {
 
+  // パーツの大きさ
+  var partsSize = [{
+      id: '0', // small
+      class: 'sticky-note note-yellow note-small',
+      flag: true // フラグで選択されているか判定
+    },{
+      id: '1', // normal
+      class: 'sticky-note note-yellow note-normal',
+      flag: false
+    },{
+      id: '2', // wide
+      class: 'sticky-note note-yellow note-wide',
+      flag: false
+    }];
+
+  // パーツの色
+  var partsColor = [{
+      id: 'a', // yellow
+      class: 'center note-sample note-yellow',
+      flag: true // フラグで選択されているか判定
+    },{
+      id: 'b', // blue
+      class: 'center note-sample note-blue',
+      flag: false
+    }];
+
   var parts = [{
-    id: '0',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
-    title: 'yellow',//パレット上に表示用
+    id: '0',
+    id2: 'a1',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
+    title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
-    img: 'img/part_fusen_yellow.png',
-    counter: 0, //パレット上に表示用
+    class: 'sticky-note note-yellow note-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
     id: '1',//付箋(青)
-    title: 'blue',
+    id2: 'b1',
+    title: 'note-blue-normal',
     type: 'fusen',
-    img: 'img/part_fusen_blue.png',
-    counter: 0,
+    class: 'sticky-note note-blue note-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    id: '2',//横長付箋(黄)
+    id2: 'a2',
+    title: 'note-yellow-wide',
+    type: 'fusen',
+    class: 'sticky-note note-yellow note-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    id: '3',//横長付箋(青)
+    id2: 'b2',
+    title: 'note-blue-wide',
+    type: 'fusen',
+    class: 'sticky-note note-blue note-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    id: '4',//小付箋(黄)
+    id2: 'a0',
+    title: 'note-yellow-small',
+    type: 'fusen',
+    class: 'sticky-note note-yellow note-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    id: '5',//小付箋(青)
+    id2: 'b0',
+    title: 'note-blue-small',
+    type: 'fusen',
+    class: 'sticky-note note-blue note-small',
+    size: {
+      width: 75,
+      height: 75
+    },
     flag : 'false'
   }];
 
@@ -216,10 +294,23 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * パレット上で選択したパーツのフラグを立てるメソッド
    * 画面にパーツをデプロイする際に使うフラグ用
    */
-  var selectPartsOnPallet = function(partid){
+  var selectPartsOnPallet = function(){
+    var tgtId;
+    for (var key in partsColor){
+      if (partsColor[key].flag){
+        tgtId = partsColor[key].id;
+        break;
+      }
+    }
+    for (var key in partsSize){
+      if (partsSize[key].flag){
+        tgtId = tgtId + partsSize[key].id;
+        break;
+      }
+    }
     for (count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
-      if (partid === part.id){
+      if (tgtId === part.id2){
         part.flag='true';
       }else{
         part.flag='false';
@@ -238,12 +329,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         part.counter++;//同じタイプのパーツの配置数//後で消すかも
         var deployedPart = {
           'partId' : part.id,
-          'image' : part.img,
+          'class' : part.class,
           'text' : text,
           'type' : part.type,
           'position' : {
-            x : partX-50,
-            y : partY-100,
+            'x' : partX - (part.size.width/2),
+            'y' : partY - (part.size.height/2) - 45
           }
         };
         part.flag='false';//パーツを1回デプロイすると，クリックしてもデプロイできなくする
@@ -316,12 +407,32 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     deployedParts[selectedPart.index].position = selectedPart.position;
   }
 
+  /***
+   * 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド
+   *
+   */
+  var setPartState = function(variable, selectedType){
+    for(var key in variable){
+      if(selectedType === variable[key].id){
+        variable[key].flag = true;
+      }else{
+        variable[key].flag = false;
+      }
+    }
+  }
+
   return {
+    getSize :function() {
+      return partsSize;
+    },
+    getColor :function() {
+      return partsColor;
+    },
     all: function() {
       return parts;
     },
-    select: function(partid) {
-      selectPartsOnPallet(partid);
+    select: function() {
+      selectPartsOnPallet();
     },
     deploy: function() {
       deployPartByClick();
@@ -338,6 +449,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     updatePart: updatePart,
     reDeploy: function(boardContent){
       reDeployUsingDBdata(boardContent);
+    },
+    setPart: function(variable, selectedType){
+      setPartState(variable, selectedType);
     },
     init: function(){
       initPartsOnBoard();
