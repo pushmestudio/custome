@@ -1,0 +1,41 @@
+/* 付箋共通部 */
+.sticky-note {
+  position: absolute;
+  word-break: break-all;
+  color: #222;
+  box-shadow: 3px 3px 3px #888;
+  -webkit-box-shadow: 3px 3px 3px #888;
+  overflow: auto;
+}
+
+.note-yellow {
+  background: #f7e999;
+}
+
+.note-blue {
+  background: #b9dcf4;
+}
+
+.note-normal {
+  width: 100px;
+  min-height: 100px;
+  max-height: 150px;
+}
+
+.note-wide {
+  width: 100px;
+  min-height: 50px;
+  max-height: 100px;
+}
+
+.note-small {
+  width: 75px;
+  min-height: 75px;
+  max-height: 100px;
+}
+
+/* 付箋の色選択時のサンプル */
+.note-sample {
+  width: 43px;
+  height: 43px;
+}

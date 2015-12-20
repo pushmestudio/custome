@@ -8,9 +8,9 @@
 
   <ion-content scroll="false" has-header="false" style="background: url({{wallpaperParams.currentWallpaperPath}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" ng-click="click($event)">
     <div ng-repeat="deployedPart in deployedParts_angular track by $index">
-      <div draggable-part style="position: absolute; width: 100px; overflow:auto; min-height: 100px; max-height: 150px; transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); -webkit-transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); background: url({{deployedPart.image}}) no-repeat 0% 0%; background-size: 100% 100%; background-position: center center;" on-tap="openMenu($index)">
-          <div class="parttext" style="margin: 5px">{{deployedPart.text}}</dev>
-        </div>
+      <div draggable-part class="{{deployedPart.class}}" style="transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px); -webkit-transform: translate3D({{deployedPart.position.x}}px, {{deployedPart.position.y}}px, 1px);" on-tap="openMenu($index)">
+        <div style="margin: 5px">{{deployedPart.text}}</div>
+      </div>
     </div>
   </ion-content>
 </ion-view>
