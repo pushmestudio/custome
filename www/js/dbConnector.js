@@ -28,7 +28,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     module.storeName = 'boards';
 
     /**
-     * DBへの接続を行う。
+     * @function connect
+     * @description DBへの接続を行う。
      * 接続に成功したら、変数dbにオブジェクトを格納して使いまわす。
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -54,7 +55,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * 初回接続時やバージョンアップ時に呼び出され、DBの初期化を行う。
+     * @function init
+     * @description 初回接続時やバージョンアップ時に呼び出され、DBの初期化を行う。
      * DB初期化処理内では、DB、オブジェクトストア、インデックスの作成を行う。
      * データ構造を変更した場合には、必ずここも更新すること。
      * @param {Object} event データベースのオープン要求に対する結果のイベント
@@ -77,7 +79,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * サンプルデータを作成する。
+     * @function createSample
+     * @description サンプルデータを作成する、初期化時に呼ばれる想定
      * @param store サンプルデータ作成先
      */
     module.createSample = function(store) {
@@ -124,7 +127,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * DBへデータを保存する。boardIdはoptional、未指定の場合は新規作成と見做す。
+     * @function saveBoardContent
+     * @description DBへデータを保存する。boardIdはoptional、未指定の場合は新規作成と見做す。
      * 指定がある場合は、boardIdが同じもののboardContentを上書きするイメージ。
      * @param {String} boardContent JSON形式、中にpartsやwallpaperなどを持つ
      * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
@@ -182,7 +186,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * オブジェクトストアに登録されている項目を更新する。
+     * @function updateBoard
+     * @description オブジェクトストアに登録されている項目を更新する。
      * @param {String} boardId アップデート対象のボードのID
      * @param {String} boardContent 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
@@ -237,7 +242,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * ボード一覧からの呼び出しにより、オブジェクトストアに登録されているボードの名前とコメントを更新する
+     * @function updateBoardNames
+     * @description ボード一覧からの呼び出しにより、オブジェクトストアに登録されているボードの名前とコメントを更新する
      * @param {String} boardId アップデート対象のボードのID
      * @param {String} boardNames 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
@@ -280,7 +286,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * 新しくボードを追加する。ボードのidはunixtimeを用いる。
+     * @function addNewBoard
+     * @description 新しくボードを追加する。ボードのidはunixtimeを用いる。
      * @param {String} boardContent JSON形式のボードの中身
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -307,7 +314,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * オブジェクトストアに登録されている項目を取得する。
+     * @function loadBoardContent
+     * @description オブジェクトストアに登録されている項目を取得する。
      * @param {String} boardId boardContentを取得したいボードのID
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -339,7 +347,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * オブジェクトストアに登録されているボードを削除する。
+     * @function deleteBoard
+     * @description オブジェクトストアに登録されているボードを削除する。
      * @param {String} boardId 削除したいボードのID
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -365,7 +374,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * オブジェクトストアに登録されているすべてのボードを取得する。
+     * @function getAllMyBoards
+     * @description オブジェクトストアに登録されているすべてのボードを取得する。
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.getAllMyBoards = function() {
@@ -398,7 +408,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     }
 
     /**
-     * データベースに作成したオブジェクトストアの中身をクリアする
+     * @function reset
+     * @description データベースに作成したオブジェクトストアの中身をクリアする
      */
     module.reset = function() {
       d.log('reset is called');
