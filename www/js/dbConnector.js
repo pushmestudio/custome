@@ -31,6 +31,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @function connect
      * @description DBへの接続を行う。
      * 接続に成功したら、変数dbにオブジェクトを格納して使いまわす。
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.connect =  function() {
@@ -130,6 +131,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @function saveBoardContent
      * @description DBへデータを保存する。boardIdはoptional、未指定の場合は新規作成と見做す。
      * 指定がある場合は、boardIdが同じもののboardContentを上書きするイメージ。
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardContent JSON形式、中にpartsやwallpaperなどを持つ
      * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
      * @return {Promise} 同期処理を行うためのオブジェクト
@@ -188,6 +190,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function updateBoard
      * @description オブジェクトストアに登録されている項目を更新する。
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardId アップデート対象のボードのID
      * @param {String} boardContent 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
@@ -244,6 +247,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function updateBoardNames
      * @description ボード一覧からの呼び出しにより、オブジェクトストアに登録されているボードの名前とコメントを更新する
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardId アップデート対象のボードのID
      * @param {String} boardNames 更新内容
      * @return {Promise} 同期処理を行うためのオブジェクト
@@ -288,6 +292,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function addNewBoard
      * @description 新しくボードを追加する。ボードのidはunixtimeを用いる。
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardContent JSON形式のボードの中身
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -316,6 +321,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function loadBoardContent
      * @description オブジェクトストアに登録されている項目を取得する。
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardId boardContentを取得したいボードのID
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -349,6 +355,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function deleteBoard
      * @description オブジェクトストアに登録されているボードを削除する。
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardId 削除したいボードのID
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -376,6 +383,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function getAllMyBoards
      * @description オブジェクトストアに登録されているすべてのボードを取得する。
+     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.getAllMyBoards = function() {

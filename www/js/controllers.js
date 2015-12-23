@@ -6,8 +6,9 @@
 angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
 
 /**
- * @module controllers.partDeleteToaster
+ * @module controllers.directives.partDeleteToaster
  * @description undo()を含んだトーストを表示するためのdirective
+ * @todo もしかすると、今後controllers.jsから分離して、directives.js的なものにした方が良いかも at 12/23 小島
  */
 .directive('partDeleteToaster', [function() {
   return {
@@ -16,8 +17,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 }])
 
 /**
- * @module controllers.draggablePart
+ * @module controllers.directives.draggablePart
  * @description drag可能な要素につける属性を定義したdirective
+ * @todo もしかすると、今後controllers.jsから分離して、directives.js的なものにした方が良いかも at 12/23 小島
  */
 .directive('draggablePart', function($ionicGesture, d){
   return {
@@ -259,7 +261,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   /**
    * @function openEditModal
    * @description 付箋パーツのテキストを編集するためのモーダルを開く
-   * @param 編集対象の付箋パーツのIndex
+   * @param index 編集対象の付箋パーツのIndex
    */
   $scope.openEditModal = function(index) {
     Parts.selectPart(index);
@@ -299,8 +301,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   /**
    * @function click
    * @description ボードにパーツを配置する
+   * @todo 名前がわかりにくいかも、関数名の変更を検討すること at 12/22 小島
    * @param $event 配置のためにクリックされた時点のイベント情報、配置先の座標などを含む
-   * TODO 名前がわかりにくいかも、関数名の変更を検討すること at 12/22 小島
    */
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
@@ -400,9 +402,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   /**
    * @function setPart
    * @description 選択したパーツのサイズ、色の情報を保持する
+   * @todo variableという名前の変数はわかりにくいかも at 12/23 小島
    * @param variable 選択したパーツのサイズ
    * @param selectedType 選択したパーツの色
-   * TODO variableという名前の変数はわかりにくいかも at 12/23 小島
    */
   $scope.setPart = function(variable, selectedType){
     Parts.setPart(variable, selectedType);
