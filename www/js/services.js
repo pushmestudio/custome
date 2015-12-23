@@ -62,14 +62,22 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   // オートセーブ機能のpromiseを格納する
   var autoSavePromise = null;
 
-  // 引数として与えられたallMyBoards(DB内のボード一覧)を、メモリ上のmyBoards[]にコピーする
+  /**
+   * @function addAllMyBoards
+   * @description 引数として与えられたallMyBoards(DB内のボード一覧)を、メモリ上のmyBoards[]にコピーする
+   * @param allMyBoards ボードオブジェクトの配列
+   */
   var addAllMyBoards = function(allMyBoards){
     allMyBoards.forEach(function(myBoard, i){
       myBoards.push(myBoard);
     });
   };
 
-  // boardの読込時に新規なのか更新なのかを判断し、以降これを見て状態を判断する
+  /**
+   * @function setUpdateFlag
+   * @description boardの読込時に新規なのか更新なのかを判断し、以降これを見て状態を判断する
+   * @param boardId 判定対象とするボードのID
+   */
   var setUpdateFlag = function(boardId){
     if(boardId) { // undefinedもnullも空文字も一括判定(http://qiita.com/phi/items/723aa59851b0716a87e3)
       updateFlag = true;
@@ -79,10 +87,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }
 
   /**
-   * DBの保存処理を呼ぶ前に、保存が押されたボードが、新規なのか更新（1回目)なのか更新（2回目以降）なのかを判断する
+   * @function openModal
+   * @description DBの保存処理を呼ぶ前に、保存が押されたボードが、新規なのか更新（1回目)なのか更新（2回目以降）なのかを判断する
+   * @todo 関数名が実態と合っていないので更新を検討する at 12/23
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
    * @param {String} boardId boardの識別番号
+   * @return {Promise|null} 更新の場合は更新したボードのボードID、新規の場合はnull
    */
   var openModal = function(parts, wallpaper, boardId){
     var deferred = q.defer();
@@ -100,11 +111,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   };
 
   /**
-   * DBに保存処理を依頼し、新規の場合は保存したboardをメモリ上にも追加しておく
+   * @function saveBoard
+   * @description DBに保存処理を依頼し、新規の場合は保存したboardをメモリ上にも追加しておく
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
    * @param {String} boardId boardの識別番号
    * @param {Object} boardNames boardの名前とコメント
+   * @return {Promise} 保存されたボードのボードID
    */
   var saveBoard = function(parts, wallpaper, boardId, boardNames){
     var deferred = q.defer();
@@ -123,6 +136,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     return deferred.promise;
   };
 
+  /**
+   * @function updateBoardNames
+   * @description ボード名を更新する
+   * @param boardId 更新対象のボードのID
+   * @param boardNames 新しいボードの名前
+   * @return {Promise}
+   */
   var updateBoardNames = function(boardId, boardNames){
     var deferred = q.defer();
     DBConn.updateBoardNames(boardId, boardNames).then(function(newBoard) {
@@ -131,14 +151,20 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     return deferred.promise;
   }
 
+  /**
+   * @function updateMyBoardValuesOnMemory
+   * @description ボードの壁紙のパスを更新する
+   * @todo 関数名が実態と少しずれているようなので変更を検討する at 12/23 小島
+   * @param boardId 更新対象のボードのID
+   * @param wallpaper 新しいボードの壁紙のパス
+   */
   var updateMyBoardValuesOnMemory = function(boardId, wallpaper){
     for (var i = 0; i < myBoards.length; i++) {
       if (myBoards[i].boardId === boardId) {
         myBoards[i].boardContent.wallpaper = wallpaper;
-        return;
+        break;
       }
     }
-    return;
   }
 
   return {
@@ -162,6 +188,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     remove: function(board) {
       templates.splice(templates.indexOf(board), 1);
     },
+    /**
+     * @function getTemplate
+     * @description テンプレートを返す、指定したIDのテンプレートがなければnullを返す
+     * @todo 他の関数と同じような記載箇所にすることを検討する at 12/23 小島
+     * @param boardId テンプレートのボードID
+     * @return {Object|null} 該当するテンプレートがあればテンプレートのオブジェクト
+     */
     getTemplate: function(boardId) {
       for (var i = 0; i < templates.length; i++) {
         if (templates[i].id === parseInt(boardId)) {
@@ -170,6 +203,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       }
       return null;
     },
+    /**
+     * @function getBoardName
+     * @description ボード名を返す、指定したIDのボードがなければ固定の値をボード名として返す
+     * @todo 他の関数と同じような記載箇所にすることを検討する at 12/23 小島
+     * @param boardId ボード名を配列から探すためのキーとなるボードID
+     * @return ボード名
+     */
     getBoardName: function(boardId){
       for (var i = 0; i < myBoards.length; i++) {
         if (myBoards[i].boardId === boardId) {
@@ -300,8 +340,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var text;
   var deployedParts=[];
 
-  /***
-   * パレット上で選択したパーツのフラグを立てるメソッド
+  /**
+   * @function selectPartsOnPallet
+   * @description パレット上で選択したパーツのフラグを立てるメソッド
    * 画面にパーツをデプロイする際に使うフラグ用
    */
   var selectPartsOnPallet = function(){
@@ -318,7 +359,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         break;
       }
     }
-    for (count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
+    for (var count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
       if (tgtId === part.id2){
         part.flag='true';
@@ -328,12 +369,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     }
   }
 
-  /***
-   * パレット上のパーツを選択した後に，画面をクリックした時に呼び出されるメソッド
+  /**
+   * @function deployPartByClick
+   * @description パレット上のパーツを選択した後に，画面をクリックした時に呼び出されるメソッド
    * deployedPartsにパーツを追加(push)することで，画面に反映させる
    */
   var deployPartByClick = function(){
-    for (count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
+    for (var count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
       if(part.flag==='true'){
         part.counter++;//同じタイプのパーツの配置数//後で消すかも
@@ -353,17 +395,21 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     }
   }
 
-  /***
-   * 配置済のパーツおよび配置されるべきパーツを全て取得するメソッド
-   *
+  /**
+   * @function getAllDeployedParts
+   * @description 配置済のパーツおよび配置されるべきパーツを全て取得するメソッド
+   * @return {Array} deployedParts 配置済のパーツ一覧
    */
   var getAllDeployedParts = function(){
     return deployedParts;
   }
 
-  /***
-   * DBからロードしたパーツをdeployedPartsに代入する前に初期化するメソッド
+  /**
+   * @function
+   * @description DBからロードしたパーツをdeployedPartsに代入する前に初期化するメソッド
    * deployedParts=[];ではダメだが，pop()を使えばうまくいった(よくわかっていない)
+   * @todo →空配列の代入(<code>deployedParts=[];</code>)でいけるはずだが、、、。pop()するより効率が良いので変更を検討 at 12/23 小島
+   * @return {Array} deployedParts 空のパーツ一覧配列
    */
   var initPartsOnBoard = function(){
     while (deployedParts.length > 0){
@@ -372,9 +418,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     return deployedParts;
   }
 
-  /***
-   * DBからロードしたパーツをdeployedPartsに代入するメソッド
-   *
+  /**
+   * @function reDeployUsingDBdata
+   * @description DBからロードしたパーツをdeployedPartsに代入するメソッド
+   * @param boardContent 更新対象のボード
    */
   var reDeployUsingDBdata = function(boardContent){
     deployedParts = initPartsOnBoard(); //deployedPartsの初期化
@@ -382,12 +429,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     for(var i = 0; i < parts.length;i++){
       parts[i].counter=0;
     }
-    for(count in boardContent.parts){ // for...ofから置き換え, for...ofなら(part in parts)でOK
+    for(var count in boardContent.parts){ // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = boardContent.parts[count];
       parts[part.partId].counter++;
       deployedParts.push(part);
     }
   }
+
   var selectedPart = {
     index: -1,
     partId: -1,
@@ -397,9 +445,14 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     position:{
       x: -1,
       y: -1
-    },
+    }
   }
 
+  /**
+   * @function selectPart
+   * @description 配置済パーツの中から選択されたパーツについて、処理に使いやすいように別オブジェクトにコピーする
+   * @param index 選択されたパーツのIndex
+   */
   var selectPart = function(index){
     selectedPart.index = index;
     selectedPart.partId = deployedParts[selectedPart.index].partId;
@@ -409,6 +462,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     selectedPart.position = deployedParts[selectedPart.index].position;
   }
 
+  /**
+   * @function updatePart
+   * @description 選択されていたパーツの更新後の結果を、配置済のパーツへと反映する
+   */
   var updatePart = function(){
     deployedParts[selectedPart.index].partId = selectedPart.partId;
     deployedParts[selectedPart.index].image = selectedPart.image;
@@ -417,9 +474,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     deployedParts[selectedPart.index].position = selectedPart.position;
   }
 
-  /***
-   * 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド
-   *
+  /**
+   * @function setPartState
+   * @description 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド
+   * @todo variableが何を指しているか伝わりにくいので更新を検討 at 12/23 小島
+   * @param variable 選択された付箋サイズ(?)
+   * @param selectedType 選択された色(?)
    */
   var setPartState = function(variable, selectedType){
     for(var key in variable){
@@ -487,10 +547,21 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     currentWallpaperPath: ''
   };
 
+  /**
+   * @function toArray
+   * @description 引数の配列が空でなければ引数を、そうでなければ空の配列の0番目を返す(?)
+   * @todo 小島のJS力だと何をしているか一瞬では理解できなかったので優しくコメントで教えて下さい♥ at 12/23 小島
+   * @param list slice対象の配列(?)
+   */
   var toArray = function(list) {
     return Array.prototype.slice.call(list || [], 0);
   }
 
+  /**
+   * @function listResults
+   * @description 壁紙のファイルをパス名と組み合わせた形で配列に格納する
+   * @param entries 事前に用意した壁紙のファイル名の配列
+   */
   var listResults = function(entries) {
     entries.forEach(function(entry, i) {
       // 最終的にディレクトリ内のファイル一覧を表示する場所がここ
@@ -498,6 +569,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     });
   }
 
+  /**
+   * @function loadWallpapers
+   * @description 予め壁紙として用意したファイルを再帰的に取得
+   * 取得が完了したら、listResultsを経由して、ファイルへのパス名として配列に格納する
+   * @return {Promise}
+   * @see listResults
+   */
   var loadWallpapers = function() {
     var deferred = q.defer();
 
@@ -533,12 +611,18 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     return deferred.promise;
   }
 
+  /**
+   * @function setCurrentWallpaper
+   * @description 指定されたパス情報を元に現在の壁紙のパス情報を更新する
+   * @param selectedWallpaperPath 新しい壁紙のパス情報
+   */
   var setCurrentWallpaper = function(selectedWallpaperPath) {
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
   }
 
   /**
-   * ローカル画像を選択し、アプリ内フォルダにコピーします
+   * @function
+   * @description ローカル画像を選択し、アプリ内フォルダにコピーします
    * コピー後は、コピー先のファイルパスを返します
    * @see http://ngcordova.com/docs/plugins/imagePicker/
    * @see http://ngcordova.com/docs/plugins/file/
@@ -605,23 +689,26 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  * @module services.d
  * @description ログ出力モジュール DEBUG_MODE ON時にログを出力させる、値の設定はapp.jsにて
  * ログ出力呼び出し時の簡便さを優先するため、モジュール名はdebugの'd'
- * @see http://flabo.io/code/20140926/01-angularjs-application-7-tips/
- * @see http://d.hatena.ne.jp/hokaccha/20111216/1324026093
  * @requires $rootScope
  */
 .factory('d', function($rootScope) {
   const DEBUG_MODE = $rootScope.debugMode;
 
+  /**
+   * @function log
+   * @description DEBUG_MODEがtrueならd.log()で出力、falseなら出力なし
+   * @see http://flabo.io/code/20140926/01-angularjs-application-7-tips/
+   * @see http://d.hatena.ne.jp/hokaccha/20111216/1324026093
+   */
   var printDebug;
   (function() {
     if(DEBUG_MODE) {
-      printDebug = console.debug.bind(console);
+      printDebug = console.debug.bind(console); // console.debugの処理をバインド
     } else {
       printDebug = function(){}; // debugMode = falseのときは何も出力しない
     }
   })();
 
-  // DEBUG_MODEがtrueならd.log()で出力、falseなら出力なし
   return {
     log: printDebug
   };

@@ -7,6 +7,10 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
 .run(function($ionicPlatform, $rootScope) {
   //デバッグ出力の有無、リリース時はfalseにする
+
+  /**
+   * @const {boolean} debugMode デバッグモードか否か、デバッグモード=trueならログ出力する
+   */
   $rootScope.debugMode = true;
 
   $ionicPlatform.ready(function() {
