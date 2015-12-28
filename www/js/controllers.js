@@ -43,7 +43,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 })
 
 //Boardの一覧を表示したり，一覧から削除するコントローラー
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $interval, toaster, Boards, DBConn, Wallpapers, d) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $ionicListDelegate, $interval, toaster, Boards, DBConn, Wallpapers, d) {
 
   //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
@@ -84,6 +84,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
           // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
           // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
           $scope.myBoards.splice(boardIndex, 1);
+          // ボードの削除後、スワイプで表示させたオプションメニューを閉じる
+          $ionicListDelegate.closeOptionButtons();
           $timeout(function(){
             toaster.pop('success', '', 'Deleted!');
           });
