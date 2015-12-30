@@ -8,7 +8,6 @@ angular.module('mainApp.directives', [])
 /**
  * @module controllers.directives.partDeleteToaster
  * @description undo()を含んだトーストを表示するためのdirective
- * @todo もしかすると、今後controllers.jsから分離して、directives.js的なものにした方が良いかも at 12/23 小島
  */
 .directive('partDeleteToaster', [function() {
   return {
@@ -19,7 +18,6 @@ angular.module('mainApp.directives', [])
 /**
  * @module controllers.directives.draggablePart
  * @description drag可能な要素につける属性を定義したdirective
- * @todo もしかすると、今後controllers.jsから分離して、directives.js的なものにした方が良いかも at 12/23 小島
  */
 .directive('draggablePart', function($ionicGesture, d){
   return {

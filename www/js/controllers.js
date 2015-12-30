@@ -161,7 +161,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     Boards.setUpdateFlag(boardData.boardId);
     // 既存ボードの更新を行う際に、オートセーブを開始する
     if(Boards.getUpdateFlag()){
-      Boards.autoSavePromise = $interval(function(){$scope.openModal();},30000);
+      Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
@@ -194,17 +194,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   });
 
   /**
-   * @function openModal
+   * @function checkSaveOrUpdate
    * @description 保存処理の前段階を実施する関数
    */
-  $scope.openModal = function(){
+  $scope.checkSaveOrUpdate = function(){
     // modalのformをclear
     $scope.boardNames.boardName = '';
     $scope.boardNames.boardComment = '';
-    Boards.openModal(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
+    Boards.checkSaveOrUpdate(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
       if(boardId){
         // boardsList.htmlで表示されるthumbnail画像を変更する
-        Boards.updateMyBoardValuesOnMemory(boardId, Wallpapers.getCurrentWallpaper());
+        Boards.updateWallpaperOnMemory(boardId, Wallpapers.getCurrentWallpaper());
         $timeout(function(){
           toaster.pop('success', '', 'Saved!');
         });
