@@ -87,15 +87,14 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }
 
   /**
-   * @function openModal
+   * @function checkSaveOrUpdate
    * @description DBの保存処理を呼ぶ前に、保存が押されたボードが、新規なのか更新（1回目)なのか更新（2回目以降）なのかを判断する
-   * @todo 関数名が実態と合っていないので更新を検討する at 12/23
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
    * @param {String} boardId boardの識別番号
    * @return {Promise|null} 更新の場合は更新したボードのボードID、新規の場合はnull
    */
-  var openModal = function(parts, wallpaper, boardId){
+  var checkSaveOrUpdate = function(parts, wallpaper, boardId){
     var deferred = q.defer();
     // 更新の場合
     if(updateFlag) {
@@ -152,13 +151,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }
 
   /**
-   * @function updateMyBoardValuesOnMemory
+   * @function updateWallpaperOnMemory
    * @description ボードの壁紙のパスを更新する
-   * @todo 関数名が実態と少しずれているようなので変更を検討する at 12/23 小島
    * @param boardId 更新対象のボードのID
    * @param wallpaper 新しいボードの壁紙のパス
    */
-  var updateMyBoardValuesOnMemory = function(boardId, wallpaper){
+  var updateWallpaperOnMemory = function(boardId, wallpaper){
     for (var i = 0; i < myBoards.length; i++) {
       if (myBoards[i].boardId === boardId) {
         myBoards[i].boardContent.wallpaper = wallpaper;
@@ -218,8 +216,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       }
       return 'New Board';
     },
-    openModal: function(parts, wallPaper, boardId){
-      return openModal(parts, wallPaper, boardId);
+    checkSaveOrUpdate: function(parts, wallPaper, boardId){
+      return checkSaveOrUpdate(parts, wallPaper, boardId);
     },
     saveBoard: function(parts, wallPaper, boardId, boardNames) {
       return saveBoard(parts, wallPaper, boardId, boardNames);
@@ -228,8 +226,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       return updateBoardNames(boardId, boardNames);
     },
     // メモリ上に保存されているボード(myBoards)のデータ(ひとまず壁紙のみ)を更新する
-    updateMyBoardValuesOnMemory: function(boardId, wallpaper){
-      updateMyBoardValuesOnMemory(boardId, wallpaper);
+    updateWallpaperOnMemory: function(boardId, wallpaper){
+      updateWallpaperOnMemory(boardId, wallpaper);
     }
   };
 })
@@ -549,9 +547,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   /**
    * @function toArray
-   * @description 引数の配列が空でなければ引数を、そうでなければ空の配列の0番目を返す(?)
-   * @todo 小島のJS力だと何をしているか一瞬では理解できなかったので優しくコメントで教えて下さい♥ at 12/23 小島
-   * @param list slice対象の配列(?)
+   * @description 引数の配列が空でなければ引数の先頭要素から最後までを、空の場合は空の配列を返す
+   * @param list FileEntryの配列
    */
   var toArray = function(list) {
     return Array.prototype.slice.call(list || [], 0);
@@ -596,7 +593,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
             deferred.resolve();
           } else {
             entries = entries.concat(toArray(results));
-            // resultsがなくなるまで繰り返し
+            // dirReader.readEntriesは一度でディレクトリ内にある全てのEntryを読み込むとは限らないため、resultsがなくなるまで繰り返し呼び出す。
+            // また、readEntriesを繰り返し呼び出す場合、一度読み込まれたEntryは再び読み込まれず、前に呼び出したEntryの続きから読み込む。
             readEntries();
           }
         }, fail);
