@@ -621,13 +621,11 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   /**
    * @function setPartState
-   * @description 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド
-   *     付箋の選択方式変更に伴い廃止 at 2016/01/06 須藤
+   * @description 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド<br>付箋の選択方式変更に伴い廃止予定 at 2016/01/06 須藤
    * @todo variableが何を指しているか伝わりにくいので更新を検討 at 12/23 小島
    * @param variable 選択された付箋サイズ(?)
    * @param selectedType 選択された色(?)
    */
-   /*
   var setPartState = function(variable, selectedType){
     for(var key in variable){
       if(selectedType === variable[key].id){
@@ -637,7 +635,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       }
     }
   }
-  */
 
   return {
     /*
