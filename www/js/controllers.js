@@ -404,17 +404,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
 
   /**
    * @function setPart
-   * @description 選択したパーツのサイズ、色の情報を保持する
-   *     付箋選択方式の変更に伴い廃止 at 2016/01/06 須藤
+   * @description 選択したパーツのサイズ、色の情報を保持する<br>付箋選択方式の変更に伴い廃止予定 at 2016/01/06 須藤
    * @todo variableという名前の変数はわかりにくいかも at 12/23 小島
    * @param variable 選択したパーツのサイズ
    * @param selectedType 選択したパーツの色
    */
-   /*
   $scope.setPart = function(variable, selectedType){
     Parts.setPart(variable, selectedType);
   };
-  */
 
   /**
    * @function select
