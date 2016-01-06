@@ -240,38 +240,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  */
 .factory('Parts', function() {
 
-  // パーツの大きさ
-  // 付箋選択方式変更に伴い廃止
-  /*
-  var partsSize = [{
-      id: '0', // small
-      class: 'sticky-note note-yellow note-small',
-      flag: true // フラグで選択されているか判定
-    },{
-      id: '1', // normal
-      class: 'sticky-note note-yellow note-normal',
-      flag: false
-    },{
-      id: '2', // wide
-      class: 'sticky-note note-yellow note-wide',
-      flag: false
-    }];
-  */
-
-  // パーツの色
-  // 付箋選択方式変更に伴い廃止
-  /*
-  var partsColor = [{
-      id: 'a', // yellow
-      class: 'center note-sample note-yellow',
-      flag: true // フラグで選択されているか判定
-    },{
-      id: 'b', // blue
-      class: 'center note-sample note-blue',
-      flag: false
-    }];
-  */
-
   // 選択できる付箋
   var parts = [{
     // 黄色の普通の付箋
@@ -619,32 +587,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     deployedParts[selectedPart.index].position = selectedPart.position;
   }
 
-  /**
-   * @function setPartState
-   * @description 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド<br>付箋の選択方式変更に伴い廃止予定 at 2016/01/06 須藤
-   * @todo variableが何を指しているか伝わりにくいので更新を検討 at 12/23 小島
-   * @param variable 選択された付箋サイズ(?)
-   * @param selectedType 選択された色(?)
-   */
-  var setPartState = function(variable, selectedType){
-    for(var key in variable){
-      if(selectedType === variable[key].id){
-        variable[key].flag = true;
-      }else{
-        variable[key].flag = false;
-      }
-    }
-  }
-
   return {
-    /*
-    getSize :function() {
-      return partsSize;
-    },
-    getColor :function() {
-      return partsColor;
-    },
-    */
     all: function() {
       return parts;
     },
@@ -667,11 +610,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     reDeploy: function(boardContent){
       reDeployUsingDBdata(boardContent);
     },
-    /*
-    setPart: function(variable, selectedType){
-      setPartState(variable, selectedType);
-    },
-    */
     init: function(){
       initPartsOnBoard();
     }
