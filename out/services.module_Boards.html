@@ -239,308 +239,7 @@
 
     
 
-    <h4 class="name" id="~getBoardName"><span class="type-signature">(inner) </span>getBoardName<span class="signature">(boardId)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-<div class="description">
-    ボード名を返す、指定したIDのボードがなければ固定の値をボード名として返す
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>boardId</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">ボード名を配列から探すためのキーとなるボードID</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services.js.html">services.js</a>, <a href="services.js.html#line206">line 206</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>他の関数と同じような記載箇所にすることを検討する at 12/23 小島</li>
-        </ul>
-    </dd>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    ボード名
-</div>
-
-
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="~getTemplate"><span class="type-signature">(inner) </span>getTemplate<span class="signature">(boardId)</span><span class="type-signature"> &rarr; {Object|null}</span></h4>
-
-    
-
-
-
-<div class="description">
-    テンプレートを返す、指定したIDのテンプレートがなければnullを返す
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>boardId</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">テンプレートのボードID</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services.js.html">services.js</a>, <a href="services.js.html#line191">line 191</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>他の関数と同じような記載箇所にすることを検討する at 12/23 小島</li>
-        </ul>
-    </dd>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    該当するテンプレートがあればテンプレートのオブジェクト
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">null</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="~openModal"><span class="type-signature">(inner) </span>openModal<span class="signature">(parts, wallPaper, boardId)</span><span class="type-signature"> &rarr; {Promise|null}</span></h4>
+    <h4 class="name" id="~checkSaveOrUpdate"><span class="type-signature">(inner) </span>checkSaveOrUpdate<span class="signature">(parts, wallPaper, boardId)</span><span class="type-signature"> &rarr; {Promise|null}</span></h4>
 
     
 
@@ -695,13 +394,6 @@
     
 
     
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>関数名が実態と合っていないので更新を検討する at 12/23</li>
-        </ul>
-    </dd>
-    
 </dl>
 
 
@@ -732,6 +424,307 @@
     <dd>
         
 <span class="param-type">Promise</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~getBoardName"><span class="type-signature">(inner) </span>getBoardName<span class="signature">(boardId)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    ボード名を返す、指定したIDのボードがなければ固定の値をボード名として返す
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>boardId</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ボード名を配列から探すためのキーとなるボードID</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="services.js.html">services.js</a>, <a href="services.js.html#line204">line 204</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>他の関数と同じような記載箇所にすることを検討する at 12/23 小島</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    ボード名
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~getTemplate"><span class="type-signature">(inner) </span>getTemplate<span class="signature">(boardId)</span><span class="type-signature"> &rarr; {Object|null}</span></h4>
+
+    
+
+
+
+<div class="description">
+    テンプレートを返す、指定したIDのテンプレートがなければnullを返す
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>boardId</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">テンプレートのボードID</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="services.js.html">services.js</a>, <a href="services.js.html#line189">line 189</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>他の関数と同じような記載箇所にすることを検討する at 12/23 小島</li>
+        </ul>
+    </dd>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    該当するテンプレートがあればテンプレートのオブジェクト
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
 |
 
 <span class="param-type">null</span>
@@ -918,7 +911,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services.js.html">services.js</a>, <a href="services.js.html#line113">line 113</a>
+        <a href="services.js.html">services.js</a>, <a href="services.js.html#line112">line 112</a>
     </li></ul></dd>
     
 
@@ -1210,7 +1203,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services.js.html">services.js</a>, <a href="services.js.html#line139">line 139</a>
+        <a href="services.js.html">services.js</a>, <a href="services.js.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -1259,7 +1252,7 @@
 
     
 
-    <h4 class="name" id="~updateMyBoardValuesOnMemory"><span class="type-signature">(inner) </span>updateMyBoardValuesOnMemory<span class="signature">(boardId, wallpaper)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~updateWallpaperOnMemory"><span class="type-signature">(inner) </span>updateWallpaperOnMemory<span class="signature">(boardId, wallpaper)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1372,7 +1365,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="services.js.html">services.js</a>, <a href="services.js.html#line154">line 154</a>
+        <a href="services.js.html">services.js</a>, <a href="services.js.html#line153">line 153</a>
     </li></ul></dd>
     
 
@@ -1380,13 +1373,6 @@
 
     
 
-    
-    <dt class="tag-todo">To Do:</dt>
-    <dd class="tag-todo">
-        <ul>
-            <li>関数名が実態と少しずれているようなので変更を検討する at 12/23 小島</li>
-        </ul>
-    </dd>
     
 </dl>
 
@@ -1427,7 +1413,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Jan 06 2016 23:49:05 GMT+0900 (東京 (標準時))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jan 07 2016 00:02:44 GMT+0900 (東京 (標準時))
 </footer>
 
 <script> prettyPrint(); </script>
