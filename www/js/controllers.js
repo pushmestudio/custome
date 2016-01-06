@@ -3,54 +3,7 @@
  * ビューとモデルをつなぐ各種コントローラを定義している
  * @copyright (c) 2015 PushMe Studio
  */
-angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate'])
-
-/**
- * @module controllers.directives.partDeleteToaster
- * @description undo()を含んだトーストを表示するためのdirective
- * @todo もしかすると、今後controllers.jsから分離して、directives.js的なものにした方が良いかも at 12/23 小島
- */
-.directive('partDeleteToaster', [function() {
-  return {
-    template: 'Part Deleted.<a class="undo" ng-click="undo()">UNDO</a>'
-  };
-}])
-
-/**
- * @module controllers.directives.draggablePart
- * @description drag可能な要素につける属性を定義したdirective
- * @todo もしかすると、今後controllers.jsから分離して、directives.js的なものにした方が良いかも at 12/23 小島
- */
-.directive('draggablePart', function($ionicGesture, d){
-  return {
-    restrict: 'A',
-    scope: false,
-    link: function(scope, elem, attrs){
-      // おまじない。これをしないとAndroid4.4系でdragイベントが正しく動作しない
-      elem.bind("touchstart", function(event){
-        event.preventDefault();
-      });
-
-      // ドラッグ中はCSSをtransformによって変化させることにより、移動しているように見せる
-      $ionicGesture.on('drag', function(event){
-        deltaX = event.gesture.deltaX;
-        deltaY = event.gesture.deltaY;
-
-        // transform3D
-        elem.css('transform', 'translate3D(' + String(scope.deployedPart.position.x + deltaX) + 'px, '
-                                             + String(scope.deployedPart.position.y + deltaY) + 'px, 1px)');
-        elem.css('-webkit-transform', 'translate3D(' + String(scope.deployedPart.position.x + deltaX) + 'px, '
-                                                    + String(scope.deployedPart.position.y + deltaY) + 'px, 1px)');
-      }, elem);
-
-      // ドラッグを離したら、離した位置にパーツを移動させる
-      $ionicGesture.on('release', function(event){
-        scope.deployedPart.position.x = scope.deployedPart.position.x + event.gesture.deltaX;
-        scope.deployedPart.position.y = scope.deployedPart.position.y + event.gesture.deltaY;
-      }, elem);
-    }
-  }
-})
+angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives', 'toaster', 'ngAnimate'])
 
 /**
  * @module controllers.BoardsCtrl
@@ -59,6 +12,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
  * @requires $timeout
  * @requires $ionicPopup
  * @requires $ionicModal
+ * @requires $ionicListDelegate
  * @requires $interval
  * @requires toaster
  * @requires Boards
@@ -66,7 +20,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $interval, toaster, Boards, DBConn, Wallpapers, d) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $ionicListDelegate, $interval, toaster, Boards, DBConn, Wallpapers, d) {
 
   //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
@@ -120,6 +74,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
           // myBoardsにあるboardを削除し、削除したパーツを一時保存用配列に退避
           // 文法的には、splice(削除する要素番号, 削除する数)で、削除する数を0にすると削除されない
           $scope.myBoards.splice(boardIndex, 1);
+          // ボードの削除後、スワイプで表示させたオプションメニューを閉じる
+          $ionicListDelegate.closeOptionButtons();
           $timeout(function(){
             toaster.pop('success', '', 'Deleted!');
           });
@@ -205,7 +161,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
     Boards.setUpdateFlag(boardData.boardId);
     // 既存ボードの更新を行う際に、オートセーブを開始する
     if(Boards.getUpdateFlag()){
-      Boards.autoSavePromise = $interval(function(){$scope.openModal();},30000);
+      Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
@@ -238,17 +194,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
   });
 
   /**
-   * @function openModal
+   * @function checkSaveOrUpdate
    * @description 保存処理の前段階を実施する関数
    */
-  $scope.openModal = function(){
+  $scope.checkSaveOrUpdate = function(){
     // modalのformをclear
     $scope.boardNames.boardName = '';
     $scope.boardNames.boardComment = '';
-    Boards.openModal(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
+    Boards.checkSaveOrUpdate(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId).then(function(boardId){
       if(boardId){
         // boardsList.htmlで表示されるthumbnail画像を変更する
-        Boards.updateMyBoardValuesOnMemory(boardId, Wallpapers.getCurrentWallpaper());
+        Boards.updateWallpaperOnMemory(boardId, Wallpapers.getCurrentWallpaper());
         $timeout(function(){
           toaster.pop('success', '', 'Saved!');
         });
