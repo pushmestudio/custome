@@ -16,6 +16,22 @@
   background: #b9dcf4;
 }
 
+.note-green {
+  background: #ccff99;
+}
+
+.note-pink {
+  background: #ffadd6;
+}
+
+.note-purple {
+  background: #ce9eff;
+}
+
+.note-white {
+  background: #f8fbf8;
+}
+
 .note-normal {
   width: 100px;
   min-height: 100px;
@@ -34,8 +50,18 @@
   max-height: 100px;
 }
 
-/* 付箋の色選択時のサンプル */
-.note-sample {
-  width: 43px;
-  height: 43px;
+/* 付箋のサンプル */
+.sample-normal {
+  width: 85px;
+  height: 85px;
+}
+
+.sample-wide {
+  width: 85px;
+  height: 42px;
+}
+
+.sample-small {
+  width: 64px;
+  height: 64px;
 }

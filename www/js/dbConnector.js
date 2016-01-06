@@ -105,7 +105,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               }
             },
             {
-              'partId': '1',
+              'partId': '3',
               'class': 'sticky-note note-blue note-normal',
               'type': 'fusen',
               'text': 'If you like this app, please support us by tapping the Ads.',
