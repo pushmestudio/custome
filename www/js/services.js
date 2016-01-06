@@ -272,6 +272,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
+    text: '',
     size: {
       width: 100,
       height: 100
@@ -283,6 +284,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-blue-normal',
     type: 'fusen',
     class: 'sticky-note note-blue note-normal',
+    text: '',
     size: {
       width: 100,
       height: 100
@@ -294,6 +296,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-yellow-wide',
     type: 'fusen',
     class: 'sticky-note note-yellow note-wide',
+    text: '',
     size: {
       width: 100,
       height: 50
@@ -305,6 +308,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-blue-wide',
     type: 'fusen',
     class: 'sticky-note note-blue note-wide',
+    text: '',
     size: {
       width: 100,
       height: 50
@@ -316,6 +320,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-yellow-small',
     type: 'fusen',
     class: 'sticky-note note-yellow note-small',
+    text: '',
     size: {
       width: 75,
       height: 75
@@ -327,12 +332,26 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-blue-small',
     type: 'fusen',
     class: 'sticky-note note-blue note-small',
+    text: '',
     size: {
       width: 75,
       height: 75
     },
     flag : 'false'
-  }];
+  }, {
+    id: '6',// 時間管理パーツ (小島くん作成後に入れ替える)
+    //id2: 'xxxx',
+    title: 'saveTime-part',
+    type: 'saveTime',
+    class: 'sticky-note note-blue note-wide',
+    text: 'Press to record currentTime.',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag: 'false'
+  }
+];
 
   var flag='false';
   var partX;
@@ -377,12 +396,19 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var deployPartByClick = function(){
     for (var count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
+
+      /*** ここから時間管理パーツ配置のための修正 ***/
+      // ここで時間管理パーツを判定するフラグを使って場合分けする。
+      // 通常パーツ or 時間管理パーツを判定し，deployedPartにpushする属性を変更する
+      // DBにスキーマと異なるので，不整合が起きないように調整する必要あり
+      /*** ここまで ***/
+
       if(part.flag==='true'){
         part.counter++;//同じタイプのパーツの配置数//後で消すかも
         var deployedPart = {
           'partId' : part.id,
           'class' : part.class,
-          'text' : text,
+          'text' : part.text,
           'type' : part.type,
           'position' : {
             'x' : partX - (part.size.width/2),
@@ -426,12 +452,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var reDeployUsingDBdata = function(boardContent){
     deployedParts = initPartsOnBoard(); //deployedPartsの初期化
     //パレット上に登録してあるパーツのカウンターを0に初期化
+    //console.log("配置済パーツ数: " + boardContent.parts.length);
     for(var i = 0; i < parts.length;i++){
       parts[i].counter=0;
     }
     for(var count in boardContent.parts){ // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = boardContent.parts[count];
-      parts[part.partId].counter++;
+      //parts[part.partId].counter++;
       deployedParts.push(part);
     }
   }
@@ -491,6 +518,27 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     }
   }
 
+  /**
+   * @function deployTimeStampAsFusen
+   * @description ボード上の時間保存パーツをタップした時に，"現在時間を埋め込んだ付箋"を配置する
+   */
+  var deployTimeStampAsFusen = function(){
+    var date = new Date();
+    var currentTime = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+    var deployedPart = {
+      'partId' : 't1',
+      'class' : 'sticky-note note-yellow note-wide',
+      'type' : 'fusen',
+      'text' : currentTime,
+      'position' : {
+        'x' : 150,//とりあえず固定値
+        'y' : 200
+      },
+    };
+    deployedParts.push(deployedPart);
+  };
+
+
   return {
     getSize :function() {
       return partsSize;
@@ -525,6 +573,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     },
     init: function(){
       initPartsOnBoard();
+    },
+    setOnFlag: function(){
+      parts[6].flag = 'true';//saveTimeパーツのフラグをOnにする
+    },
+    deployTimeStampPart: function(){
+      deployTimeStampAsFusen();
     }
   };
 })
