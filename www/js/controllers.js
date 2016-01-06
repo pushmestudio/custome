@@ -379,11 +379,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
  * @requires Parts
  */
 .controller('PalletCtrl', function($scope, $ionicModal, Parts){
-  // 付箋選択方式変更に伴い以下の変数を廃止
-  /*
-  $scope.partsSize = Parts.getSize();
-  $scope.partsColor = Parts.getColor();
-  */
   $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
 
   // modalの定義　使用する付箋の選択を行うためのmodalを設定
@@ -400,17 +395,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'toaster', 'ngAnimate
    */
   $scope.showStickyNoteList = function(){
     $scope.modal.show();
-  };
-
-  /**
-   * @function setPart
-   * @description 選択したパーツのサイズ、色の情報を保持する<br>付箋選択方式の変更に伴い廃止予定 at 2016/01/06 須藤
-   * @todo variableという名前の変数はわかりにくいかも at 12/23 小島
-   * @param variable 選択したパーツのサイズ
-   * @param selectedType 選択したパーツの色
-   */
-  $scope.setPart = function(variable, selectedType){
-    Parts.setPart(variable, selectedType);
   };
 
   /**
