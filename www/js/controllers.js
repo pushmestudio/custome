@@ -335,8 +335,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires Parts
  */
 .controller('PalletCtrl', function($scope, $ionicModal, Parts){
-  $scope.partsSize = Parts.getSize();
-  $scope.partsColor = Parts.getColor();
   $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
 
   // modalの定義　使用する付箋の選択を行うためのmodalを設定
@@ -356,22 +354,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   };
 
   /**
-   * @function setPart
-   * @description 選択したパーツのサイズ、色の情報を保持する
-   * @todo variableという名前の変数はわかりにくいかも at 12/23 小島
-   * @param variable 選択したパーツのサイズ
-   * @param selectedType 選択したパーツの色
-   */
-  $scope.setPart = function(variable, selectedType){
-    Parts.setPart(variable, selectedType);
-  };
-
-  /**
    * @function select
    * @description パレットからボードに配置するパーツを選択する
+   * @param tgtId 選択した付箋を示すID
    */
-  $scope.select = function(){
-    Parts.select();//パレットからボードに配置するパーツを選択
+  $scope.select = function(tgtId){
+    Parts.select(tgtId);//パレットからボードに配置するパーツを選択
     if($scope.modal.isShown()){
       $scope.modal.hide();
     }

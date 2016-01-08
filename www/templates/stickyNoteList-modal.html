@@ -4,28 +4,14 @@
 <ion-modal-view>
   <ion-header-bar align-title="center" class="bar-royal">
     <h1 class="title">Select Sticky note</h1>
-    <button class="button button-icon icon ion-checkmark-round" ng-click="select()"></button>
   </ion-header-bar>
   <ion-content>
     <ion-list>
-      <div class="item item-divider">
-        Size
-      </div>
-      <ion-scroll class="sizeArea">
-        <ion-item  ng-repeat="size in partsSize" ng-class="{clickColor : size.flag}" ng-click="setPart(partsSize, size.id)">
-          <div class="{{size.class}}" style="position: relative;" ng-click="setPart(partsSize, size.id)"/>
-        </ion-item>
-      </ion-scroll>
-      <div class="item item-divider">
-        Color
-      </div>
-      <ion-scroll direction="x">
-        <div class="row">
-          <ion-item class="col col-20" ng-repeat="color in partsColor" ng-class="{clickColor : color.flag}" ng-click="setPart(partsColor, color.id)">
-            <div class="{{color.class}}" style="position: relative;" ng-click="setPart(partsColor, color.id)"/>
-          </ion-item>
+      <div class="row palette-items">
+        <div class="col col-33" ng-repeat="part in parts">
+          <div class="{{part.sample}}" style="position: relative;" ng-click="select(part.id)"/>
         </div>
-      </ion-scroll>
+      </div>
     </ion-list>
   </ion-content>
 </ion-modal-view>

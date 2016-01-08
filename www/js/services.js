@@ -238,93 +238,218 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  */
 .factory('Parts', function() {
 
-  // パーツの大きさ
-  var partsSize = [{
-      id: '0', // small
-      class: 'sticky-note note-yellow note-small',
-      flag: true // フラグで選択されているか判定
-    },{
-      id: '1', // normal
-      class: 'sticky-note note-yellow note-normal',
-      flag: false
-    },{
-      id: '2', // wide
-      class: 'sticky-note note-yellow note-wide',
-      flag: false
-    }];
-
-  // パーツの色
-  var partsColor = [{
-      id: 'a', // yellow
-      class: 'center note-sample note-yellow',
-      flag: true // フラグで選択されているか判定
-    },{
-      id: 'b', // blue
-      class: 'center note-sample note-blue',
-      flag: false
-    }];
-
+  // 選択できる付箋
   var parts = [{
-    id: '0',
-    id2: 'a1',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
+    // 黄色の普通の付箋
+    id: '0',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。
     title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
+    sample: 'sticky-note note-yellow sample-normal', // モーダル表示用付箋サンプル
     size: {
       width: 100,
       height: 100
     },
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
-    id: '1',//付箋(青)
-    id2: 'b1',
-    title: 'note-blue-normal',
-    type: 'fusen',
-    class: 'sticky-note note-blue note-normal',
-    size: {
-      width: 100,
-      height: 100
-    },
-    flag : 'false'
-  }, {
-    id: '2',//横長付箋(黄)
-    id2: 'a2',
+    // 黄色の横長の付箋
+    id: '1',
     title: 'note-yellow-wide',
     type: 'fusen',
     class: 'sticky-note note-yellow note-wide',
+    sample: 'sticky-note note-yellow sample-wide',
     size: {
       width: 100,
       height: 50
     },
     flag : 'false'
   }, {
-    id: '3',//横長付箋(青)
-    id2: 'b2',
-    title: 'note-blue-wide',
-    type: 'fusen',
-    class: 'sticky-note note-blue note-wide',
-    size: {
-      width: 100,
-      height: 50
-    },
-    flag : 'false'
-  }, {
-    id: '4',//小付箋(黄)
-    id2: 'a0',
+    // 黄色の小付箋
+    id: '2',
     title: 'note-yellow-small',
     type: 'fusen',
     class: 'sticky-note note-yellow note-small',
+    sample: 'sticky-note note-yellow sample-small',
     size: {
       width: 75,
       height: 75
     },
     flag : 'false'
   }, {
-    id: '5',//小付箋(青)
-    id2: 'b0',
+    // 青色の普通の付箋
+    id: '3',
+    title: 'note-blue-normal',
+    type: 'fusen',
+    class: 'sticky-note note-blue note-normal',
+    sample: 'sticky-note note-blue sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // 青色の横長の付箋
+    id: '4',
+    title: 'note-blue-wide',
+    type: 'fusen',
+    class: 'sticky-note note-blue note-wide',
+    sample: 'sticky-note note-blue sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 青色の小付箋
+    id: '5',
     title: 'note-blue-small',
     type: 'fusen',
     class: 'sticky-note note-blue note-small',
+    sample: 'sticky-note note-blue sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // 緑色の普通の付箋
+    id: '6',
+    title: 'note-green-normal',
+    type: 'fusen',
+    class: 'sticky-note note-green note-normal',
+    sample: 'sticky-note note-green sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // 緑色の横長の付箋
+    id: '7',
+    title: 'note-green-wide',
+    type: 'fusen',
+    class: 'sticky-note note-green note-wide',
+    sample: 'sticky-note note-green sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 緑色の小付箋
+    id: '8',
+    title: 'note-green-small',
+    type: 'fusen',
+    class: 'sticky-note note-green note-small',
+    sample: 'sticky-note note-green sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // ピンク色の普通の付箋
+    id: '9',
+    title: 'note-pink-normal',
+    type: 'fusen',
+    class: 'sticky-note note-pink note-normal',
+    sample: 'sticky-note note-pink sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // ピンク色の横長の付箋
+    id: '10',
+    title: 'note-pink-wide',
+    type: 'fusen',
+    class: 'sticky-note note-pink note-wide',
+    sample: 'sticky-note note-pink sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // ピンク色の小付箋
+    id: '11',
+    title: 'note-pink-small',
+    type: 'fusen',
+    class: 'sticky-note note-pink note-small',
+    sample: 'sticky-note note-pink sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // 紫色の普通の付箋
+    id: '12',
+    title: 'note-purple-normal',
+    type: 'fusen',
+    class: 'sticky-note note-purple note-normal',
+    sample: 'sticky-note note-purple sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // 紫色の横長の付箋
+    id: '13',
+    title: 'note-purple-wide',
+    type: 'fusen',
+    class: 'sticky-note note-purple note-wide',
+    sample: 'sticky-note note-purple sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 紫色の小付箋
+    id: '14',
+    title: 'note-purple-small',
+    type: 'fusen',
+    class: 'sticky-note note-purple note-small',
+    sample: 'sticky-note note-purple sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // 白色の普通の付箋
+    id: '15',
+    title: 'note-white-normal',
+    type: 'fusen',
+    class: 'sticky-note note-white note-normal',
+    sample: 'sticky-note note-white sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // 白色の横長の付箋
+    id: '16',
+    title: 'note-white-wide',
+    type: 'fusen',
+    class: 'sticky-note note-white note-wide',
+    sample: 'sticky-note note-white sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 白色の小付箋
+    id: '17',
+    title: 'note-white-small',
+    type: 'fusen',
+    class: 'sticky-note note-white note-small',
+    sample: 'sticky-note note-white sample-small',
     size: {
       width: 75,
       height: 75
@@ -342,24 +467,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @function selectPartsOnPallet
    * @description パレット上で選択したパーツのフラグを立てるメソッド
    * 画面にパーツをデプロイする際に使うフラグ用
+   * @param tgtId 選択した付箋を示すID
    */
-  var selectPartsOnPallet = function(){
-    var tgtId;
-    for (var key in partsColor){
-      if (partsColor[key].flag){
-        tgtId = partsColor[key].id;
-        break;
-      }
-    }
-    for (var key in partsSize){
-      if (partsSize[key].flag){
-        tgtId = tgtId + partsSize[key].id;
-        break;
-      }
-    }
+  var selectPartsOnPallet = function(tgtId){
     for (var count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
-      if (tgtId === part.id2){
+      if (tgtId === part.id){
         part.flag='true';
       }else{
         part.flag='false';
@@ -472,35 +585,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     deployedParts[selectedPart.index].position = selectedPart.position;
   }
 
-  /**
-   * @function setPartState
-   * @description 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド
-   * @todo variableが何を指しているか伝わりにくいので更新を検討 at 12/23 小島
-   * @param variable 選択された付箋サイズ(?)
-   * @param selectedType 選択された色(?)
-   */
-  var setPartState = function(variable, selectedType){
-    for(var key in variable){
-      if(selectedType === variable[key].id){
-        variable[key].flag = true;
-      }else{
-        variable[key].flag = false;
-      }
-    }
-  }
-
   return {
-    getSize :function() {
-      return partsSize;
-    },
-    getColor :function() {
-      return partsColor;
-    },
     all: function() {
       return parts;
     },
-    select: function() {
-      selectPartsOnPallet();
+    select: function(tgtId) {
+      selectPartsOnPallet(tgtId);
     },
     deploy: function() {
       deployPartByClick();
@@ -517,9 +607,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     updatePart: updatePart,
     reDeploy: function(boardContent){
       reDeployUsingDBdata(boardContent);
-    },
-    setPart: function(variable, selectedType){
-      setPartState(variable, selectedType);
     },
     init: function(){
       initPartsOnBoard();
