@@ -52,16 +52,20 @@
 
 /* 付箋のサンプル */
 .sample-normal {
-  width: 85px;
-  height: 85px;
+  width: 80px;
+  height: 80px;
 }
 
 .sample-wide {
   width: 85px;
   height: 42px;
+  top: 20px;
+  right: 3px;
 }
 
 .sample-small {
   width: 64px;
   height: 64px;
+  top: 7px;
+  left: 7px;
 }
