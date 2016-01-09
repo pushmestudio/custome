@@ -1,8 +1,4 @@
 /* 付箋のモーダル用css */
-.sizeArea {
-  height: 275px;
-}
-
-.clickColor {
-  background: #f0ffff;
+.sample-border {
+  border:1px solid #e6e6e6;
 }
