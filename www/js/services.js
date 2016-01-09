@@ -87,15 +87,14 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }
 
   /**
-   * @function openModal
+   * @function checkSaveOrUpdate
    * @description DBの保存処理を呼ぶ前に、保存が押されたボードが、新規なのか更新（1回目)なのか更新（2回目以降）なのかを判断する
-   * @todo 関数名が実態と合っていないので更新を検討する at 12/23
    * @param {Array} parts board上のparts
    * @param {String} wallPaper 壁紙のパス
    * @param {String} boardId boardの識別番号
    * @return {Promise|null} 更新の場合は更新したボードのボードID、新規の場合はnull
    */
-  var openModal = function(parts, wallpaper, boardId){
+  var checkSaveOrUpdate = function(parts, wallpaper, boardId){
     var deferred = q.defer();
     // 更新の場合
     if(updateFlag) {
@@ -152,13 +151,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }
 
   /**
-   * @function updateMyBoardValuesOnMemory
+   * @function updateWallpaperOnMemory
    * @description ボードの壁紙のパスを更新する
-   * @todo 関数名が実態と少しずれているようなので変更を検討する at 12/23 小島
    * @param boardId 更新対象のボードのID
    * @param wallpaper 新しいボードの壁紙のパス
    */
-  var updateMyBoardValuesOnMemory = function(boardId, wallpaper){
+  var updateWallpaperOnMemory = function(boardId, wallpaper){
     for (var i = 0; i < myBoards.length; i++) {
       if (myBoards[i].boardId === boardId) {
         myBoards[i].boardContent.wallpaper = wallpaper;
@@ -218,8 +216,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       }
       return 'New Board';
     },
-    openModal: function(parts, wallPaper, boardId){
-      return openModal(parts, wallPaper, boardId);
+    checkSaveOrUpdate: function(parts, wallPaper, boardId){
+      return checkSaveOrUpdate(parts, wallPaper, boardId);
     },
     saveBoard: function(parts, wallPaper, boardId, boardNames) {
       return saveBoard(parts, wallPaper, boardId, boardNames);
@@ -228,8 +226,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       return updateBoardNames(boardId, boardNames);
     },
     // メモリ上に保存されているボード(myBoards)のデータ(ひとまず壁紙のみ)を更新する
-    updateMyBoardValuesOnMemory: function(boardId, wallpaper){
-      updateMyBoardValuesOnMemory(boardId, wallpaper);
+    updateWallpaperOnMemory: function(boardId, wallpaper){
+      updateWallpaperOnMemory(boardId, wallpaper);
     }
   };
 })
@@ -240,106 +238,243 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  */
 .factory('Parts', function() {
 
-  // パーツの大きさ
-  var partsSize = [{
-      id: '0', // small
-      class: 'sticky-note note-yellow note-small',
-      flag: true // フラグで選択されているか判定
-    },{
-      id: '1', // normal
-      class: 'sticky-note note-yellow note-normal',
-      flag: false
-    },{
-      id: '2', // wide
-      class: 'sticky-note note-yellow note-wide',
-      flag: false
-    }];
-
-  // パーツの色
-  var partsColor = [{
-      id: 'a', // yellow
-      class: 'center note-sample note-yellow',
-      flag: true // フラグで選択されているか判定
-    },{
-      id: 'b', // blue
-      class: 'center note-sample note-blue',
-      flag: false
-    }];
-
+  // 選択できる付箋
   var parts = [{
-    id: '0',
-    id2: 'a1',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。(黄色)
+    // 黄色の普通の付箋
+    id: '0',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。
     title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
     text: '',
+    sample: 'sticky-note note-yellow sample-normal', // モーダル表示用付箋サンプル
     size: {
       width: 100,
       height: 100
     },
     flag : 'false'  //フラグのOn/Offで，これからボードに配置するパーツかを判定
   }, {
-    id: '1',//付箋(青)
-    id2: 'b1',
+    // 黄色の横長の付箋
+    id: '1',
+    title: 'note-yellow-wide',
+    type: 'fusen',
+    class: 'sticky-note note-yellow note-wide',
+    text: '',
+    sample: 'sticky-note note-yellow sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 黄色の小付箋
+    id: '2',
+    title: 'note-yellow-small',
+    type: 'fusen',
+    class: 'sticky-note note-yellow note-small',
+    text: '',
+    sample: 'sticky-note note-yellow sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // 青色の普通の付箋
+    id: '3',
     title: 'note-blue-normal',
     type: 'fusen',
     class: 'sticky-note note-blue note-normal',
     text: '',
+    sample: 'sticky-note note-blue sample-normal',
     size: {
       width: 100,
       height: 100
     },
     flag : 'false'
   }, {
-    id: '2',//横長付箋(黄)
-    id2: 'a2',
-    title: 'note-yellow-wide',
-    type: 'fusen',
-    class: 'sticky-note note-yellow note-wide',
-    text: '',
-    size: {
-      width: 100,
-      height: 50
-    },
-    flag : 'false'
-  }, {
-    id: '3',//横長付箋(青)
-    id2: 'b2',
+    // 青色の横長の付箋
+    id: '4',
     title: 'note-blue-wide',
     type: 'fusen',
-    class: 'sticky-note note-blue note-wide',
     text: '',
+    class: 'sticky-note note-blue note-wide',
+    sample: 'sticky-note note-blue sample-wide',
     size: {
       width: 100,
       height: 50
     },
     flag : 'false'
   }, {
-    id: '4',//小付箋(黄)
-    id2: 'a0',
-    title: 'note-yellow-small',
-    type: 'fusen',
-    class: 'sticky-note note-yellow note-small',
-    text: '',
-    size: {
-      width: 75,
-      height: 75
-    },
-    flag : 'false'
-  }, {
-    id: '5',//小付箋(青)
-    id2: 'b0',
+    // 青色の小付箋
+    id: '5',
     title: 'note-blue-small',
     type: 'fusen',
-    class: 'sticky-note note-blue note-small',
     text: '',
+    class: 'sticky-note note-blue note-small',
+    sample: 'sticky-note note-blue sample-small',
     size: {
       width: 75,
       height: 75
     },
     flag : 'false'
   }, {
-    id: '6',// 時間管理パーツ (小島くん作成後に入れ替える)
+    // 緑色の普通の付箋
+    id: '6',
+    title: 'note-green-normal',
+    type: 'fusen',
+    class: 'sticky-note note-green note-normal',
+    text: '',
+    sample: 'sticky-note note-green sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // 緑色の横長の付箋
+    id: '7',
+    title: 'note-green-wide',
+    type: 'fusen',
+    class: 'sticky-note note-green note-wide',
+    text: '',
+    sample: 'sticky-note note-green sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 緑色の小付箋
+    id: '8',
+    title: 'note-green-small',
+    type: 'fusen',
+    class: 'sticky-note note-green note-small',
+    text: '',
+    sample: 'sticky-note note-green sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // ピンク色の普通の付箋
+    id: '9',
+    title: 'note-pink-normal',
+    type: 'fusen',
+    class: 'sticky-note note-pink note-normal',
+    text: '',
+    sample: 'sticky-note note-pink sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // ピンク色の横長の付箋
+    id: '10',
+    title: 'note-pink-wide',
+    type: 'fusen',
+    class: 'sticky-note note-pink note-wide',
+    text: '',
+    sample: 'sticky-note note-pink sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // ピンク色の小付箋
+    id: '11',
+    title: 'note-pink-small',
+    type: 'fusen',
+    class: 'sticky-note note-pink note-small',
+    text: '',
+    sample: 'sticky-note note-pink sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // 紫色の普通の付箋
+    id: '12',
+    title: 'note-purple-normal',
+    type: 'fusen',
+    class: 'sticky-note note-purple note-normal',
+    text: '',
+    sample: 'sticky-note note-purple sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // 紫色の横長の付箋
+    id: '13',
+    title: 'note-purple-wide',
+    type: 'fusen',
+    class: 'sticky-note note-purple note-wide',
+    text: '',
+    sample: 'sticky-note note-purple sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 紫色の小付箋
+    id: '14',
+    title: 'note-purple-small',
+    type: 'fusen',
+    class: 'sticky-note note-purple note-small',
+    text: '',
+    sample: 'sticky-note note-purple sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    // 白色の普通の付箋
+    id: '15',
+    title: 'note-white-normal',
+    type: 'fusen',
+    class: 'sticky-note note-white note-normal',
+    text: '',
+    sample: 'sticky-note note-white sample-normal',
+    size: {
+      width: 100,
+      height: 100
+    },
+    flag : 'false'
+  }, {
+    // 白色の横長の付箋
+    id: '16',
+    title: 'note-white-wide',
+    type: 'fusen',
+    class: 'sticky-note note-white note-wide',
+    text: '',
+    sample: 'sticky-note note-white sample-wide',
+    size: {
+      width: 100,
+      height: 50
+    },
+    flag : 'false'
+  }, {
+    // 白色の小付箋
+    id: '17',
+    title: 'note-white-small',
+    type: 'fusen',
+    class: 'sticky-note note-white note-small',
+    text: '',
+    sample: 'sticky-note note-white sample-small',
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag : 'false'
+  }, {
+    id: '18',// 時間管理パーツ (小島くん作成後に入れ替える)
     //id2: 'xxxx',
     title: 'saveTime-part',
     type: 'saveTime',
@@ -363,24 +498,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @function selectPartsOnPallet
    * @description パレット上で選択したパーツのフラグを立てるメソッド
    * 画面にパーツをデプロイする際に使うフラグ用
+   * @param tgtId 選択した付箋を示すID
    */
-  var selectPartsOnPallet = function(){
-    var tgtId;
-    for (var key in partsColor){
-      if (partsColor[key].flag){
-        tgtId = partsColor[key].id;
-        break;
-      }
-    }
-    for (var key in partsSize){
-      if (partsSize[key].flag){
-        tgtId = tgtId + partsSize[key].id;
-        break;
-      }
-    }
+  var selectPartsOnPallet = function(tgtId){
     for (var count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
-      if (tgtId === part.id2){
+      if (tgtId === part.id){
         part.flag='true';
       }else{
         part.flag='false';
@@ -538,19 +661,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     deployedParts.push(deployedPart);
   };
 
-
   return {
-    getSize :function() {
-      return partsSize;
-    },
-    getColor :function() {
-      return partsColor;
-    },
     all: function() {
       return parts;
     },
-    select: function() {
-      selectPartsOnPallet();
+    select: function(tgtId) {
+      selectPartsOnPallet(tgtId);
     },
     deploy: function() {
       deployPartByClick();
@@ -568,14 +684,11 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     reDeploy: function(boardContent){
       reDeployUsingDBdata(boardContent);
     },
-    setPart: function(variable, selectedType){
-      setPartState(variable, selectedType);
-    },
     init: function(){
       initPartsOnBoard();
     },
     setOnFlag: function(){
-      parts[6].flag = 'true';//saveTimeパーツのフラグをOnにする
+      parts[18].flag = 'true';//saveTimeパーツのフラグをOnにする
     },
     deployTimeStampPart: function(){
       deployTimeStampAsFusen();
@@ -603,9 +716,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   /**
    * @function toArray
-   * @description 引数の配列が空でなければ引数を、そうでなければ空の配列の0番目を返す(?)
-   * @todo 小島のJS力だと何をしているか一瞬では理解できなかったので優しくコメントで教えて下さい♥ at 12/23 小島
-   * @param list slice対象の配列(?)
+   * @description 引数の配列が空でなければ引数の先頭要素から最後までを、空の場合は空の配列を返す
+   * @param list FileEntryの配列
    */
   var toArray = function(list) {
     return Array.prototype.slice.call(list || [], 0);
@@ -650,7 +762,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
             deferred.resolve();
           } else {
             entries = entries.concat(toArray(results));
-            // resultsがなくなるまで繰り返し
+            // dirReader.readEntriesは一度でディレクトリ内にある全てのEntryを読み込むとは限らないため、resultsがなくなるまで繰り返し呼び出す。
+            // また、readEntriesを繰り返し呼び出す場合、一度読み込まれたEntryは再び読み込まれず、前に呼び出したEntryの続きから読み込む。
             readEntries();
           }
         }, fail);
