@@ -233,6 +233,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.saveModal.remove();
     $scope.saveModal = null;
 
+    // ボード名が未入力の場合に，デフォルト値を入れる
+    if ($scope.boardNames.boardName === ""){
+      var currentTime = new Date();
+      var sampleBoardNameAt1stSave = "Your board: " + currentTime.getFullYear()+"/"+(currentTime.getMonth()+1)+"/"+currentTime.getDate()+" created";
+      $scope.boardNames.boardName = sampleBoardNameAt1stSave;
+    }
+
     Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId, $scope.boardNames).then(function(boardId){
       $stateParams.boardId = boardId;
       $scope.boardName = Boards.getBoardName($stateParams.boardId);
