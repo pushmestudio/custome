@@ -111,6 +111,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.boardNames.boardName = board.boardContent.boardName;
     $scope.boardNames.boardComment = board.boardContent.boardComment;
 
+    // 編集前のボード名を格納し，保存時に，ボード名が空文字("")になっていたら，編集前のボード名を使用する仕様とする (下記のsave()内で利用)
+    $scope.boardNames.boardNameBeforeChange = board.boardContent.boardName;
+
     $scope.saveModal.show();
   };
 
@@ -119,12 +122,19 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description ボードの名前及びコメント保存時の処理
    */
   $scope.save = function(){
+    console.log("This is save() in BoardsCtrl");
     // 保存後再度編集画面を開かれたときに表示できなくなってしまうので、remove, null代入はしない
     $scope.saveModal.hide();
 
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
     $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
+
+    // 上記のopenModal()で"$scope.boardNames.boardNameBeforeChange"を用意
+    // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
+    if ($scope.currentBoard.boardContent.boardName === ""){
+      $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardNameBeforeChange;
+    }
 
     Boards.updateBoardNames($scope.currentBoard.boardId, $scope.boardNames).then(function(){
       $timeout(function(){
