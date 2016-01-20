@@ -235,8 +235,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 /**
  * @module services.Parts
  * @description ボードに配置するパーツ
+ * @requires d
  */
-.factory('Parts', function() {
+.factory('Parts', function(d) {
 
   // 選択できる付箋
   var parts = [{
@@ -477,9 +478,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     id: '18',// 時間管理パーツ (小島くん作成後に入れ替える)
     //id2: 'xxxx',
     title: 'saveTime-part',
-    type: 'saveTime',
-    class: 'sticky-note note-blue note-wide',
-    text: 'Press to record currentTime.',
+    type: 'saveTime', // TODO 便利ボタン的なタイプ名にしたい
+    class: 'sticky-note note-purple item item-icon ion-clock', // TODO 付箋と同じクラスを使うのか？見た目は検討の余地あり
+    text: '', // TODO 表示する文言はこれでいくか？検討の余地あり
     size: {
       width: 75,
       height: 75
@@ -647,15 +648,19 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    */
   var deployTimeStampAsFusen = function(){
     var date = new Date();
-    var currentTime = date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+    var currentTime = date.toTimeString().substring(0, 8); // "21:54:26 GMT+0900"の出力の0番目(含)から8番目(除)まで
+
+    const ADJUST_POSITION = 0.6; // 余り画面サイズギリギリの値だとどこかにいってしまうので
+    var xRandom = window.parent.screen.width * ADJUST_POSITION * Math.random();
+    var yRandom = window.parent.screen.height * ADJUST_POSITION * Math.random();
     var deployedPart = {
       'partId' : 't1',
-      'class' : 'sticky-note note-yellow note-wide',
+      'class' : 'sticky-note note-white note-white center',
       'type' : 'fusen',
       'text' : currentTime,
       'position' : {
-        'x' : 150,//とりあえず固定値
-        'y' : 200
+        'x' : xRandom, // 設置場所をランダムにしてみた
+        'y' : yRandom // 設置場所をランダムにしてみた
       },
     };
     deployedParts.push(deployedPart);
