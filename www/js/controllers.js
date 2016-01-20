@@ -374,7 +374,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $ionicPopup
  */
 .controller('AdsCtrl', function($scope, $ionicModal, $ionicPopup) {
-  const FREQ_POP_AD = 0.3; // 広告の表示量、1で常に表示、0で常に非表示
+  const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
   $scope.hidden = true;
 
   /**
