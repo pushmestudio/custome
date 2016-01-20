@@ -304,13 +304,29 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function openMenu
    * @description パーツの削除や編集などの処理が可能なメニューを開く
    * @param partIndex メニューを開く対象として選択されたパーツのIndex
+   * @TODO if文の分岐がかなり冗長なのでリファクタリング必要か
    */
   $scope.openMenu = function(partIndex) {
     console.log("partIndex : " + partIndex);
-    // 時間保存パーツの場合は，特別な付箋を自動配置する
+    // 時間保存パーツの場合は，時間保存用メニュー(時間保存/Delete/Cancel)を出す
     // 通常のパーツの場合は，メニュー(Edit/Delete/Cancel)を出す
     if ($scope.deployedParts_angular[partIndex].type === 'saveTime'){
-      Parts.deployTimeStampPart();
+      var hideSheet = $ionicActionSheet.show({
+        buttons: [
+          { text: '<i class="icon ion-clock royal"></i>Stop The World!' } // index=0 時間保存用の文言、elseとの変化点1 TODO ふざけすぎでしょうか？
+        ],
+        destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
+        cancelText: '<i class="icon ion-close-round"></i>Cancel',
+        buttonClicked: function(menuIndex) {
+          if (menuIndex == 0) {
+            Parts.deployTimeStampPart(); // 時間保存用のメニュー、elseとの変化点2
+          }
+          return true;
+        }, destructiveButtonClicked: function() {
+          $scope.remove(partIndex);
+          return true;
+        }
+      });
     }else{
       var hideSheet = $ionicActionSheet.show({
         buttons: [
