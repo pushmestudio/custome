@@ -798,3 +798,61 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     log: printDebug
   };
 })
+
+/**
+ * @module services.AdMobManager
+ * @description AdMob広告関連の変数を用意する
+ * @requires d
+ */
+.factory('AdMobManager', function(d){
+  // 広告のID
+  admobid = {
+    // banner: '',
+    interstitial: 'ca-app-pub-2622960706202758/6313111825'
+  };
+
+  // 広告関連の処理を初期化する関数
+  var initAdMob = function(){
+    // Androidの場合
+    if(ionic.Platform.isAndroid()){
+      if(typeof window.AdMob == 'undefined'){
+        d.log('AdMob plugin is not ready');
+      } else {
+        /*
+        // バナー広告を準備
+        AdMob.createBanner({
+          adId: admobid.banner,
+          isTesting: true,
+          overlap: false,
+          position: AdMob.AS_POSITION.BOTTOM_CENTER,
+          bgColor: 'black',
+          autoShow: true
+        });
+        */
+
+        // インタースティシャル広告を準備
+        window.AdMob.prepareInterstitial({
+          adId: admobid.interstitial,
+          isTesting: true,
+          autoShow: false
+        });
+      }
+    }
+  }
+
+  // インタースティシャル広告を表示する関数
+  var showInterstitialAd = function(){
+    d.log(window.AdMob);
+    window.AdMob.showInterstitial();
+  }
+
+  return {
+    AdMob: window.AdMob,
+    initAdMob: function(){
+      return initAdMob();
+    },
+    showInterstitialAd: function(){
+      return showInterstitialAd();
+    }
+  }
+})

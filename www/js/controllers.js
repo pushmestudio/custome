@@ -373,39 +373,42 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $ionicModal
  * @requires $ionicPopup
  */
-.controller('AdsCtrl', function($scope, $ionicModal, $ionicPopup) {
-  const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
-  $scope.hidden = true;
+.controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
+  const FREQ_POP_AD = 0.5; // 広告の表示量、1で常に表示、0で常に非表示
 
   /**
    * @function init
    * @description バックで広告が読み込めていたら、確率に従って広告表示のためのアイコンを表示する
    */
   $scope.init = function(){
-    // 広告が読み込めていれば、nens_adsplace...がDOMに追加される。nendの広告表示jsの仕様に依存している点に注意。
-    if(document.getElementById('nend_adspace_' + nend_params.site + '_' + nend_params.spot)) {
-      $scope.flagAd = Math.random() <= FREQ_POP_AD;
-    } else {
-      $scope.flagAd = false;
-    }
+    $ionicPlatform.ready(function(){
+      AdMobManager.initAdMob();
+      // AdMobの初期化が正しく行われていれば
+      if(AdMobManager.AdMob){
+        $scope.flagAd = Math.random() <= FREQ_POP_AD;
+      } else {
+        $scope.flagAd = false;
+      }
+    });
   }
-
-  // modalの定義、このmodal内に広告を表示する
-  $ionicModal.fromTemplateUrl('templates/ads-modal.html', {
-    scope: $scope,
-    animataion: 'slide-in-up'
-  }).then(function(modal){
-    $scope.modal = modal;
-  });
 
   $scope.showAlterAd = false; // バックグラウンドの広告が表示できないときに代替的な広告を表示するかどうかのフラグ
 
   /**
-   * @function showUpAd
-   * @description 広告表示のモーダル内に広告をコピーする
+   * @function showUpInterstitialAd
+   * @description インタースティシャル広告を画面全体に表示させる
    * 広告表示するモーダル内の要素'adspace'はモーダル内にあるため、モーダルを読み込むまでは存在しない
    * 不必要な処理を減らすため、読み込み後(adspaceがnullじゃなくなったとき)のみ広告取得の処理をする
    */
+  $scope.showUpInterstitialAd = function(){
+    try{
+      d.log('Show Interstitial Ad');
+      AdMobManager.showInterstitialAd();
+    } catch(e){
+      d.log(e);
+    }
+  };
+  /*
   $scope.showUpAd = function() {
     var adspace = document.getElementById('adspace');
     if(adspace) {
@@ -427,15 +430,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       $scope.showAlterAd = true;
     }
   };
-
-  /**
-   * @function closeAd
-   * 広告表示のモーダルを閉じる
-   */
-  $scope.closeAd = function() {
-    $scope.modal.hide();
-    $scope.modal.remove();
-  }
+  */
 
   /**
    * @function popAd
@@ -448,8 +443,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // Okなら広告を表示する
         $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
-        $scope.modal.show();
-        $scope.showUpAd();
+        $scope.showUpInterstitialAd();
       } else {
         $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
       }
