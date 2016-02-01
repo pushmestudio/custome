@@ -87,12 +87,6 @@
         },
         "cordova-plugin-file": {
             "PACKAGE_NAME": "jp.pushmestudio.custome"
-        },
-        "org.apache.cordova.camera": {
-            "PACKAGE_NAME": "jp.pushmestudio.custome"
-        },
-        "org.apache.cordova.media": {
-            "PACKAGE_NAME": "jp.pushmestudio.custome"
         }
     },
     "dependent_plugins": {}
