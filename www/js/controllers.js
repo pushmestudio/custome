@@ -111,6 +111,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.boardNames.boardName = board.boardContent.boardName;
     $scope.boardNames.boardComment = board.boardContent.boardComment;
 
+    // 編集前のボード名を格納し，保存時に，ボード名が空文字("")になっていたら，編集前のボード名を使用する仕様とする (下記のsave()内で利用)
+    $scope.boardNames.boardNameBeforeChange = board.boardContent.boardName;
+
     $scope.saveModal.show();
   };
 
@@ -119,12 +122,19 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description ボードの名前及びコメント保存時の処理
    */
   $scope.save = function(){
+    console.log("This is save() in BoardsCtrl");
     // 保存後再度編集画面を開かれたときに表示できなくなってしまうので、remove, null代入はしない
     $scope.saveModal.hide();
 
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
     $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
+
+    // 上記のopenModal()で"$scope.boardNames.boardNameBeforeChange"を用意
+    // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
+    if ($scope.currentBoard.boardContent.boardName === ""){
+      $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardNameBeforeChange;
+    }
 
     Boards.updateBoardNames($scope.currentBoard.boardId, $scope.boardNames).then(function(){
       $timeout(function(){
@@ -151,8 +161,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires DBConn
  * @requires Parts
  * @requires Wallpapers
+ * @requires d
  */
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers, d) {
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
@@ -233,6 +244,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.saveModal.remove();
     $scope.saveModal = null;
 
+    // ボード名が未入力の場合に，デフォルト値を入れる
+    if ($scope.boardNames.boardName === ""){
+      var currentTime = new Date();
+      var sampleBoardNameAt1stSave = "Your board: " + currentTime.getFullYear()+"/"+(currentTime.getMonth()+1)+"/"+currentTime.getDate()+" created";
+      $scope.boardNames.boardName = sampleBoardNameAt1stSave;
+    }
+
     Boards.saveBoard(Parts.getAllDeployed(), Wallpapers.getCurrentWallpaper(), $stateParams.boardId, $scope.boardNames).then(function(boardId){
       $stateParams.boardId = boardId;
       $scope.boardName = Boards.getBoardName($stateParams.boardId);
@@ -304,25 +322,49 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function openMenu
    * @description パーツの削除や編集などの処理が可能なメニューを開く
    * @param partIndex メニューを開く対象として選択されたパーツのIndex
+   * @TODO if文の分岐がかなり冗長なのでリファクタリング必要か
    */
   $scope.openMenu = function(partIndex) {
-    var hideSheet = $ionicActionSheet.show({
-      buttons: [
-        { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
-      //  , { text: '<i class="icon ion-clipboard energized"></i>Copy' } // index=1 今は使わない
-      ],
-      destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
-      cancelText: '<i class="icon ion-close-round"></i>Cancel',
-      buttonClicked: function(menuIndex) {
-        if (menuIndex == 0) {
-          $scope.openEditModal(partIndex);
+    d.log("partIndex : " + partIndex);
+    // 時間保存パーツの場合は，時間保存用メニュー(時間保存/Delete/Cancel)を出す
+    // 通常のパーツの場合は，メニュー(Edit/Delete/Cancel)を出す
+    if ($scope.deployedParts_angular[partIndex].type === 'saveTime'){
+      var hideSheet = $ionicActionSheet.show({
+        buttons: [
+          { text: '<i class="icon ion-clock royal"></i>Create Time Stamp' } // index=0 時間保存用の文言、elseとの変化点1
+        ],
+        destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
+        cancelText: '<i class="icon ion-close-round"></i>Cancel',
+        buttonClicked: function(menuIndex) {
+          if (menuIndex == 0) {
+            // 時間保存用のメニュー、elseとの変化点2, 時間保存パーツのx, y位置を送る
+            Parts.deployTimeStampPart($scope.deployedParts_angular[partIndex].position.x, $scope.deployedParts_angular[partIndex].position.y);
+          }
+          return true;
+        }, destructiveButtonClicked: function() {
+          $scope.remove(partIndex);
+          return true;
         }
-        return true;
-      }, destructiveButtonClicked: function() {
-        $scope.remove(partIndex);
-        return true;
-      }
-    });
+      });
+    }else{
+      var hideSheet = $ionicActionSheet.show({
+        buttons: [
+          { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
+        //  , { text: '<i class="icon ion-clipboard energized"></i>Copy' } // index=1 今は使わない
+        ],
+        destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
+        cancelText: '<i class="icon ion-close-round"></i>Cancel',
+        buttonClicked: function(menuIndex) {
+          if (menuIndex == 0) {
+            $scope.openEditModal(partIndex);
+          }
+          return true;
+        }, destructiveButtonClicked: function() {
+          $scope.remove(partIndex);
+          return true;
+        }
+      });
+    }
   }
 })
 
@@ -363,6 +405,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     if($scope.modal.isShown()){
       $scope.modal.hide();
     }
+  };
+  /**
+   * @function selectSaveTimeParts
+   * @description パレットからボードに配置する時間保存パーツを選択する (後にselect()と統合したい)
+   */
+  $scope.selectSaveTimeParts = function(){
+    //Parts.setOnFlag2TimeParts();//servicesのPartsサービス内でフラグをtrueにする。その後，BoardsDetailCtrl#click()で指定座標に配置
+    //Parts.otherPart[0].flag = true;
+    //Parts.parts[6].flag = true;
+    Parts.setOnFlag();
   }
 })
 
