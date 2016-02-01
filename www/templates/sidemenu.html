@@ -7,7 +7,7 @@
 <ion-content class="has-header palette" ng-controller="PalletCtrl">
   <ion-list>
     <div class="item item-divider">
-      Sticky note
+      Sticky Note
     </div>
     <!--
     <div class="row palette-items">
@@ -41,6 +41,17 @@
       <div class="back-layer-img">
         <img ng-src="{{wallpaperParams.currentWallpaperPath}}" ng-click="showWallpaperList()" class="palette-item ">
         <img ng-src="img/ios7-refresh.png" ng-click="showWallpaperList()" class="front-layer-img">
+      </div>
+    </div>
+
+
+<!-- 時間保存パーツをパレット上に配置 -->
+    <div class="item item-divider">
+      Fantasic Parts
+    </div>
+    <div>
+      <div class="back-layer-img">
+        <div class="item item-icon ion-clock center note-purple" ng-click="selectSaveTimeParts()" menu-close>
       </div>
     </div>
   </ion-list>

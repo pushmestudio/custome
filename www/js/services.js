@@ -235,8 +235,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 /**
  * @module services.Parts
  * @description ボードに配置するパーツ
+ * @requires d
  */
-.factory('Parts', function() {
+.factory('Parts', function(d) {
 
   // 選択できる付箋
   var parts = [{
@@ -245,6 +246,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-yellow-normal',//パレット上に表示用
     type: 'fusen',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
+    text: '',
     sample: 'sticky-note note-yellow sample-normal', // モーダル表示用付箋サンプル
     size: {
       width: 100,
@@ -257,6 +259,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-yellow-wide',
     type: 'fusen',
     class: 'sticky-note note-yellow note-wide',
+    text: '',
     sample: 'sticky-note note-yellow sample-wide',
     size: {
       width: 100,
@@ -269,6 +272,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-yellow-small',
     type: 'fusen',
     class: 'sticky-note note-yellow note-small',
+    text: '',
     sample: 'sticky-note note-yellow sample-small',
     size: {
       width: 75,
@@ -281,6 +285,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-blue-normal',
     type: 'fusen',
     class: 'sticky-note note-blue note-normal',
+    text: '',
     sample: 'sticky-note note-blue sample-normal',
     size: {
       width: 100,
@@ -292,6 +297,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     id: '4',
     title: 'note-blue-wide',
     type: 'fusen',
+    text: '',
     class: 'sticky-note note-blue note-wide',
     sample: 'sticky-note note-blue sample-wide',
     size: {
@@ -304,6 +310,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     id: '5',
     title: 'note-blue-small',
     type: 'fusen',
+    text: '',
     class: 'sticky-note note-blue note-small',
     sample: 'sticky-note note-blue sample-small',
     size: {
@@ -317,6 +324,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-green-normal',
     type: 'fusen',
     class: 'sticky-note note-green note-normal',
+    text: '',
     sample: 'sticky-note note-green sample-normal',
     size: {
       width: 100,
@@ -329,6 +337,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-green-wide',
     type: 'fusen',
     class: 'sticky-note note-green note-wide',
+    text: '',
     sample: 'sticky-note note-green sample-wide',
     size: {
       width: 100,
@@ -341,6 +350,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-green-small',
     type: 'fusen',
     class: 'sticky-note note-green note-small',
+    text: '',
     sample: 'sticky-note note-green sample-small',
     size: {
       width: 75,
@@ -353,6 +363,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-pink-normal',
     type: 'fusen',
     class: 'sticky-note note-pink note-normal',
+    text: '',
     sample: 'sticky-note note-pink sample-normal',
     size: {
       width: 100,
@@ -365,6 +376,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-pink-wide',
     type: 'fusen',
     class: 'sticky-note note-pink note-wide',
+    text: '',
     sample: 'sticky-note note-pink sample-wide',
     size: {
       width: 100,
@@ -377,6 +389,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-pink-small',
     type: 'fusen',
     class: 'sticky-note note-pink note-small',
+    text: '',
     sample: 'sticky-note note-pink sample-small',
     size: {
       width: 75,
@@ -389,6 +402,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-purple-normal',
     type: 'fusen',
     class: 'sticky-note note-purple note-normal',
+    text: '',
     sample: 'sticky-note note-purple sample-normal',
     size: {
       width: 100,
@@ -401,6 +415,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-purple-wide',
     type: 'fusen',
     class: 'sticky-note note-purple note-wide',
+    text: '',
     sample: 'sticky-note note-purple sample-wide',
     size: {
       width: 100,
@@ -413,6 +428,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-purple-small',
     type: 'fusen',
     class: 'sticky-note note-purple note-small',
+    text: '',
     sample: 'sticky-note note-purple sample-small',
     size: {
       width: 75,
@@ -425,6 +441,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-white-normal',
     type: 'fusen',
     class: 'sticky-note note-white note-normal',
+    text: '',
     sample: 'sticky-note note-white sample-normal',
     size: {
       width: 100,
@@ -437,6 +454,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-white-wide',
     type: 'fusen',
     class: 'sticky-note note-white note-wide',
+    text: '',
     sample: 'sticky-note note-white sample-wide',
     size: {
       width: 100,
@@ -449,13 +467,27 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     title: 'note-white-small',
     type: 'fusen',
     class: 'sticky-note note-white note-small',
+    text: '',
     sample: 'sticky-note note-white sample-small',
     size: {
       width: 75,
       height: 75
     },
     flag : 'false'
-  }];
+  }, {
+    id: '18',// 時間管理パーツ (小島くん作成後に入れ替える)
+    //id2: 'xxxx',
+    title: 'saveTime-part',
+    type: 'saveTime', // TODO 便利ボタン的なタイプ名にしたい
+    class: 'sticky-note note-purple item item-icon ion-clock', // TODO 付箋と同じクラスを使うのか？見た目は検討の余地あり
+    text: '', // TODO 表示する文言はこれでいくか？検討の余地あり
+    size: {
+      width: 75,
+      height: 75
+    },
+    flag: 'false'
+  }
+];
 
   var flag='false';
   var partX;
@@ -488,12 +520,19 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var deployPartByClick = function(){
     for (var count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
+
+      /*** ここから時間管理パーツ配置のための修正 ***/
+      // ここで時間管理パーツを判定するフラグを使って場合分けする。
+      // 通常パーツ or 時間管理パーツを判定し，deployedPartにpushする属性を変更する
+      // DBにスキーマと異なるので，不整合が起きないように調整する必要あり
+      /*** ここまで ***/
+
       if(part.flag==='true'){
         part.counter++;//同じタイプのパーツの配置数//後で消すかも
         var deployedPart = {
           'partId' : part.id,
           'class' : part.class,
-          'text' : text,
+          'text' : part.text,
           'type' : part.type,
           'position' : {
             'x' : partX - (part.size.width/2),
@@ -537,12 +576,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var reDeployUsingDBdata = function(boardContent){
     deployedParts = initPartsOnBoard(); //deployedPartsの初期化
     //パレット上に登録してあるパーツのカウンターを0に初期化
+    //console.log("配置済パーツ数: " + boardContent.parts.length);
     for(var i = 0; i < parts.length;i++){
       parts[i].counter=0;
     }
     for(var count in boardContent.parts){ // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = boardContent.parts[count];
-      parts[part.partId].counter++;
+      //parts[part.partId].counter++;
       deployedParts.push(part);
     }
   }
@@ -585,6 +625,72 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     deployedParts[selectedPart.index].position = selectedPart.position;
   }
 
+  /**
+   * @function setPartState
+   * @description 選択された付箋サイズと色に応じて変数partsSize、partsColorのステータスを変更するメソッド
+   * @todo variableが何を指しているか伝わりにくいので更新を検討 at 12/23 小島
+   * @param variable 選択された付箋サイズ(?)
+   * @param selectedType 選択された色(?)
+   */
+  var setPartState = function(variable, selectedType){
+    for(var key in variable){
+      if(selectedType === variable[key].id){
+        variable[key].flag = true;
+      }else{
+        variable[key].flag = false;
+      }
+    }
+  }
+
+  /**
+   * @function deployTimeStampAsFusen
+   * @description ボード上の時間保存パーツをタップした時に，"現在時間を埋め込んだ付箋"を配置する
+   * @param {double} x タップされた時間保存パーツのx(横)位置, NaNが来たら固定値に置き換え
+   * @param {double} y タップされた時間保存パーツのy(縦)位置, NaNが来たら固定値に置き換え
+   */
+  var deployTimeStampAsFusen = function(x, y){
+    var date = new Date();
+    var currentTime = date.toTimeString().substring(0, 8); // "21:54:26 GMT+0900"の出力の0番目(含)から8番目(除)まで
+
+    // 配置位置をランダムにずらす 時間保存パーツと位置が被ってしまわないように固定値で生成位置をずらしている
+    const POSITION_RANGE = 80; // ランダムに配置される位置(px)の可変幅(縦横ともに)
+    const POSITION_AVOID = 20; // ランダムに配置される際に、配置しないように避ける幅
+
+    // ありえないはずだが、万が一x, yにNaN(Not a Number)が来たら、100, 100の位置を代替的に使う
+    x = isNaN(x) ? (POSITION_RANGE + POSITION_AVOID) : x;
+    y = isNaN(y) ? (POSITION_RANGE + POSITION_AVOID) : y;
+
+    // POSITION_RANGE+POSITION_AVOID=時間保存パーツから離れて生成される際の最大の距離幅
+    // 既存の時間保存パーツの位置 ± ランダム計算した位置
+    var xRandom = x + ((POSITION_RANGE * Math.random() + POSITION_AVOID) * getRandomSign());
+    var yRandom = y + ((POSITION_RANGE * Math.random() + POSITION_AVOID) * getRandomSign());
+    d.log('Random position is: \(x, y\)=\(' + xRandom + ',' + yRandom + '\)');
+
+    var deployedPart = {
+      'partId' : 't1',
+      'class' : 'sticky-note note-white center',
+      'type' : 'fusen',
+      'text' : currentTime,
+      'position' : {
+        'x' : xRandom,
+        'y' : yRandom
+      },
+    };
+    deployedParts.push(deployedPart);
+  };
+
+  /**
+   * ランダムに1 or -1を返す、内部関数として、公開せずに使用する想定
+   * @return 1 or -1
+   */
+  var getRandomSign = function() {
+    if(Math.random() - 0.5 >= 0) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
   return {
     all: function() {
       return parts;
@@ -610,6 +716,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     },
     init: function(){
       initPartsOnBoard();
+    },
+    setOnFlag: function(){
+      parts[18].flag = 'true';//saveTimeパーツのフラグをOnにする
+    },
+    deployTimeStampPart: function(x, y){
+      deployTimeStampAsFusen(x, y);
     }
   };
 })
