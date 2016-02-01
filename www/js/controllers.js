@@ -151,8 +151,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires DBConn
  * @requires Parts
  * @requires Wallpapers
+ * @requires d
  */
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers, d) {
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
@@ -307,19 +308,20 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @TODO if文の分岐がかなり冗長なのでリファクタリング必要か
    */
   $scope.openMenu = function(partIndex) {
-    console.log("partIndex : " + partIndex);
+    d.log("partIndex : " + partIndex);
     // 時間保存パーツの場合は，時間保存用メニュー(時間保存/Delete/Cancel)を出す
     // 通常のパーツの場合は，メニュー(Edit/Delete/Cancel)を出す
     if ($scope.deployedParts_angular[partIndex].type === 'saveTime'){
       var hideSheet = $ionicActionSheet.show({
         buttons: [
-          { text: '<i class="icon ion-clock royal"></i>Stop The World!' } // index=0 時間保存用の文言、elseとの変化点1 TODO ふざけすぎでしょうか？
+          { text: '<i class="icon ion-clock royal"></i>Create Time Stamp' } // index=0 時間保存用の文言、elseとの変化点1
         ],
         destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
         cancelText: '<i class="icon ion-close-round"></i>Cancel',
         buttonClicked: function(menuIndex) {
           if (menuIndex == 0) {
-            Parts.deployTimeStampPart(); // 時間保存用のメニュー、elseとの変化点2
+            // 時間保存用のメニュー、elseとの変化点2, 時間保存パーツのx, y位置を送る
+            Parts.deployTimeStampPart($scope.deployedParts_angular[partIndex].position.x, $scope.deployedParts_angular[partIndex].position.y);
           }
           return true;
         }, destructiveButtonClicked: function() {
