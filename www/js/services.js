@@ -645,26 +645,51 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   /**
    * @function deployTimeStampAsFusen
    * @description ボード上の時間保存パーツをタップした時に，"現在時間を埋め込んだ付箋"を配置する
+   * @param {double} x タップされた時間保存パーツのx(横)位置, NaNが来たら固定値に置き換え
+   * @param {double} y タップされた時間保存パーツのy(縦)位置, NaNが来たら固定値に置き換え
    */
-  var deployTimeStampAsFusen = function(){
+  var deployTimeStampAsFusen = function(x, y){
     var date = new Date();
     var currentTime = date.toTimeString().substring(0, 8); // "21:54:26 GMT+0900"の出力の0番目(含)から8番目(除)まで
 
-    const ADJUST_POSITION = 0.6; // 余り画面サイズギリギリの値だとどこかにいってしまうので
-    var xRandom = window.parent.screen.width * ADJUST_POSITION * Math.random();
-    var yRandom = window.parent.screen.height * ADJUST_POSITION * Math.random();
+    // 配置位置をランダムにずらす 時間保存パーツと位置が被ってしまわないように固定値で生成位置をずらしている
+    const POSITION_RANGE = 80; // ランダムに配置される位置(px)の可変幅(縦横ともに)
+    const POSITION_AVOID = 20; // ランダムに配置される際に、配置しないように避ける幅
+
+    // ありえないはずだが、万が一x, yにNaN(Not a Number)が来たら、100, 100の位置を代替的に使う
+    x = isNaN(x) ? (POSITION_RANGE + POSITION_AVOID) : x;
+    y = isNaN(y) ? (POSITION_RANGE + POSITION_AVOID) : y;
+
+    // POSITION_RANGE+POSITION_AVOID=時間保存パーツから離れて生成される際の最大の距離幅
+    // 既存の時間保存パーツの位置 ± ランダム計算した位置
+    var xRandom = x + ((POSITION_RANGE * Math.random() + POSITION_AVOID) * getRandomSign());
+    var yRandom = y + ((POSITION_RANGE * Math.random() + POSITION_AVOID) * getRandomSign());
+    d.log('Random position is: \(x, y\)=\(' + xRandom + ',' + yRandom + '\)');
+
     var deployedPart = {
       'partId' : 't1',
-      'class' : 'sticky-note note-white note-white center',
+      'class' : 'sticky-note note-white center',
       'type' : 'fusen',
       'text' : currentTime,
       'position' : {
-        'x' : xRandom, // 設置場所をランダムにしてみた
-        'y' : yRandom // 設置場所をランダムにしてみた
+        'x' : xRandom,
+        'y' : yRandom
       },
     };
     deployedParts.push(deployedPart);
   };
+
+  /**
+   * ランダムに1 or -1を返す、内部関数として、公開せずに使用する想定
+   * @return 1 or -1
+   */
+  var getRandomSign = function() {
+    if(Math.random() - 0.5 >= 0) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
 
   return {
     all: function() {
@@ -695,8 +720,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     setOnFlag: function(){
       parts[18].flag = 'true';//saveTimeパーツのフラグをOnにする
     },
-    deployTimeStampPart: function(){
-      deployTimeStampAsFusen();
+    deployTimeStampPart: function(x, y){
+      deployTimeStampAsFusen(x, y);
     }
   };
 })
