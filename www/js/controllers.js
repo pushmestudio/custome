@@ -161,8 +161,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires DBConn
  * @requires Parts
  * @requires Wallpapers
+ * @requires d
  */
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers, d) {
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
@@ -321,25 +322,49 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function openMenu
    * @description パーツの削除や編集などの処理が可能なメニューを開く
    * @param partIndex メニューを開く対象として選択されたパーツのIndex
+   * @TODO if文の分岐がかなり冗長なのでリファクタリング必要か
    */
   $scope.openMenu = function(partIndex) {
-    var hideSheet = $ionicActionSheet.show({
-      buttons: [
-        { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
-      //  , { text: '<i class="icon ion-clipboard energized"></i>Copy' } // index=1 今は使わない
-      ],
-      destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
-      cancelText: '<i class="icon ion-close-round"></i>Cancel',
-      buttonClicked: function(menuIndex) {
-        if (menuIndex == 0) {
-          $scope.openEditModal(partIndex);
+    d.log("partIndex : " + partIndex);
+    // 時間保存パーツの場合は，時間保存用メニュー(時間保存/Delete/Cancel)を出す
+    // 通常のパーツの場合は，メニュー(Edit/Delete/Cancel)を出す
+    if ($scope.deployedParts_angular[partIndex].type === 'saveTime'){
+      var hideSheet = $ionicActionSheet.show({
+        buttons: [
+          { text: '<i class="icon ion-clock royal"></i>Create Time Stamp' } // index=0 時間保存用の文言、elseとの変化点1
+        ],
+        destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
+        cancelText: '<i class="icon ion-close-round"></i>Cancel',
+        buttonClicked: function(menuIndex) {
+          if (menuIndex == 0) {
+            // 時間保存用のメニュー、elseとの変化点2, 時間保存パーツのx, y位置を送る
+            Parts.deployTimeStampPart($scope.deployedParts_angular[partIndex].position.x, $scope.deployedParts_angular[partIndex].position.y);
+          }
+          return true;
+        }, destructiveButtonClicked: function() {
+          $scope.remove(partIndex);
+          return true;
         }
-        return true;
-      }, destructiveButtonClicked: function() {
-        $scope.remove(partIndex);
-        return true;
-      }
-    });
+      });
+    }else{
+      var hideSheet = $ionicActionSheet.show({
+        buttons: [
+          { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
+        //  , { text: '<i class="icon ion-clipboard energized"></i>Copy' } // index=1 今は使わない
+        ],
+        destructiveText: '<i class="icon ion-trash-a assertive"></i>Delete',
+        cancelText: '<i class="icon ion-close-round"></i>Cancel',
+        buttonClicked: function(menuIndex) {
+          if (menuIndex == 0) {
+            $scope.openEditModal(partIndex);
+          }
+          return true;
+        }, destructiveButtonClicked: function() {
+          $scope.remove(partIndex);
+          return true;
+        }
+      });
+    }
   }
 })
 
@@ -380,6 +405,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     if($scope.modal.isShown()){
       $scope.modal.hide();
     }
+  };
+  /**
+   * @function selectSaveTimeParts
+   * @description パレットからボードに配置する時間保存パーツを選択する (後にselect()と統合したい)
+   */
+  $scope.selectSaveTimeParts = function(){
+    //Parts.setOnFlag2TimeParts();//servicesのPartsサービス内でフラグをtrueにする。その後，BoardsDetailCtrl#click()で指定座標に配置
+    //Parts.otherPart[0].flag = true;
+    //Parts.parts[6].flag = true;
+    Parts.setOnFlag();
   }
 })
 
