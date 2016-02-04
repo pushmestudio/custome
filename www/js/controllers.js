@@ -426,7 +426,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $ionicPopup
  */
 .controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
-  const FREQ_POP_AD = 0.5; // 広告の表示量、1で常に表示、0で常に非表示
+  const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
 
   /**
    * @function init
@@ -434,13 +434,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    */
   $scope.init = function(){
     $ionicPlatform.ready(function(){
-      AdMobManager.initAdMob();
-      // AdMobの初期化が正しく行われていれば
-      if(AdMobManager.AdMob){
-        $scope.flagAd = Math.random() <= FREQ_POP_AD;
-      } else {
-        $scope.flagAd = false;
-      }
+      AdMobManager.initAdMob().then(function(admob){
+          d.log(admob);
+        // AdMobの初期化が正しく行われていれば
+        if(admob){
+          $scope.flagAd = Math.random() <= FREQ_POP_AD;
+          d.log($scope.flagAd);
+        } else {
+          $scope.flagAd = false;
+          d.log($scope.flagAd);
+        }
+      });
     });
   }
 
