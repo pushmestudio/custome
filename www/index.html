@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="copyright" content="(c) 2015 PushMe Studio">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; connect-src *; img-src *; frame-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline' *;">
     <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
@@ -67,14 +68,9 @@
     </ion-side-menus>
 
   <div ng-controller="AdsCtrl" ng-init="init()">
-    <div id="nend" ng-hide="hidden">
-      <script type="text/javascript">
-        var nend_params = {"media":22843,"site":147184,"spot":398567,"type":1,"oriented":3};
-//sample        var nend_params = {"media":82,"site":58536,"spot":127518,"type":1,"oriented":1};
-      </script>
-      <script type="text/javascript" src="https://js1.nend.net/js/nendAdLoader.js"></script>
+    <div class="ads-trigger" ng-show="flagAd">
+      <img ng-src=img/icon_pushme.png ng-click="popAd()" />
     </div>
-    <div class="ads-trigger" ng-show="flagAd"><img ng-src=img/icon_pushme.png ng-click="popAd()" /></div>
   </div>
   </body>
 </html>
