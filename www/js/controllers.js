@@ -173,6 +173,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     // 既存ボードの更新を行う際に、オートセーブを開始する
     if(Boards.getUpdateFlag()){
       Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
+    }else{
+        // 新規ボード作成時に，15秒後に一度保存する。モーダルなし。
+      $timeout(function(){
+        $scope.save();
+      },15000);
+        // 一度自動保存したあ後は，通常通り，30秒ごとにオートセーブ開始。
+      Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
