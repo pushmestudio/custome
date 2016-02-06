@@ -61,6 +61,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   // オートセーブ機能のpromiseを格納する
   var autoSavePromise = null;
+  var autoSavePromise_at_1st = null;
 
   /**
    * @function addAllMyBoards
@@ -168,6 +169,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   return {
     boardNames: boardNames,
     autoSavePromise: autoSavePromise,
+    autoSavePromise_at_1st: autoSavePromise_at_1st,
     getMyBoards: function() {
       return myBoards;
     },
