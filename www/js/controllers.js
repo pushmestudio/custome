@@ -174,11 +174,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     if(Boards.getUpdateFlag()){
       Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }else{
-        // 新規ボード作成時に，15秒後に一度保存する。モーダルなし。
+        // 新規ボード作成時の初めてのボードは，15秒後に一度保存する。モーダルなし。
+        // 2回目は15秒後，3回め以降は30秒後にオートセーブされる
+        // ※将来的には，パーツ操作をトリガーにセーブするなど仕様変更が必要かも。
       $timeout(function(){
         $scope.save();
       },15000);
-        // 一度自動保存したあ後は，通常通り，30秒ごとにオートセーブ開始。
+        // 3回目以降は30秒ごとにオートセーブ開始。
       Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }
     $timeout(function(){
@@ -254,7 +256,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     // ボード名が未入力の場合に，デフォルト値を入れる
     if ($scope.boardNames.boardName === ""){
       var currentTime = new Date();
-      var sampleBoardNameAt1stSave = "Your board: " + currentTime.getFullYear()+"/"+(currentTime.getMonth()+1)+"/"+currentTime.getDate()+" created";
+      var sampleBoardNameAt1stSave = "board: " + currentTime.getFullYear()+"/"+(currentTime.getMonth()+1)+"/"+currentTime.getDate();
       $scope.boardNames.boardName = sampleBoardNameAt1stSave;
     }
 
