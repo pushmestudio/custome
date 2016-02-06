@@ -25,8 +25,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
   if($scope.autoSavePromise){
-    $interval.cancel($scope.autoSavePromise);
-    Boards.autoSavePromise = null;
+    Boards.autoSavePromise = $interval.cancel($scope.autoSavePromise);
+  }
+  // $timeout.cancel(xxxxxxx);の形で，ボード一覧遷移時に，新規ボード作成時に15秒後にオートセーブする機能をoffにする
+  // 下記のままでも良いが，冗長なのでサービス化する？
+  $scope.autoSavePromise_at_1st = Boards.autoSavePromise_at_1st;
+  if($scope.autoSavePromise_at_1st){
+    Boards.autoSavePromise_at_1st =     $timeout.cancel($scope.autoSavePromise_at_1st);
   }
 
   /**
@@ -173,6 +178,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     // 既存ボードの更新を行う際に、オートセーブを開始する
     if(Boards.getUpdateFlag()){
       Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
+    }else{
+        // 新規ボード作成時の初めてのボードは，15秒後に一度保存する。モーダルなし。
+        // 2回目は15秒後，3回め以降は30秒後にオートセーブされる
+        // ※将来的には，パーツ操作をトリガーにセーブするなど仕様変更が必要かも。
+      Boards.autoSavePromise_at_1st = $timeout(function(){$scope.save();
+      },15000);
+        // 3回目以降は30秒ごとにオートセーブ開始。
+      Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
@@ -245,9 +258,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.saveModal = null;
 
     // ボード名が未入力の場合に，デフォルト値を入れる
+    // デフォルトのボード名 (as of) :  "board: YYYY/MM/DD"
     if ($scope.boardNames.boardName === ""){
       var currentTime = new Date();
-      var sampleBoardNameAt1stSave = "Your board: " + currentTime.getFullYear()+"/"+(currentTime.getMonth()+1)+"/"+currentTime.getDate()+" created";
+      var sampleBoardNameAt1stSave = "board: " + currentTime.getFullYear()+"/"+(currentTime.getMonth()+1)+"/"+currentTime.getDate();
       $scope.boardNames.boardName = sampleBoardNameAt1stSave;
     }
 
