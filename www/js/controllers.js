@@ -438,9 +438,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $scope
  * @requires $ionicModal
  * @requires $ionicPopup
+ * @requires AdMobManager
  */
 .controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
   const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
+  $scope.showAlterAd = false;
 
   /**
    * @function init
@@ -449,58 +451,31 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.init = function(){
     $ionicPlatform.ready(function(){
       AdMobManager.initAdMob().then(function(admob){
-          d.log(admob);
         // AdMobの初期化が正しく行われていれば
         if(admob){
           $scope.flagAd = Math.random() <= FREQ_POP_AD;
-          d.log($scope.flagAd);
         } else {
           $scope.flagAd = false;
-          d.log($scope.flagAd);
         }
       });
     });
   }
 
-  $scope.showAlterAd = false; // バックグラウンドの広告が表示できないときに代替的な広告を表示するかどうかのフラグ
-
   /**
    * @function showUpInterstitialAd
    * @description インタースティシャル広告を画面全体に表示させる
-   * 広告表示するモーダル内の要素'adspace'はモーダル内にあるため、モーダルを読み込むまでは存在しない
-   * 不必要な処理を減らすため、読み込み後(adspaceがnullじゃなくなったとき)のみ広告取得の処理をする
+   * 何らかのエラーでInterstitial広告が表示できない場合は、代替広告表示用のフラグをtrueにする
    */
   $scope.showUpInterstitialAd = function(){
     try{
       d.log('Show Interstitial Ad');
+      // Interstitial広告を呼び出す
       AdMobManager.showInterstitialAd();
     } catch(e){
       d.log(e);
-    }
-  };
-  /*
-  $scope.showUpAd = function() {
-    var adspace = document.getElementById('adspace');
-    if(adspace) {
-      // 広告が読み込めていれば、nens_adsplace...がDOMに追加される。nendの広告表示jsの仕様に依存している点に注意。
-      if(document.getElementById('nend_adspace_' + nend_params.site + '_' + nend_params.spot)) {
-        var nend = document.getElementById('nend'); // index.html内で事前に読み込んだ広告を取得
-        adspace.replaceChild(nend, adspace.firstChild); // 広告モーダル内に設置
-        // index.html内で広告が表示されるのを防ぐために付してあるhiddenクラスを排除する
-        $scope.showAlterAd = false;
-        adspace.firstChild.className = '';
-      } else {
-        // 広告が取得できない(ネットワークの問題やブラウザで見てる場合)ときはPushMe!の広告を表示する
-        $scope.showAlterAd = true;
-        // index.html内で広告が表示されるのを防ぐために付してあるhiddenクラスを排除する
-        adspace.firstChild.className = '';
-      }
-    } else {
-      // 広告が取得できない(ネットワークの問題やブラウザで見てる場合)ときはPushMe!の広告を表示する
       $scope.showAlterAd = true;
     }
   };
-  */
 
   /**
    * @function popAd

@@ -909,7 +909,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   })();
 
   return {
-    log: printDebug
+    log: printDebug,
+    DEBUG_MODE: DEBUG_MODE
   };
 })
 
@@ -923,7 +924,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var q = $injector.get('$q');
 
   // 広告のID
-  admobid = {
+  var admobid = {
     // banner: '',　バナー広告を使用する場合に必要
     interstitial: 'ca-app-pub-2622960706202758/6313111825'
   };
@@ -938,6 +939,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         d.log('AdMob plugin is not ready');
         deferred.reject();
       } else {
+        d.log(d.DEBUG_MODE);
         /*
         // バナー広告を準備
         AdMob.createBanner({
@@ -950,11 +952,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         });
         */
 
+        d.log(admobid.interstitial);
         // インタースティシャル広告を準備
         window.AdMob.prepareInterstitial({
           adId: admobid.interstitial,
-          // 本番リリース時はコメントアウト
-          isTesting: true,
+          // デバック⇒true, 本番⇒false
+          // isTesting: d.DEBUG_MODE,
           autoShow: false
         });
         deferred.resolve(window.AdMob);
