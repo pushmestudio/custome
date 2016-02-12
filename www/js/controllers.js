@@ -98,6 +98,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description ボード一覧上にてボードの名前とコメントを変更ためのポップアップを開く
    * BoardsDetailCtrlとほぼ同様の実装方法
    * @param board 削除するマイボードの配列内でのIndex
+   * @todo checkSaveOrUpdateとの共通化(必要に応じて、ポップアップの関数化？)
    */
   $scope.openBoardInfoPopup = function(board) { // openmodal to openBoardInfoPopup
     // 選択中のボードを保持する
@@ -114,7 +115,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
       var editPopup = $ionicPopup.show({
         template: '<div class="list">' +
-          '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName"></label>' +
+          '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
           '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
         title: 'Input Board Info',
         scope: $scope,
@@ -218,6 +219,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function checkSaveOrUpdate
    * @description 保存処理の前段階を実施する関数
+   * @todo openBoardInfoPopupとの共通化(必要に応じて、ポップアップの関数化？)
    */
   $scope.checkSaveOrUpdate = function(){
     // modalのformをclear
@@ -235,7 +237,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
           var editPopup = $ionicPopup.show({
             template: '<div class="list">' +
-              '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName"></label>' +
+              '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
               '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
             title: 'Input Board Info',
             scope: $scope,
@@ -268,6 +270,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function openEditNotePopup
    * @description 付箋パーツのテキストを編集するためのポップアップを開く
    * @param index 編集対象の付箋パーツのIndex
+   * @todo (必要に応じて、ポップアップの関数化？)
    */
   $scope.openEditNotePopup = function(index) {
     Parts.selectPart(index); // selectedPartに、indexに該当するパーツを引き当てる
