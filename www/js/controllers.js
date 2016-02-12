@@ -11,7 +11,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $scope
  * @requires $timeout
  * @requires $ionicPopup
- * @requires $ionicModal
  * @requires $ionicListDelegate
  * @requires $interval
  * @requires toaster
@@ -20,7 +19,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $ionicListDelegate, $interval, toaster, Boards, DBConn, Wallpapers, d) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicListDelegate, $interval, toaster, Boards, DBConn, Wallpapers, d) {
 
   //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
@@ -89,22 +88,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     });
   }
 
-  // modalの定義, BoardsDetailCtrlと同じものを使用
-  $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
-    id: '1',
-    scope: $scope,
-    animataion: 'slide-in-up'
-  }).then(function(modal){
-    $scope.saveModal = modal;
-  });
 
-  // モーダル画面の入力欄とバインド
+  // ポップアップ画面の入力欄とバインド
   $scope.boardNames = Boards.boardNames;
   $scope.currentBoard;
 
   /**
-   * @function openModal
-   * @description ボード一覧上にてボードの名前とコメントを変更ためのモーダルを開く
+   * @function openBoardInfoPopup
+   * @description ボード一覧上にてボードの名前とコメントを変更ためのポップアップを開く
    * BoardsDetailCtrlとほぼ同様の実装方法
    * @param board 削除するマイボードの配列内でのIndex
    */
@@ -182,7 +173,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * <code>stateParams = { boardId : 0}</code>となる
  * @requires $scope
  * @requires $stateParams
- * @requires $ionicModal
  * @requires $ionicActionSheet
  * @requires $interval
  * @requires $timeout
@@ -193,7 +183,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, $ionicPopup, toaster, Boards, DBConn, Parts, Wallpapers, d) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicActionSheet, $interval, $timeout, $ionicPopup, toaster, Boards, DBConn, Parts, Wallpapers, d) {
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
@@ -204,7 +194,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     if(Boards.getUpdateFlag()){
       Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }else{
-        // 新規ボード作成時の初めてのボードは，15秒後に一度保存する。モーダルなし。
+        // 新規ボード作成時の初めてのボードは，15秒後に一度保存する。ポップアップなし。
         // 2回目は15秒後，3回め以降は30秒後にオートセーブされる
         // ※将来的には，パーツ操作をトリガーにセーブするなど仕様変更が必要かも。
       Boards.autoSavePromise_at_1st = $timeout(function(){$scope.save();
@@ -485,8 +475,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @module controllers.AdsCtrl
  * @description 広告表示用のコントローラ
  * @requires $scope
- * @requires $ionicModal
+ * @requires $ionicPralform
  * @requires $ionicPopup
+ * @requires $AdMobManager
+ * @requires d
  */
 .controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
   const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
