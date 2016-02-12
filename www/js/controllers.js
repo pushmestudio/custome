@@ -31,7 +31,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   // 下記のままでも良いが，冗長なのでサービス化する？
   $scope.autoSavePromise_at_1st = Boards.autoSavePromise_at_1st;
   if($scope.autoSavePromise_at_1st){
-    Boards.autoSavePromise_at_1st =     $timeout.cancel($scope.autoSavePromise_at_1st);
+    Boards.autoSavePromise_at_1st = $timeout.cancel($scope.autoSavePromise_at_1st);
   }
 
   /**
@@ -108,7 +108,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * BoardsDetailCtrlとほぼ同様の実装方法
    * @param board 削除するマイボードの配列内でのIndex
    */
-  $scope.openModal = function(board){
+  $scope.openBoardInfoPopup = function(board) { // openmodal to openBoardInfoPopup
     // 選択中のボードを保持する
     $scope.currentBoard = board;
 
@@ -119,7 +119,35 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     // 編集前のボード名を格納し，保存時に，ボード名が空文字("")になっていたら，編集前のボード名を使用する仕様とする (下記のsave()内で利用)
     $scope.boardNames.boardNameBeforeChange = board.boardContent.boardName;
 
-    $scope.saveModal.show();
+    $scope.showEditPopup = function() {
+
+      var editPopup = $ionicPopup.show({
+        template: '<div class="list">' +
+          '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName"></label>' +
+          '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
+        title: 'Edit Board Info',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Save</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
+            }
+          }
+        ]
+      });
+
+      editPopup.then(function(res) {
+        d.log('Tapped!', res);
+        // cancelが押された場合はresがundefになる
+        if(res !== undefined) {
+          $scope.save();
+        }
+      });
+    };
+    $scope.showEditPopup();
   };
 
   /**
@@ -127,7 +155,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description ボードの名前及びコメント保存時の処理
    */
   $scope.save = function(){
-    console.log("This is save() in BoardsCtrl");
+    d.log("This is save() in BoardsCtrl");
     // 保存後再度編集画面を開かれたときに表示できなくなってしまうので、remove, null代入はしない
     $scope.saveModal.hide();
 
@@ -209,14 +237,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.saveModal = modal;
   });
 
-  $ionicModal.fromTemplateUrl('templates/textedit-modal.html', {
-    id: '2',
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.editModal = modal;
-  });
-
   /**
    * @function checkSaveOrUpdate
    * @description 保存処理の前段階を実施する関数
@@ -233,23 +253,23 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           toaster.pop('success', '', 'Saved!');
         });
       } else {
-        $scope.saveModal.show();
+        $scope.saveModal.show(); // TODO replace to popup
       }
     });
   };
 
   /**
-   * @function openEditPopup
+   * @function openEditNotePopup
    * @description 付箋パーツのテキストを編集するためのポップアップを開く
    * @param index 編集対象の付箋パーツのIndex
    */
-  $scope.openEditPopup = function(index) {
+  $scope.openEditNotePopup = function(index) {
     Parts.selectPart(index); // selectedPartに、indexに該当するパーツを引き当てる
     $scope.showEditPopup = function() {
 
       var editPopup = $ionicPopup.show({
         template: '<textarea rows="8" ng-model="selectedPart.text" autofocus></textarea>',
-        title: 'Edit',
+        title: 'Edit Note',
         scope: $scope,
         buttons: [
           { text: 'Cancel' },
@@ -298,15 +318,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         toaster.pop('success', '', 'Saved!');
       });
     });
-  };
-
-  /**
-   * @function closeEditModal
-   * @description 付箋パーツのテキストを編集するためのモーダルを閉じる
-   */
-  $scope.closeEditModal = function() {
-    $scope.editModal.hide();
-    Parts.updatePart();
   };
 
   $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
@@ -396,7 +407,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         cancelText: '<i class="icon ion-close-round"></i>Cancel',
         buttonClicked: function(menuIndex) {
           if (menuIndex == 0) {
-            $scope.openEditPopup(partIndex);
+            $scope.openEditNotePopup(partIndex);
           }
           return true;
         }, destructiveButtonClicked: function() {
