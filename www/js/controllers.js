@@ -168,7 +168,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers, d) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, $ionicPopup, toaster, Boards, DBConn, Parts, Wallpapers, d) {
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
@@ -245,7 +245,38 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    */
   $scope.openEditModal = function(index) {
     Parts.selectPart(index);
-    $scope.editModal.show();
+    $scope.showPopup = function() {
+      $scope.data = {};
+      $scope.data.wifi = $scope.deployedParts_angular[index].text;
+      d.log($scope.data.wifi);
+
+      // An elaborate, custom popup
+      var myPopup = $ionicPopup.show({
+        template: '<textarea placeholder="Comment" ng-model="data.wifi"></textarea>',
+        title: 'Enter Wi-Fi Password',
+        subTitle: 'Please use normal things',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Save</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (!$scope.data.wifi) {
+                //don't allow the user to close unless he enters wifi password
+                e.preventDefault();
+              } else {
+                return $scope.data.wifi;
+              }
+            }
+          }
+        ]
+      });
+      myPopup.then(function(res) {
+        console.log('Tapped!', res);
+      });
+    };//    $scope.editModal.show();
+    $scope.showPopup();
   }
 
   /**
