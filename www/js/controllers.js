@@ -125,7 +125,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         template: '<div class="list">' +
           '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName"></label>' +
           '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
-        title: 'Edit Board Info',
+        title: 'Input Board Info',
         scope: $scope,
         buttons: [
           { text: 'Cancel' },
@@ -156,14 +156,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    */
   $scope.save = function(){
     d.log("This is save() in BoardsCtrl");
-    // 保存後再度編集画面を開かれたときに表示できなくなってしまうので、remove, null代入はしない
-    $scope.saveModal.hide();
-
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
     $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
 
-    // 上記のopenModal()で"$scope.boardNames.boardNameBeforeChange"を用意
+    // 上記のpopupで"$scope.boardNames.boardNameBeforeChange"を用意
     // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
     if ($scope.currentBoard.boardContent.boardName === ""){
       $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardNameBeforeChange;
@@ -228,15 +225,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.selectedPart = Parts.selectedPart;
 
-  // modalの定義
-  $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
-    id: '1',
-    scope: $scope,
-    animataion: 'slide-in-up'
-  }).then(function(modal){
-    $scope.saveModal = modal;
-  });
-
   /**
    * @function checkSaveOrUpdate
    * @description 保存処理の前段階を実施する関数
@@ -253,7 +241,35 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           toaster.pop('success', '', 'Saved!');
         });
       } else {
-        $scope.saveModal.show(); // TODO replace to popup
+        $scope.showEditPopup = function() {
+
+          var editPopup = $ionicPopup.show({
+            template: '<div class="list">' +
+              '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName"></label>' +
+              '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
+            title: 'Input Board Info',
+            scope: $scope,
+            buttons: [
+              { text: 'Cancel' },
+              {
+                text: '<b>Save</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                  return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
+                }
+              }
+            ]
+          });
+
+          editPopup.then(function(res) {
+            d.log('Tapped!', res);
+            // cancelが押された場合はresがundefになる
+            if(res !== undefined) {
+              $scope.save();
+            }
+          });
+        };
+        $scope.showEditPopup();
       }
     });
   };
@@ -299,10 +315,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description 新規作成時の保存処理
    */
   $scope.save = function(){
-    $scope.saveModal.hide();
-    $scope.saveModal.remove();
-    $scope.saveModal = null;
-
     // ボード名が未入力の場合に，デフォルト値を入れる
     // デフォルトのボード名 (as of) :  "board: YYYY/MM/DD"
     if ($scope.boardNames.boardName === ""){
