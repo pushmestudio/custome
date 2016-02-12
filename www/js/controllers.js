@@ -239,22 +239,17 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   };
 
   /**
-   * @function openEditModal
-   * @description 付箋パーツのテキストを編集するためのモーダルを開く
+   * @function openEditPopup
+   * @description 付箋パーツのテキストを編集するためのポップアップを開く
    * @param index 編集対象の付箋パーツのIndex
    */
-  $scope.openEditModal = function(index) {
-    Parts.selectPart(index);
-    $scope.showPopup = function() {
-      $scope.data = {};
-      $scope.data.wifi = $scope.deployedParts_angular[index].text;
-      d.log($scope.data.wifi);
+  $scope.openEditPopup = function(index) {
+    Parts.selectPart(index); // selectedPartに、indexに該当するパーツを引き当てる
+    $scope.showEditPopup = function() {
 
-      // An elaborate, custom popup
-      var myPopup = $ionicPopup.show({
-        template: '<textarea placeholder="Comment" ng-model="data.wifi"></textarea>',
-        title: 'Enter Wi-Fi Password',
-        subTitle: 'Please use normal things',
+      var editPopup = $ionicPopup.show({
+        template: '<textarea rows="8" ng-model="selectedPart.text" autofocus></textarea>',
+        title: 'Edit',
         scope: $scope,
         buttons: [
           { text: 'Cancel' },
@@ -262,21 +257,21 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
             text: '<b>Save</b>',
             type: 'button-positive',
             onTap: function(e) {
-              if (!$scope.data.wifi) {
-                //don't allow the user to close unless he enters wifi password
-                e.preventDefault();
-              } else {
-                return $scope.data.wifi;
-              }
+              return $scope.selectedPart.text;
             }
           }
         ]
       });
-      myPopup.then(function(res) {
-        console.log('Tapped!', res);
+
+      editPopup.then(function(res) {
+        d.log('Tapped!', res);
+        // cancelが押された場合はresがundefになる
+        if(res !== undefined) {
+          Parts.updatePart();
+        }
       });
-    };//    $scope.editModal.show();
-    $scope.showPopup();
+    };
+    $scope.showEditPopup();
   }
 
   /**
@@ -401,7 +396,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         cancelText: '<i class="icon ion-close-round"></i>Cancel',
         buttonClicked: function(menuIndex) {
           if (menuIndex == 0) {
-            $scope.openEditModal(partIndex);
+            $scope.openEditPopup(partIndex);
           }
           return true;
         }, destructiveButtonClicked: function() {
