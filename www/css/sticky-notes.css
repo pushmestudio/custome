@@ -52,20 +52,25 @@
 
 /* 付箋のサンプル */
 .sample-normal {
-  width: 80px;
-  height: 80px;
+  position: absolute;
+  width: 85%;
+  height: 85%;
+  top: 7%;
+  left: 7%;
 }
 
 .sample-wide {
-  width: 85px;
-  height: 42px;
-  top: 20px;
-  right: 3px;
+  position: absolute;
+  width: 92%;
+  height: 45%;
+  top: 27%;
+  left: 3%;
 }
 
 .sample-small {
-  width: 64px;
-  height: 64px;
-  top: 7px;
-  left: 7px;
+  position: absolute;
+  width: 64%;
+  height: 64%;
+  top: 18%;
+  left: 18%;
 }
