@@ -110,6 +110,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
     // 編集前のボード名を格納し，保存時に，ボード名が空文字("")になっていたら，編集前のボード名を使用する仕様とする (下記のsave()内で利用)
     $scope.boardNames.boardNameBeforeChange = board.boardContent.boardName;
+    //$scope.boardNames.boardCommentBeforeChange = board.boardContent.boardComment; //ボードコメントはブランクでも良いため，コメントアウト
 
     $scope.showEditPopup = function() {
 
@@ -150,7 +151,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     d.log("This is save() in BoardsCtrl");
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
-    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
+    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment; 
 
     // 上記のpopupで"$scope.boardNames.boardNameBeforeChange"を用意
     // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
@@ -158,7 +159,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardNameBeforeChange;
     }
 
-    Boards.updateBoardNames($scope.currentBoard.boardId, $scope.boardNames).then(function(){
+    // if ($scope.currentBoard.boardContent.boardComment === ""){ //ボードコメントはブランクでも良いため，コメントアウト
+    //   $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardCommentBeforeChange;
+    // }
+
+    Boards.updateBoardNames($scope.currentBoard.boardId, $scope.currentBoard.boardContent).then(function(){
       $timeout(function(){
         toaster.pop('success', '', 'Saved!');
       });

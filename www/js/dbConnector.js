@@ -254,7 +254,6 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      */
     module.updateBoardNames = function(boardId, boardNames) {
       d.log('updateBoardNames is called');
-
       var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
       var deferred = module.q.defer();
@@ -265,7 +264,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
         if(data) { // 該当結果がある場合
 
           // モーダルを使用した更新を実施しない場合、boardNamesは未定義となる
-          if(typeof boardNames !== 'undefined' && boardNames.boardName != '' && boardNames.boardComment != ''){
+          if(typeof boardNames !== 'undefined' && boardNames.boardName != ''){
             data.boardContent.boardName = boardNames.boardName;
             data.boardContent.boardComment = boardNames.boardComment;
           }
