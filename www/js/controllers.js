@@ -13,13 +13,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $ionicPopup
  * @requires $ionicListDelegate
  * @requires $interval
+ * @requires $cordovaKeyboard
  * @requires toaster
  * @requires Boards
  * @requires DBConn
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicListDelegate, $interval, toaster, Boards, DBConn, Wallpapers, d) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicListDelegate, $interval, $cordovaKeyboard, toaster, Boards, DBConn, Wallpapers, d) {
 
   //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
@@ -131,8 +132,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           }
         ]
       });
+      $cordovaKeyboard.show(); // キーボードを表示する
 
       editPopup.then(function(res) {
+        $cordovaKeyboard.close(); // 表示中のキーボードを閉じる
         d.log('Tapped!', res);
         // cancelが押された場合はresがundefになる
         if(res !== undefined) {
@@ -140,6 +143,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         }
       });
     };
+
     $scope.showEditPopup();
   };
 
@@ -151,7 +155,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     d.log("This is save() in BoardsCtrl");
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
-    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment; 
+    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
 
     // 上記のpopupで"$scope.boardNames.boardNameBeforeChange"を用意
     // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
@@ -182,6 +186,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $ionicActionSheet
  * @requires $interval
  * @requires $timeout
+ * @requires $cordovaKeyboard
  * @requires toaster
  * @requires Boards
  * @requires DBConn
@@ -189,7 +194,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicActionSheet, $interval, $timeout, $ionicPopup, toaster, Boards, DBConn, Parts, Wallpapers, d) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicActionSheet, $interval, $timeout, $ionicPopup, $cordovaKeyboard, toaster, Boards, DBConn, Parts, Wallpapers, d) {
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
@@ -257,8 +262,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
               }
             ]
           });
+          $cordovaKeyboard.show(); // キーボードを表示する
 
           editPopup.then(function(res) {
+            $cordovaKeyboard.close(); // 表示されているキーボードを閉じる
             d.log('Tapped!', res);
             // cancelが押された場合はresがundefになる
             if(res !== undefined) {
@@ -296,8 +303,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           }
         ]
       });
+      $cordovaKeyboard.show(); // キーボードを表示する
 
       editPopup.then(function(res) {
+        $cordovaKeyboard.close(); // 表示しているキーボードを閉じる
         d.log('Tapped!', res);
         // cancelが押された場合はresがundefになる
         if(res !== undefined) {
