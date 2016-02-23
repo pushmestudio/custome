@@ -441,8 +441,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires AdMobManager
  */
 .controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
-  const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
-  $scope.showAlterAd = false;
+  $scope.flagData = AdMobManager.flagData;
 
   /**
    * @function init
@@ -450,14 +449,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    */
   $scope.init = function(){
     $ionicPlatform.ready(function(){
-      AdMobManager.initAdMob().then(function(admob){
-        // AdMobの初期化が正しく行われていれば
-        if(admob){
-          $scope.flagAd = Math.random() <= FREQ_POP_AD;
-        } else {
-          $scope.flagAd = false;
-        }
-      });
+      AdMobManager.initAdMob();
     });
   }
 
@@ -487,10 +479,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       template: 'Our Robo bring an ad. <br>Can I show you it once?<br>(You can help us through tapping an ad!)', // String (optional). The html template to place in the popup body.
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // Okなら広告を表示する
-        $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
+        AdMobManager.flagData.iconFlag = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
         $scope.showUpInterstitialAd();
       } else {
-        $scope.flagAd = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
+        AdMobManager.flagData.iconFlag = false; // 一度アイコンボタンを押したら、はい・いいえにかかわらず以降は表示しないようにする
       }
     });
   };
