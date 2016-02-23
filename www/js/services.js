@@ -920,26 +920,25 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  * @requires d
  */
 .factory('AdMobManager', function(d){
-  var $injector = angular.injector(['ng']);
-  var q = $injector.get('$q');
-
   // 広告のID
   var admobid = {
     // banner: '',　バナー広告を使用する場合に必要
     interstitial: 'ca-app-pub-2622960706202758/6313111825'
   };
+  const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
+  var flagData = {
+    iconFlag: false,
+    alterFlag: false
+  }
 
   // 広告関連の処理を初期化する関数
   var initAdMob = function(){
-    var deferred = q.defer();
 
     // Androidの場合
     if(ionic.Platform.isAndroid()){
       if(typeof window.AdMob == 'undefined'){
         d.log('AdMob plugin is not ready');
-        deferred.reject();
       } else {
-        d.log(d.DEBUG_MODE);
         /*
         // バナー広告を準備
         AdMob.createBanner({
@@ -952,20 +951,22 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         });
         */
 
-        d.log(admobid.interstitial);
         // インタースティシャル広告を準備
         window.AdMob.prepareInterstitial({
           adId: admobid.interstitial,
           // デバック⇒true, 本番⇒false
           // isTesting: d.DEBUG_MODE,
           autoShow: false
+        }, function(){
+          if(Math.random() <= FREQ_POP_AD){
+            d.log('Interstitial ads is ready');
+            flagData.iconFlag = true;
+          }
+        }, function(){
+          flagData.iconFlag = false;
         });
-        deferred.resolve(window.AdMob);
       }
-    } else {
-      deferred.reject();
     }
-    return deferred.promise;
   }
 
   // インタースティシャル広告を表示する関数
@@ -975,11 +976,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   return {
     AdMob: window.AdMob,
+    flagData: flagData,
     initAdMob: function(){
-      return initAdMob();
+      initAdMob();
     },
     showInterstitialAd: function(){
-      return showInterstitialAd();
+      showInterstitialAd();
     }
   }
 })
