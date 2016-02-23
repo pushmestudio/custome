@@ -50,17 +50,3 @@ angular.module('mainApp.directives', [])
   }
 })
 
-.directive('focusMe', function($timeout) {
-    return {
-        link: function(scope, element, attrs) {
-            console.log("focusMe directive init");
-            if(scope.focusMe ) {
-                $timeout(function() {
-                    console.log(" adding focus to element")
-
-                    element[0].focus();
-                }, 150);
-            }
-        }
-    };
-})

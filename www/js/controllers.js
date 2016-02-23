@@ -114,11 +114,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
     $scope.showEditPopup = function() {
 
-      $scope.focusMe = true;
       var editPopup = $ionicPopup.show({
         template: '<div class="list">' +
-          '<label class="item item-input-wrapper" focus-me><input type="text" placeholder="Board Name" ng-model="boardNames.boardName"></label>' +
-          '<label class="item item-input-wrapper"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
+          '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+          '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
         title: 'Input Board Info',
         scope: $scope,
         buttons: [
@@ -152,7 +151,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     d.log("This is save() in BoardsCtrl");
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
-    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
+    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment; 
 
     // 上記のpopupで"$scope.boardNames.boardNameBeforeChange"を用意
     // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
@@ -241,11 +240,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       } else {
         $scope.showEditPopup = function() {
 
-          $scope.focusMe = true;
           var editPopup = $ionicPopup.show({
             template: '<div class="list">' +
-              '<label class="item item-input-wrapper" focus-me><input type="text" placeholder="Board Name" ng-model="boardNames.boardName"></label>' +
-              '<label class="item item-input-wrapper"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
+              '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+              '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
             title: 'Input Board Info',
             scope: $scope,
             buttons: [
@@ -283,9 +281,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     Parts.selectPart(index); // selectedPartに、indexに該当するパーツを引き当てる
     $scope.showEditPopup = function() {
 
-      $scope.focusMe = true;
       var editPopup = $ionicPopup.show({
-        template: '<label class="item item-input-wrapper" focus-me><textarea rows="8" ng-model="selectedPart.text"></textarea></label>',
+        template: '<textarea rows="8" ng-model="selectedPart.text" autofocus></textarea>',
         title: 'Edit Note',
         scope: $scope,
         buttons: [
