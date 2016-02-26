@@ -11,16 +11,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $scope
  * @requires $timeout
  * @requires $ionicPopup
- * @requires $ionicModal
  * @requires $ionicListDelegate
  * @requires $interval
+ * @requires $cordovaKeyboard
  * @requires toaster
  * @requires Boards
  * @requires DBConn
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicModal, $ionicListDelegate, $interval, toaster, Boards, DBConn, Wallpapers, d) {
+.controller('BoardsCtrl', function($scope, $timeout, $ionicPopup, $ionicListDelegate, $interval, $cordovaKeyboard, toaster, Boards, DBConn, Wallpapers, d) {
 
   //オートセーブを行っている場合、オートセーブを停止する。
   $scope.autoSavePromise = Boards.autoSavePromise;
@@ -31,7 +31,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   // 下記のままでも良いが，冗長なのでサービス化する？
   $scope.autoSavePromise_at_1st = Boards.autoSavePromise_at_1st;
   if($scope.autoSavePromise_at_1st){
-    Boards.autoSavePromise_at_1st =     $timeout.cancel($scope.autoSavePromise_at_1st);
+    Boards.autoSavePromise_at_1st = $timeout.cancel($scope.autoSavePromise_at_1st);
   }
 
   /**
@@ -89,26 +89,19 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     });
   }
 
-  // modalの定義, BoardsDetailCtrlと同じものを使用
-  $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
-    id: '1',
-    scope: $scope,
-    animataion: 'slide-in-up'
-  }).then(function(modal){
-    $scope.saveModal = modal;
-  });
 
-  // モーダル画面の入力欄とバインド
+  // ポップアップ画面の入力欄とバインド
   $scope.boardNames = Boards.boardNames;
   $scope.currentBoard;
 
   /**
-   * @function openModal
-   * @description ボード一覧上にてボードの名前とコメントを変更ためのモーダルを開く
+   * @function openBoardInfoPopup
+   * @description ボード一覧上にてボードの名前とコメントを変更ためのポップアップを開く
    * BoardsDetailCtrlとほぼ同様の実装方法
    * @param board 削除するマイボードの配列内でのIndex
+   * @todo checkSaveOrUpdateとの共通化(必要に応じて、ポップアップの関数化？)
    */
-  $scope.openModal = function(board){
+  $scope.openBoardInfoPopup = function(board) { // openmodal to openBoardInfoPopup
     // 選択中のボードを保持する
     $scope.currentBoard = board;
 
@@ -120,7 +113,38 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.boardNames.boardNameBeforeChange = board.boardContent.boardName;
     //$scope.boardNames.boardCommentBeforeChange = board.boardContent.boardComment; //ボードコメントはブランクでも良いため，コメントアウト
 
-    $scope.saveModal.show();
+    $scope.showEditPopup = function() {
+
+      var editPopup = $ionicPopup.show({
+        template: '<div class="list">' +
+          '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+          '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
+        title: 'Input Board Info',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Save</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
+            }
+          }
+        ]
+      });
+      $cordovaKeyboard.show(); // キーボードを表示する
+
+      editPopup.then(function(res) {
+        $cordovaKeyboard.close(); // 表示中のキーボードを閉じる
+        d.log('Tapped!', res);
+        // cancelが押された場合はresがundefになる
+        if(res !== undefined) {
+          $scope.save();
+        }
+      });
+    };
+
+    $scope.showEditPopup();
   };
 
   /**
@@ -128,15 +152,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description ボードの名前及びコメント保存時の処理
    */
   $scope.save = function(){
-    console.log("This is save() in BoardsCtrl");
-    // 保存後再度編集画面を開かれたときに表示できなくなってしまうので、remove, null代入はしない
-    $scope.saveModal.hide();
-
+    d.log("This is save() in BoardsCtrl");
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
-    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment; 
+    $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
 
-    // 上記のopenModal()で"$scope.boardNames.boardNameBeforeChange"を用意
+    // 上記のpopupで"$scope.boardNames.boardNameBeforeChange"を用意
     // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
     if ($scope.currentBoard.boardContent.boardName === ""){
       $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardNameBeforeChange;
@@ -162,10 +183,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * <code>stateParams = { boardId : 0}</code>となる
  * @requires $scope
  * @requires $stateParams
- * @requires $ionicModal
  * @requires $ionicActionSheet
  * @requires $interval
  * @requires $timeout
+ * @requires $cordovaKeyboard
  * @requires toaster
  * @requires Boards
  * @requires DBConn
@@ -173,7 +194,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires Wallpapers
  * @requires d
  */
-.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicModal, $ionicActionSheet, $interval, $timeout, toaster, Boards, DBConn, Parts, Wallpapers, d) {
+.controller('BoardsDetailCtrl', function($scope, $stateParams, $ionicActionSheet, $interval, $timeout, $ionicPopup, $cordovaKeyboard, toaster, Boards, DBConn, Parts, Wallpapers, d) {
   // パーツの読込
   DBConn.load($stateParams.boardId).then(function(boardData){
     // board.htmlで使用できるようにバインドする
@@ -184,7 +205,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     if(Boards.getUpdateFlag()){
       Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }else{
-        // 新規ボード作成時の初めてのボードは，15秒後に一度保存する。モーダルなし。
+        // 新規ボード作成時の初めてのボードは，15秒後に一度保存する。ポップアップなし。
         // 2回目は15秒後，3回め以降は30秒後にオートセーブされる
         // ※将来的には，パーツ操作をトリガーにセーブするなど仕様変更が必要かも。
       Boards.autoSavePromise_at_1st = $timeout(function(){$scope.save();
@@ -205,26 +226,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.selectedPart = Parts.selectedPart;
 
-  // modalの定義
-  $ionicModal.fromTemplateUrl('templates/boardname-modal.html', {
-    id: '1',
-    scope: $scope,
-    animataion: 'slide-in-up'
-  }).then(function(modal){
-    $scope.saveModal = modal;
-  });
-
-  $ionicModal.fromTemplateUrl('templates/textedit-modal.html', {
-    id: '2',
-    scope: $scope,
-    animation: 'slide-in-up'
-  }).then(function(modal) {
-    $scope.editModal = modal;
-  });
-
   /**
    * @function checkSaveOrUpdate
    * @description 保存処理の前段階を実施する関数
+   * @todo openBoardInfoPopupとの共通化(必要に応じて、ポップアップの関数化？)
    */
   $scope.checkSaveOrUpdate = function(){
     // modalのformをclear
@@ -238,19 +243,78 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           toaster.pop('success', '', 'Saved!');
         });
       } else {
-        $scope.saveModal.show();
+        $scope.showEditPopup = function() {
+
+          var editPopup = $ionicPopup.show({
+            template: '<div class="list">' +
+              '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+              '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
+            title: 'Input Board Info',
+            scope: $scope,
+            buttons: [
+              { text: 'Cancel' },
+              {
+                text: '<b>Save</b>',
+                type: 'button-positive',
+                onTap: function(e) {
+                  return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
+                }
+              }
+            ]
+          });
+          $cordovaKeyboard.show(); // キーボードを表示する
+
+          editPopup.then(function(res) {
+            $cordovaKeyboard.close(); // 表示されているキーボードを閉じる
+            d.log('Tapped!', res);
+            // cancelが押された場合はresがundefになる
+            if(res !== undefined) {
+              $scope.save();
+            }
+          });
+        };
+        $scope.showEditPopup();
       }
     });
   };
 
   /**
-   * @function openEditModal
-   * @description 付箋パーツのテキストを編集するためのモーダルを開く
+   * @function openEditNotePopup
+   * @description 付箋パーツのテキストを編集するためのポップアップを開く
    * @param index 編集対象の付箋パーツのIndex
+   * @todo (必要に応じて、ポップアップの関数化？)
    */
-  $scope.openEditModal = function(index) {
-    Parts.selectPart(index);
-    $scope.editModal.show();
+  $scope.openEditNotePopup = function(index) {
+    Parts.selectPart(index); // selectedPartに、indexに該当するパーツを引き当てる
+    $scope.showEditPopup = function() {
+
+      var editPopup = $ionicPopup.show({
+        template: '<textarea rows="8" ng-model="selectedPart.text" autofocus></textarea>',
+        title: 'Edit Note',
+        scope: $scope,
+        buttons: [
+          { text: 'Cancel' },
+          {
+            text: '<b>Save</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              return $scope.selectedPart.text;
+            }
+          }
+        ]
+      });
+      $cordovaKeyboard.show(); // キーボードを表示する
+
+      editPopup.then(function(res) {
+        $cordovaKeyboard.close(); // 表示しているキーボードを閉じる
+        d.log('Tapped!', res);
+        // cancelが押された場合はresがundefになる
+        if(res !== undefined) {
+          Parts.updatePart();
+        }
+      });
+    };
+    $scope.showEditPopup();
   }
 
   /**
@@ -258,10 +322,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description 新規作成時の保存処理
    */
   $scope.save = function(){
-    $scope.saveModal.hide();
-    $scope.saveModal.remove();
-    $scope.saveModal = null;
-
     // ボード名が未入力の場合に，デフォルト値を入れる
     // デフォルトのボード名 (as of) :  "board: YYYY/MM/DD"
     if ($scope.boardNames.boardName === ""){
@@ -277,15 +337,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         toaster.pop('success', '', 'Saved!');
       });
     });
-  };
-
-  /**
-   * @function closeEditModal
-   * @description 付箋パーツのテキストを編集するためのモーダルを閉じる
-   */
-  $scope.closeEditModal = function() {
-    $scope.editModal.hide();
-    Parts.updatePart();
   };
 
   $scope.deployedParts_angular = Parts.getAllDeployed();//配置するパーツをすべて取得
@@ -375,7 +426,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         cancelText: '<i class="icon ion-close-round"></i>Cancel',
         buttonClicked: function(menuIndex) {
           if (menuIndex == 0) {
-            $scope.openEditModal(partIndex);
+            $scope.openEditNotePopup(partIndex);
           }
           return true;
         }, destructiveButtonClicked: function() {
@@ -441,8 +492,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @module controllers.AdsCtrl
  * @description 広告表示用のコントローラ
  * @requires $scope
- * @requires $ionicModal
+ * @requires $ionicPralform
  * @requires $ionicPopup
+ * @requires $AdMobManager
+ * @requires d
  */
 .controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
   const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
