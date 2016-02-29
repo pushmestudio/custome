@@ -488,8 +488,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       height: 75
     },
     flag: 'false'
-  }
-];
+  }];
 
   var flag='false';
   var partX;
@@ -578,7 +577,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var reDeployUsingDBdata = function(boardContent){
     deployedParts = initPartsOnBoard(); //deployedPartsの初期化
     //パレット上に登録してあるパーツのカウンターを0に初期化
-    //console.log("配置済パーツ数: " + boardContent.parts.length);
+    //d.log("配置済パーツ数: " + boardContent.parts.length);
     for(var i = 0; i < parts.length;i++){
       parts[i].counter=0;
     }
@@ -804,7 +803,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     }
 
     function fail(event) {
-      console.log(event.target.error.code);
+      d.log(event.target.error.code);
       deferred.reject();
     }
     return deferred.promise;
