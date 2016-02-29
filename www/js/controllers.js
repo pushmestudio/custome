@@ -446,11 +446,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires AdMobManager
  */
 .controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
+  // AdMobManagerのフラグに関するデータをバインド
   $scope.flagData = AdMobManager.flagData;
 
   /**
    * @function init
-   * @description バックで広告が読み込めていたら、確率に従って広告表示のためのアイコンを表示する
+   * @description ionicの準備ができたら、広告表示の初期化処理を呼び出す
    */
   $scope.init = function(){
     $ionicPlatform.ready(function(){
