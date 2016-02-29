@@ -919,13 +919,16 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  * @description AdMob広告関連の変数を用意する
  * @requires d
  */
-.factory('AdMobManager', function(d){
-  // 広告のID
+.factory('AdMobManager', function($rootScope, $timeout, d){
+  const FREQ_POP_AD = 0.3; // 広告の表示量、1で常に表示、0で常に非表示
+  const DEBUG_MODE = $rootScope.debugMode;
+
+  // 広告呼び出し用のID
   var admobid = {
     // banner: '',　バナー広告を使用する場合に必要
     interstitial: 'ca-app-pub-2622960706202758/6313111825'
   };
-  const FREQ_POP_AD = 1; // 広告の表示量、1で常に表示、0で常に非表示
+
   var flagData = {
     iconFlag: false,
     alterFlag: false
@@ -933,7 +936,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   // 広告関連の処理を初期化する関数
   var initAdMob = function(){
-
     // Androidの場合
     if(ionic.Platform.isAndroid()){
       if(typeof window.AdMob == 'undefined'){
@@ -951,19 +953,22 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         });
         */
 
+        // 広告の読込が完了（成功したときのコールバック）
+        document.addEventListener('onAdLoaded', function(data){
+          if(Math.random() <= FREQ_POP_AD){
+            d.log('Interstitial ads is ready');
+            $timeout(function(){
+              flagData.iconFlag = true;
+            });
+          }
+        });
+
         // インタースティシャル広告を準備
         window.AdMob.prepareInterstitial({
           adId: admobid.interstitial,
           // デバック⇒true, 本番⇒false
-          // isTesting: d.DEBUG_MODE,
+          isTesting: DEBUG_MODE,
           autoShow: false
-        }, function(){
-          if(Math.random() <= FREQ_POP_AD){
-            d.log('Interstitial ads is ready');
-            flagData.iconFlag = true;
-          }
-        }, function(){
-          flagData.iconFlag = false;
         });
       }
     }
