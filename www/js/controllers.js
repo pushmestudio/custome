@@ -6,7 +6,7 @@
 angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives', 'toaster', 'ngAnimate'])
 
 /**
- * @module controllers.BoardsCtrl
+ * @module BoardsCtrl
  * @description Boardの一覧を表示したり，一覧から削除するコントローラー
  * @requires $scope
  * @requires $timeout
@@ -176,7 +176,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 })
 
 /**
- * @module controllers.BoardsDetailCtrl
+ * @module BoardsDetailCtrl
  * @description Board上に操作を加えるコントローラー
  * (as of 4/25では，バックグラウンドに壁紙指定のみ)
  * このコントローラーはapp.js内で/board/:boardIdに関連付けられているため、この/board/0にアクセスしたとき
@@ -439,7 +439,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 })
 
 /**
- * @module controllers.PalletCtrl
+ * @module PalletCtrl
  * @description Pallet操作用のコントローラー
  * Pallet上のパーツ操作のために使うため，PartsCtrlから名前変更
  * @requires $scope
@@ -489,7 +489,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 })
 
 /**
- * @module controllers.AdsCtrl
+ * @module AdsCtrl
  * @description 広告表示用のコントローラ
  * @requires $scope
  * @requires $ionicPralform
@@ -580,7 +580,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 })
 
 /**
- * @module controllers.WallpaperCtrl
+ * @module WallpaperCtrl
  * @description 壁紙管理用のコントローラ
  * @requires $scope
  * @requires $ionicModal

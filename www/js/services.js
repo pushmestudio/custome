@@ -6,7 +6,7 @@
 angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
 /**
- * @module services.Boards
+ * @module Boards
  * @description ボード、テンプレートの内容の定義も含む
  * @requires DBConn
  * @requires toaster
@@ -235,7 +235,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 })
 
 /**
- * @module services.Parts
+ * @module Parts
  * @description ボードに配置するパーツ
  * @requires d
  */
@@ -728,7 +728,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 })
 
 /**
- * @module services.Wallpapers
+ * @module Wallpapers
  * @description 壁紙
  * @requires $cordovaFile
  * @requires $cordovaImagePicker
@@ -884,7 +884,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 })
 
 /**
- * @module services.d
+ * @module d
  * @description ログ出力モジュール DEBUG_MODE ON時にログを出力させる、値の設定はapp.jsにて
  * ログ出力呼び出し時の簡便さを優先するため、モジュール名はdebugの'd'
  * @requires $rootScope
@@ -913,7 +913,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 })
 
 /**
- * @module services.AdMobManager
+ * @module AdMobManager
  * @description AdMob広告関連の変数を用意する
  * @requires d
  */
