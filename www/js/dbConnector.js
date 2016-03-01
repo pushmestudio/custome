@@ -7,7 +7,7 @@
  */
 angular.module('mainApp.dbConnector', ['mainApp.services'])
   /**
-   * @module dbConnector.DBConn
+   * @module DBConn
    * @description DB接続に関連する内容全てを定義
    * @requires d
    */

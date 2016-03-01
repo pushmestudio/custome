@@ -79,14 +79,14 @@
 各ctrlやservicesなどに次のように付加する。
 下記のように、`.factory`や`.controller`直後に記載。
 
-* `@module` モジュール名。`ファイル名.モジュール名`とする(サイドメニューがファイルごとに綺麗に索引できるので)
+* `@module` モジュール名。@requiresにて記載するのもこの名前。
 * `@description` このモジュールの説明
 * `@requires` 依存するモジュール名(JSDocで見るときにこれがあると楽なので)、1つにつき1行
 
 ```
 angular.module('mainApp.dbConnector', ['mainApp.services'])
 /**
- * @module dbConnector.DBConn
+ * @module DBConn
  * @description DB接続
  * @requires d
  */
