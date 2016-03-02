@@ -8,7 +8,7 @@
   <ion-content>
     <ion-list>
       <div class="row palette-items">
-        <div class="col col-33 sample-border" ng-repeat="part in parts" ng-click="select(part.id)">
+        <div class="col col-33 sample-border" ng-repeat="part in stickyParts" ng-click="select(part.id)">
           <div class="{{part.sample}}" ng-click="select(part.id)"/>
         </div>
       </div>
