@@ -132,10 +132,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           }
         ]
       });
-      $cordovaKeyboard.show(); // キーボードを表示する
+      if(window.cordova) { // Cordova読み込み時のみ呼び出し(ブラウザでのTestabilityを考慮)
+        $cordovaKeyboard.show(); // キーボードを表示する
+      }
 
       editPopup.then(function(res) {
-        $cordovaKeyboard.close(); // 表示中のキーボードを閉じる
+        if(window.cordova) { // Cordova読み込み時のみ呼び出し(ブラウザでのTestabilityを考慮)
+          $cordovaKeyboard.close(); // 表示中のキーボードを閉じる
+        }
         d.log('Tapped!', res);
         // cancelが押された場合はresがundefになる
         if(res !== undefined) {
@@ -262,10 +266,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
               }
             ]
           });
-          $cordovaKeyboard.show(); // キーボードを表示する
+          if(window.cordova) { // Cordova読み込み時のみ呼び出し(ブラウザでのTestabilityを考慮)
+            $cordovaKeyboard.show(); // キーボードを表示する
+          }
 
           editPopup.then(function(res) {
-            $cordovaKeyboard.close(); // 表示されているキーボードを閉じる
+            if(window.cordova) { // Cordova読み込み時のみ呼び出し(ブラウザでのTestabilityを考慮)
+              $cordovaKeyboard.close(); // 表示されているキーボードを閉じる
+            }
             d.log('Tapped!', res);
             // cancelが押された場合はresがundefになる
             if(res !== undefined) {
@@ -303,10 +311,14 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           }
         ]
       });
-      $cordovaKeyboard.show(); // キーボードを表示する
+      if(window.cordova) { // Cordova読み込み時のみ呼び出し(ブラウザでのTestabilityを考慮)
+        $cordovaKeyboard.show(); // キーボードを表示する
+      }
 
       editPopup.then(function(res) {
-        $cordovaKeyboard.close(); // 表示しているキーボードを閉じる
+        if(window.cordova) { // Cordova読み込み時のみ呼び出し(ブラウザでのTestabilityを考慮)
+          $cordovaKeyboard.close(); // 表示しているキーボードを閉じる
+        }
         d.log('Tapped!', res);
         // cancelが押された場合はresがundefになる
         if(res !== undefined) {
