@@ -908,8 +908,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   })();
 
   return {
-    log: printDebug,
-    DEBUG_MODE: DEBUG_MODE
+    log: printDebug
   };
 })
 
