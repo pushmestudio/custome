@@ -209,6 +209,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     if(Boards.getUpdateFlag()){
       Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
     }else{
+      // 新規ボード作成時に，ボード名，コメントを初期化
+      // ボード一覧で，ボード名やコメントを変更後に，新規ボード作成した際の影響をなくすため
+      $scope.boardNames.boardName = '';
+      $scope.boardNames.boardComment = '';
         // 新規ボード作成時の初めてのボードは，15秒後に一度保存する。ポップアップなし。
         // 2回目は15秒後，3回め以降は30秒後にオートセーブされる
         // ※将来的には，パーツ操作をトリガーにセーブするなど仕様変更が必要かも。
