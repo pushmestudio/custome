@@ -692,6 +692,21 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     }
   }
 
+  /**
+   * @function getStickyParts
+   * @description 事前に用意してある全パーツの中から，Stickyを抽出する
+   * @return extractedStickyParts 抽出したSticky配列のオブジェクト
+   */
+  var getStickyParts = function(){
+    var extractedStickyParts=[];
+    for (var partNo in parts){
+      if (parts[partNo].type === 'fusen'){
+        extractedStickyParts.push(parts[partNo]);
+      }
+    }
+    return extractedStickyParts;
+  }
+
   return {
     all: function() {
       return parts;
@@ -723,6 +738,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     },
     deployTimeStampPart: function(x, y){
       deployTimeStampAsFusen(x, y);
+    },
+    getStickyParts: function(){
+      return getStickyParts();
     }
   };
 })
