@@ -644,12 +644,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }
 
   /**
-   * @function deployTimeStampAsFusen
+   * @function deployTimeStampAsSticky
    * @description ボード上の時間保存パーツをタップした時に，"現在時間を埋め込んだ付箋"を配置する
    * @param {double} x タップされた時間保存パーツのx(横)位置, NaNが来たら固定値に置き換え
    * @param {double} y タップされた時間保存パーツのy(縦)位置, NaNが来たら固定値に置き換え
    */
-  var deployTimeStampAsFusen = function(x, y){
+  var deployTimeStampAsSticky = function(x, y){
     var date = new Date();
     var currentTime = date.toTimeString().substring(0, 8); // "21:54:26 GMT+0900"の出力の0番目(含)から8番目(除)まで
 
@@ -737,7 +737,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       parts[18].flag = 'true';//saveTimeパーツのフラグをOnにする
     },
     deployTimeStampPart: function(x, y){
-      deployTimeStampAsFusen(x, y);
+      deployTimeStampAsSticky(x, y);
     },
     getStickyParts: function(){
       return getStickyParts();
