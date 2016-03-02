@@ -246,7 +246,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 黄色の普通の付箋
     id: '0',//パーツの種類を表すユニークな名前(ID)。同じ付箋でも色が違うとか。
     title: 'note-yellow-normal',//パレット上に表示用
-    type: 'fusen',  //パレット上に表示用
+    type: 'sticky',  //パレット上に表示用
     class: 'sticky-note note-yellow note-normal',
     text: '',
     sample: 'sticky-note note-yellow sample-normal', // モーダル表示用付箋サンプル
@@ -259,7 +259,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 黄色の横長の付箋
     id: '1',
     title: 'note-yellow-wide',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-yellow note-wide',
     text: '',
     sample: 'sticky-note note-yellow sample-wide',
@@ -272,7 +272,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 黄色の小付箋
     id: '2',
     title: 'note-yellow-small',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-yellow note-small',
     text: '',
     sample: 'sticky-note note-yellow sample-small',
@@ -285,7 +285,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 青色の普通の付箋
     id: '3',
     title: 'note-blue-normal',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-blue note-normal',
     text: '',
     sample: 'sticky-note note-blue sample-normal',
@@ -298,7 +298,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 青色の横長の付箋
     id: '4',
     title: 'note-blue-wide',
-    type: 'fusen',
+    type: 'sticky',
     text: '',
     class: 'sticky-note note-blue note-wide',
     sample: 'sticky-note note-blue sample-wide',
@@ -311,7 +311,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 青色の小付箋
     id: '5',
     title: 'note-blue-small',
-    type: 'fusen',
+    type: 'sticky',
     text: '',
     class: 'sticky-note note-blue note-small',
     sample: 'sticky-note note-blue sample-small',
@@ -324,7 +324,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 緑色の普通の付箋
     id: '6',
     title: 'note-green-normal',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-green note-normal',
     text: '',
     sample: 'sticky-note note-green sample-normal',
@@ -337,7 +337,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 緑色の横長の付箋
     id: '7',
     title: 'note-green-wide',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-green note-wide',
     text: '',
     sample: 'sticky-note note-green sample-wide',
@@ -350,7 +350,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 緑色の小付箋
     id: '8',
     title: 'note-green-small',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-green note-small',
     text: '',
     sample: 'sticky-note note-green sample-small',
@@ -363,7 +363,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // ピンク色の普通の付箋
     id: '9',
     title: 'note-pink-normal',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-pink note-normal',
     text: '',
     sample: 'sticky-note note-pink sample-normal',
@@ -376,7 +376,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // ピンク色の横長の付箋
     id: '10',
     title: 'note-pink-wide',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-pink note-wide',
     text: '',
     sample: 'sticky-note note-pink sample-wide',
@@ -389,7 +389,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // ピンク色の小付箋
     id: '11',
     title: 'note-pink-small',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-pink note-small',
     text: '',
     sample: 'sticky-note note-pink sample-small',
@@ -402,7 +402,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 紫色の普通の付箋
     id: '12',
     title: 'note-purple-normal',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-purple note-normal',
     text: '',
     sample: 'sticky-note note-purple sample-normal',
@@ -415,7 +415,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 紫色の横長の付箋
     id: '13',
     title: 'note-purple-wide',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-purple note-wide',
     text: '',
     sample: 'sticky-note note-purple sample-wide',
@@ -428,7 +428,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 紫色の小付箋
     id: '14',
     title: 'note-purple-small',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-purple note-small',
     text: '',
     sample: 'sticky-note note-purple sample-small',
@@ -441,7 +441,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 白色の普通の付箋
     id: '15',
     title: 'note-white-normal',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-white note-normal',
     text: '',
     sample: 'sticky-note note-white sample-normal',
@@ -454,7 +454,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 白色の横長の付箋
     id: '16',
     title: 'note-white-wide',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-white note-wide',
     text: '',
     sample: 'sticky-note note-white sample-wide',
@@ -467,7 +467,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // 白色の小付箋
     id: '17',
     title: 'note-white-small',
-    type: 'fusen',
+    type: 'sticky',
     class: 'sticky-note note-white note-small',
     text: '',
     sample: 'sticky-note note-white sample-small',
@@ -670,7 +670,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     var deployedPart = {
       'partId' : 't1',
       'class' : 'sticky-note note-white center',
-      'type' : 'fusen',
+      'type' : 'sticky',
       'text' : currentTime,
       'position' : {
         'x' : xRandom,
@@ -700,7 +700,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var getStickyParts = function(){
     var extractedStickyParts=[];
     for (var partNo in parts){
-      if (parts[partNo].type === 'fusen'){
+      if (parts[partNo].type === 'sticky'){
         extractedStickyParts.push(parts[partNo]);
       }
     }
