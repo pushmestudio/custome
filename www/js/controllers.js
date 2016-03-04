@@ -478,6 +478,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description 付箋一覧のモーダルを開く
    */
   $scope.showStickyNoteList = function(){
+    $scope.stickyParts = Parts.getStickyParts();//事前に用意してある全てのPartsの中からStickyを抽出
     $scope.modal.show();
   };
 
