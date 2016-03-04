@@ -28,6 +28,10 @@
 
 <header>
     
+        
+            
+        
+    
 </header>
 
 <article>
@@ -38,6 +42,20 @@
         
 
         
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <dl class="details">
@@ -81,6 +99,20 @@
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     
     </div>
@@ -97,21 +129,21 @@
         
             <li>module:$ionicPopup</li>
         
-            <li>module:$ionicModal</li>
-        
             <li>module:$ionicListDelegate</li>
         
             <li>module:$interval</li>
         
+            <li>module:$cordovaKeyboard</li>
+        
             <li>module:toaster</li>
         
-            <li>module:Boards</li>
+            <li><a href="module-Boards.html">module:Boards</a></li>
         
-            <li>module:DBConn</li>
+            <li><a href="module-DBConn.html">module:DBConn</a></li>
         
-            <li>module:Wallpapers</li>
+            <li><a href="module-Wallpapers.html">module:Wallpapers</a></li>
         
-            <li>module:d</li>
+            <li><a href="module-d.html">module:d</a></li>
         </ul>
     
 
@@ -184,7 +216,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line32">line 32</a>
+        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -215,14 +247,14 @@
 
     
 
-    <h4 class="name" id="~openModal"><span class="type-signature">(inner) </span>openModal<span class="signature">(board)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~openBoardInfoPopup"><span class="type-signature">(inner) </span>openBoardInfoPopup<span class="signature">(board)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    ボード一覧上にてボードの名前とコメントを変更ためのモーダルを開く
+    ボード一覧上にてボードの名前とコメントを変更ためのポップアップを開く
 BoardsDetailCtrlとほぼ同様の実装方法
 </div>
 
@@ -311,7 +343,7 @@ BoardsDetailCtrlとほぼ同様の実装方法
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line100">line 100</a>
+        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -319,6 +351,13 @@ BoardsDetailCtrlとほぼ同様の実装方法
 
     
 
+    
+    <dt class="tag-todo">To Do:</dt>
+    <dd class="tag-todo">
+        <ul>
+            <li>checkSaveOrUpdateとの共通化(必要に応じて、ポップアップの関数化？)</li>
+        </ul>
+    </dd>
     
 </dl>
 
@@ -437,7 +476,7 @@ BoardsDetailCtrlとほぼ同様の実装方法
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line62">line 62</a>
+        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line67">line 67</a>
     </li></ul></dd>
     
 
@@ -519,7 +558,7 @@ BoardsDetailCtrlとほぼ同様の実装方法
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line117">line 117</a>
+        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line154">line 154</a>
     </li></ul></dd>
     
 
@@ -645,7 +684,7 @@ BoardsDetailCtrlとほぼ同様の実装方法
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line53">line 53</a>
+        <a href="controllers.js.html">controllers.js</a>, <a href="controllers.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -687,13 +726,13 @@ BoardsDetailCtrlとほぼ同様の実装方法
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="controllers.directives.module_draggablePart.html">draggablePart</a></li><li><a href="controllers.directives.module_partDeleteToaster.html">partDeleteToaster</a></li><li><a href="controllers.module_AdsCtrl.html">AdsCtrl</a></li><li><a href="controllers.module_BoardsCtrl.html">BoardsCtrl</a></li><li><a href="controllers.module_BoardsDetailCtrl.html">BoardsDetailCtrl</a></li><li><a href="controllers.module_PalletCtrl.html">PalletCtrl</a></li><li><a href="controllers.module_WallpaperCtrl.html">WallpaperCtrl</a></li><li><a href="dbConnector.module_DBConn.html">DBConn</a></li><li><a href="services.module_Boards.html">Boards</a></li><li><a href="services.module_d.html">d</a></li><li><a href="services.module_Parts.html">Parts</a></li><li><a href="services.module_Wallpapers.html">Wallpapers</a></li></ul><h3>Global</h3><ul><li><a href="global.html#debugMode">debugMode</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-AdMobManager.html">AdMobManager</a></li><li><a href="module-AdsCtrl.html">AdsCtrl</a></li><li><a href="module-Boards.html">Boards</a></li><li><a href="module-BoardsCtrl.html">BoardsCtrl</a></li><li><a href="module-BoardsDetailCtrl.html">BoardsDetailCtrl</a></li><li><a href="module-d.html">d</a></li><li><a href="module-DBConn.html">DBConn</a></li><li><a href="module-draggablePart.html">draggablePart</a></li><li><a href="module-PalletCtrl.html">PalletCtrl</a></li><li><a href="module-partDeleteToaster.html">partDeleteToaster</a></li><li><a href="module-Parts.html">Parts</a></li><li><a href="module-WallpaperCtrl.html">WallpaperCtrl</a></li><li><a href="module-Wallpapers.html">Wallpapers</a></li></ul><h3>Global</h3><ul><li><a href="global.html#debugMode">debugMode</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Jan 07 2016 00:02:44 GMT+0900 (東京 (標準時))
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Mar 04 2016 20:40:16 GMT+0900 (東京 (標準時))
 </footer>
 
 <script> prettyPrint(); </script>

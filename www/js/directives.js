@@ -6,7 +6,7 @@
 angular.module('mainApp.directives', [])
 
 /**
- * @module controllers.directives.partDeleteToaster
+ * @module partDeleteToaster
  * @description undo()を含んだトーストを表示するためのdirective
  */
 .directive('partDeleteToaster', [function() {
@@ -16,7 +16,7 @@ angular.module('mainApp.directives', [])
 }])
 
 /**
- * @module controllers.directives.draggablePart
+ * @module draggablePart
  * @description drag可能な要素につける属性を定義したdirective
  */
 .directive('draggablePart', function($ionicGesture, d){
@@ -49,4 +49,3 @@ angular.module('mainApp.directives', [])
     }
   }
 })
-
