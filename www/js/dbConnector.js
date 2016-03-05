@@ -18,7 +18,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     module.db = null;
 
     // バージョン情報、データベースの初期化の必要性の有無の判断に使う
-    module.version = 1;
+    module.version = 2;
 
     // 非同期処理のために使う、q.defer()のようにして呼び出す
     var $injector = angular.injector(['ng']);
