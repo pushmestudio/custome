@@ -52,8 +52,6 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     boardComment : ''
   };
 
-  // var usedWallpaper='';
-
   var extWallpaper='';
 
   // ボード画面を開いたとき、新規か更新かを判断する
@@ -477,8 +475,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     },
     flag : 'false'
   }, {
-    id: '18',// 時間管理パーツ (小島くん作成後に入れ替える)
-    //id2: 'xxxx',
+    id: '18', // TODO このサービスのreturnの中でparts[18]と指定してflagに変更を加えている関数有り、変更時要注意
     title: 'saveTime-part',
     type: 'saveTime', // TODO 便利ボタン的なタイプ名にしたい
     class: 'sticky-note note-purple item item-icon ion-clock', // TODO 付箋と同じクラスを使うのか？見た目は検討の余地あり
@@ -490,10 +487,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     flag: 'false'
   }];
 
+  // サービス内で使い回している、各パーツの位置やテキストを一時的に格納している変数
   var flag='false';
   var partX;
   var partY;
   var text;
+
+  // 配置済のパーツを管理するために使用している配列
   var deployedParts=[];
 
   /**
@@ -522,14 +522,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     for (var count in parts) { // for...ofから置き換え, for...ofなら(part in parts)でOK
       var part = parts[count];
 
-      /*** ここから時間管理パーツ配置のための修正 ***/
-      // ここで時間管理パーツを判定するフラグを使って場合分けする。
-      // 通常パーツ or 時間管理パーツを判定し，deployedPartにpushする属性を変更する
-      // DBにスキーマと異なるので，不整合が起きないように調整する必要あり
-      /*** ここまで ***/
-
       if(part.flag==='true'){
-        part.counter++;//同じタイプのパーツの配置数//後で消すかも
+        // part.counter++; //同じタイプのパーツの配置数 未使用に付きコメントアウト 時期を見て削除 at 16/3/9 小島
         var deployedPart = {
           'partId' : part.id,
           'class' : part.class,
@@ -681,7 +675,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   };
 
   /**
-   * ランダムに1 or -1を返す、内部関数として、公開せずに使用する想定
+   * @private
+   * @function getRandomSign
+   * @description ランダムに1 or -1を返す、内部関数として、公開せずに使用する想定
    * @return 1 or -1
    */
   var getRandomSign = function() {
@@ -734,7 +730,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       initPartsOnBoard();
     },
     setOnFlag: function(){
-      parts[18].flag = 'true';//saveTimeパーツのフラグをOnにする
+      // saveTimeパーツのフラグをOnにする TODO 明らかにバグになりそうなので要注意 at 16/3/9 小島
+      parts[18].flag = 'true';
     },
     deployTimeStampPart: function(x, y){
       deployTimeStampAsSticky(x, y);
@@ -796,6 +793,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
     // resolveLocalFileSystemURL()は、DirectoryEntryもしくはFileEntryを、ローカルのURL(第1引数)を指定して取得する(第2引数)
     // ここでは、cordova.file.applicationDirectory = "file:///android_asset/" (つまり"custome/platforms/android/assets/")である
+    // 失敗した場合、failが呼ばれる
     window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/img/wallpaper", gotDIR, fail);
 
     function gotDIR(dirEntry) {
@@ -804,6 +802,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
       var readEntries = function() {
         // dirReader.readEntriesの第1引数がsuccessCallbackであり、この引数resultsにはFileEntry(もしくはDirectoryEntry)が格納されている
+        // 失敗した場合、failが呼ばれる
         dirReader.readEntries(function(results) {
           if(!results.length) {
             // Array.prototype.sort()は、引数が省略された場合、要素の文字列比較に基づいて辞書順にソートされる
@@ -861,7 +860,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       for (var i = 0; i < results.length; i++) {
         var filepath = results[i];
         d.log('Image URI: ' + filepath); // コピー元のイメージへのパス
-        var sp = filepath.lastIndexOf("/") + 1; // フォルダとファイルの境目
+        var sp = filepath.lastIndexOf("/") + 1; // フォルダとファイルの境目の位置, Separatorの略
 
         // copyFile(コピー元フォルダ、コピーファイル名、コピー先フォルダ、コピーファイル名)
         // dataDirectoryはアプリ内フォルダ
@@ -908,6 +907,9 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  * @requires $rootScope
  */
 .factory('d', function($rootScope) {
+  /**
+   * @const {boolean} DEBUG_MODE デバッグ中ならONにして、ログ出力機能を有効にする
+   */
   const DEBUG_MODE = $rootScope.debugMode;
 
   /**
@@ -952,10 +954,19 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 /**
  * @module AdMobManager
  * @description AdMob広告関連の変数を用意する
+ * @requires $rootScope
+ * @requires $timeout
  * @requires d
  */
 .factory('AdMobManager', function($rootScope, $timeout, d){
-  const FREQ_POP_AD = 0.3; // 広告の表示量、1で常に表示、0で常に非表示
+  /**
+   * @const {double} FREQ_POP_AD 広告の表示量、1で常に表示、0で常に非表示
+   */
+  const FREQ_POP_AD = 0.3;
+
+  /**
+  * @const {boolean} DEBUG_MODE デバッグ中ならONにして、テスト用広告にする
+   */
   const DEBUG_MODE = $rootScope.debugMode;
 
   // 広告呼び出し用のID
@@ -969,7 +980,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     alterFlag: false
   }
 
-  // 広告関連の処理を初期化する関数
+  /**
+   * @function initAdMob
+   * @description 広告関連の処理を初期化する関数
+   * 現在は、端末がAndroidの場合のみ初期化処理が進められる
+   * デバッグモードtrueの場合、テスト広告の準備をする
+   */
   var initAdMob = function(){
     // Androidの場合
     if(ionic.Platform.isAndroid()){
@@ -1009,7 +1025,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     }
   }
 
-  // インタースティシャル広告を表示する関数
+  /**
+   * @function showInterstitialAd
+   * @description インターステイシャル広告を表示する
+   */
   var showInterstitialAd = function(){
     window.AdMob.showInterstitial();
   }

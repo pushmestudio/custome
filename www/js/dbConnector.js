@@ -31,7 +31,6 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @function connect
      * @description DBへの接続を行う。
      * 接続に成功したら、変数dbにオブジェクトを格納して使いまわす。
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.connect =  function() {
@@ -131,10 +130,11 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @function saveBoardContent
      * @description DBへデータを保存する。boardIdはoptional、未指定の場合は新規作成と見做す。
      * 指定がある場合は、boardIdが同じもののboardContentを上書きするイメージ。
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
-     * @param {String} boardContent JSON形式、中にpartsやwallpaperなどを持つ
-     * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp
-     * @return {Promise} 同期処理を行うためのオブジェクト
+     * @param {Array} parts partsを格納した配列
+     * @param {String} wallPaper 壁紙のパス
+     * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp、boardIdはない場合新規作成とみなされる
+     * @param {Object} boardNames ボードの名前と説明文のオブジェクトを格納しているオブジェクト
+     * @return {Promise} newBoard (一旦同期処理オブジェクトを返した上で) 新規作成時のみ、作成したボードのオブジェクト
      */
     module.saveBoardContent = function(parts, wallpaper, boardId, boardNames) {
       d.log('saveBoardContent is called');
@@ -142,7 +142,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
 
       if(typeof boardId === 'undefined' || boardId === null) {
         updateFlag = false; // 判定結果として、要新規作成
-        console.log("this is null??");
+        d.log("create new board");
       }
 
       // boardIdに対応するものがDBに保存されてるかを確認する
@@ -190,9 +190,10 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function updateBoard
      * @description オブジェクトストアに登録されている項目を更新する。
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
-     * @param {String} boardId アップデート対象のボードのID
-     * @param {String} boardContent 更新内容
+     * @param {Array} parts partsを格納した配列
+     * @param {String} wallPaper 壁紙のパス
+     * @param {String} boardId 各ボードのPrimary Keyになるunix timestamp、boardIdはない場合新規作成とみなされる
+     * @param {Object} boardNames ボードの名前と説明文のオブジェクトを格納しているオブジェクト
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.updateBoard = function(boardId, parts, wallpaper, boardNames) {
@@ -219,7 +220,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
           data.boardContent.parts = parts;
           data.boardContent.wallpaper = wallpaper;
 
-          // モーダルを使用した更新を実施しない場合、boardNamesは未定義となる
+          // ポップアップを使用した更新を実施しない場合、boardNamesは未定義となる
           if(typeof boardNames !== 'undefined' && boardNames.boardName != '' && boardNames.boardComment != ''){
             data.boardContent.boardName = boardNames.boardName;
             data.boardContent.boardComment = boardNames.boardComment;
@@ -247,9 +248,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function updateBoardNames
      * @description ボード一覧からの呼び出しにより、オブジェクトストアに登録されているボードの名前とコメントを更新する
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardId アップデート対象のボードのID
-     * @param {String} boardNames 更新内容
+     * @param {Object} boardNames ボードの名前と説明文のオブジェクトを格納しているオブジェクト
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.updateBoardNames = function(boardId, boardNames) {
@@ -291,9 +291,10 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function addNewBoard
      * @description 新しくボードを追加する。ボードのidはunixtimeを用いる。
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
-     * @param {String} boardContent JSON形式のボードの中身
-     * @return {Promise} 同期処理を行うためのオブジェクト
+     * @param {Array} parts partsを格納した配列
+     * @param {String} wallPaper 壁紙のパス
+     * @param {Object} boardNames ボードの名前と説明文のオブジェクトを格納しているオブジェクト
+     * @return {Promise} newBoard (一旦同期処理オブジェクトを返した上で) 新規作成時のみ、作成したボードのオブジェクト
      */
     module.addNewBoard = function(parts, wallpaper, boardNames) {
       d.log('addNewBoard is called');
@@ -320,9 +321,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function loadBoardContent
      * @description オブジェクトストアに登録されている項目を取得する。
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardId boardContentを取得したいボードのID
-     * @return {Promise} 同期処理を行うためのオブジェクト
+     * @return {Promise} data (同期処理オブジェクトを一旦返した上で)DBから取得したボード1件分のオブジェクト
      */
     module.loadBoardContent = function(boardId) {
       d.log("loadBoardContent is called");
@@ -354,7 +354,6 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function deleteBoard
      * @description オブジェクトストアに登録されているボードを削除する。
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
      * @param {String} boardId 削除したいボードのID
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
@@ -382,8 +381,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function getAllMyBoards
      * @description オブジェクトストアに登録されているすべてのボードを取得する。
-     * @todo returnの説明が、実質的に何も説明していないので更新を検討 at 12/23 小島
-     * @return {Promise} 同期処理を行うためのオブジェクト
+     * @return {Promise} myboards (一旦同期処理をオブジェクトを返した上で)すべてのボードを格納した配列
      */
     module.getAllMyBoards = function() {
       d.log('getAllMyBoards is called');

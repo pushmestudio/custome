@@ -6,7 +6,6 @@
 angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
 .run(function($ionicPlatform, $rootScope) {
-  //デバッグ出力の有無、リリース時はfalseにする
 
   /**
    * @const {boolean} debugMode デバッグモードか否か、デバッグモード=trueならログ出力する
@@ -44,7 +43,7 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
   $compileProvider.imgSrcSanitizationWhitelist(/^\s*(content|file|data|http):/);
 
   // 指定されたURLが下記ののいずれにも該当しない場合に表示するURLを指定
-  // アプリ起動時には、/custome/init が表示される
+  // アプリ起動時には、/custome が表示される
   $urlRouterProvider.otherwise('/custome');
 
   // SPAの肝の部分

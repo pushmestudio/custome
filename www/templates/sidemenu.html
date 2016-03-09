@@ -2,28 +2,12 @@
 <ion-header-bar align-title="center" class="bar-balanced">
   <h1 class="title">Palette</h1>
 </ion-header-bar>
-<!-- TODO 20151209小島 改行コードをCRLFからLFに直す -->
 <!-- //test //PartsCtrlをBoardsDetailCtrlに移行 -->
 <ion-content class="has-header palette" ng-controller="PalletCtrl">
   <ion-list>
     <div class="item item-divider">
       Sticky Note
     </div>
-    <!--
-    <div class="row palette-items">
-      <div class="col col-50" ng-repeat="part in parts">
-        <div class="center">
-          <div class="{{part.class}}" style="position: relative;" menu-close ng-click="select(part.id)">
-    -->
-          <!--
-          <img ng-src="{{part.img}}" menu-close ng-click="select(part.id)">
-          -->
-    <!--
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
     <!-- 付箋を選択するためのモーダルを起動 -->
     <div class="col col-50">
       <div class="back-layer-img">
@@ -31,8 +15,6 @@
         <img ng-src="img/ios7-refresh.png" ng-click="showStickyNoteList()" menu-close class="front-layer-img">
       </div>
     </div>
-
-
 
     <div class="item item-divider">
       Wallpaper
@@ -45,7 +27,7 @@
     </div>
 
 
-<!-- 時間保存パーツをパレット上に配置 -->
+    <!-- 時間保存パーツをパレット上に配置 -->
     <div class="item item-divider">
       Fantasic Parts
     </div>
