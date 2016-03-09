@@ -59,7 +59,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @description 初回接続時やバージョンアップ時に呼び出され、DBの初期化を行う。
      * DB初期化処理内では、DB、オブジェクトストア、インデックスの作成を行う。
      * データ構造を変更した場合には、必ずここも更新すること。
-     * @param {Object} event データベースのオープン要求に対する結果のイベント
+     * @param {IDBRequest.onsuccess} event データベースのオープン要求に対する結果のイベント
      */
     module.init = function(event) {
       d.log('init is called.');
@@ -81,7 +81,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     /**
      * @function createSample
      * @description サンプルデータを作成する、初期化時に呼ばれる想定
-     * @param store サンプルデータ作成先
+     * @param {IDBObjectStore} store サンプルデータ作成先
      */
     module.createSample = function(store) {
       d.log('createSample is called.');
@@ -132,7 +132,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * 指定がある場合は、boardIdが同じもののboardContentを上書きするイメージ。
      * @param {Array} parts partsを格納した配列
      * @param {String} wallPaper 壁紙のパス
-     * @param [String] boardId 各ボードのPrimary Keyになるunix timestamp、boardIdはない場合新規作成とみなされる
+     * @param {String} [boardId] 各ボードのPrimary Keyになるunix timestamp、boardIdはない場合新規作成とみなされる
      * @param {Object} boardNames ボードの名前と説明文のオブジェクトを格納しているオブジェクト
      * @return {Promise} newBoard (一旦同期処理オブジェクトを返した上で) 新規作成時のみ、作成したボードのオブジェクト
      */
@@ -192,7 +192,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @description オブジェクトストアに登録されている項目を更新する。
      * @param {Array} parts partsを格納した配列
      * @param {String} wallPaper 壁紙のパス
-     * @param {String} boardId 各ボードのPrimary Keyになるunix timestamp、boardIdはない場合新規作成とみなされる
+     * @param {String} boardId 各ボードのPrimary Keyになるunix timestamp
      * @param {Object} boardNames ボードの名前と説明文のオブジェクトを格納しているオブジェクト
      * @return {Promise} 同期処理を行うためのオブジェクト
      */

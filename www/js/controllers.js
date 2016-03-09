@@ -59,7 +59,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function selectWallpaper
    * @description 詳細画面移行時に現在の壁紙を上書き
-   * @param selectedWallpaperPath 選択された壁紙のパス情報
+   * @param {String} selectedWallpaperPath 選択された壁紙のパス情報
    */
   $scope.selectWallpaper = function(selectedWallpaperPath){
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
@@ -69,6 +69,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function remove
    * @description 作成済のマイボードを削除する
    * @param boardIndex 削除するマイボードの配列内でのIndex
+   * @todo ControllerからDBへ接続処理をするのは望ましくないのでリファクタリングを検討する
    */
   $scope.remove = function(boardIndex) {
     $ionicPopup.confirm({
@@ -99,7 +100,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function openBoardInfoPopup
    * @description ボード一覧上にてボードの名前とコメントを変更ためのポップアップを開く
    * BoardsDetailCtrlとほぼ同様の実装方法
-   * @param board 削除するマイボードの配列内でのIndex
+   * @param {int} board 削除するマイボードの配列内でのIndex
    * @todo checkSaveOrUpdateとの共通化(必要に応じて、ポップアップの関数化？)
    */
   $scope.openBoardInfoPopup = function(board) { // openmodal to openBoardInfoPopup
@@ -307,7 +308,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function openEditNotePopup
    * @description 付箋パーツのテキストを編集するためのポップアップを開く
-   * @param index 編集対象の付箋パーツのIndex
+   * @param {int} index 編集対象の付箋パーツのIndex
    * @todo (必要に応じて、ポップアップの関数化？)
    */
   $scope.openEditNotePopup = function(index) {
@@ -384,7 +385,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function click
    * @description ボードにパーツを配置する
    * @todo 名前がわかりにくいかも、関数名の変更を検討すること at 12/22 小島
-   * @param $event 配置のためにクリックされた時点のイベント情報、配置先の座標などを含む
+   * @param {Object} $event 配置のためにクリックされた時点のイベント情報、配置先の座標などを含む
    */
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
@@ -395,7 +396,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function remove
    * @description 配置済のパーツを削除する
    * 一時保存用の配列に退避させ、トースト表示からUNDOができる
-   * @param partIndex 削除対象としてクリックされたパーツのIndex
+   * @param {int} partIndex 削除対象としてクリックされたパーツのIndex
    */
   $scope.remove = function(partIndex) {
     // deployedPartsにあるpartを削除し、削除したパーツを一時保存用配列に退避
@@ -430,7 +431,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function openMenu
    * @description パーツの削除や編集などの処理が可能なメニューを開く
    * パーツタイプが'saveTime'なら時間保存メニューを表示、そうでないなら編集ボタンを表示する
-   * @param partIndex メニューを開く対象として選択されたパーツのIndex
+   * @param {int} partIndex メニューを開く対象として選択されたパーツのIndex
    * @TODO if文の分岐がかなり冗長なのでリファクタリング必要か
    */
   $scope.openMenu = function(partIndex) {
@@ -508,7 +509,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function select
    * @description パレットからボードに配置するパーツを選択する
-   * @param tgtId 選択した付箋を示すID
+   * @param {String} tgtId 選択した付箋を示すID
    */
   $scope.select = function(tgtId){
     Parts.select(tgtId);//パレットからボードに配置するパーツを選択
@@ -568,7 +569,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
   /**
    * @function popAd
-   * 広告の表示についてポップアップで表示してもよいか確認後、モーダルにて表示する
+   * @description 広告の表示についてポップアップで表示してもよいか確認後、モーダルにて表示する
    */
   $scope.popAd = function() {
     $ionicPopup.confirm({
@@ -619,7 +620,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function selectWallpaper
    * @description 選択された壁紙のパス情報を元に壁紙をセットする
-   * @param selectWallpaperPath 壁紙のパス情報
+   * @param {String} selectWallpaperPath 壁紙のパス情報
    */
   $scope.selectWallpaper = function(selectedWallpaperPath) {
     d.log('変更前：' + $scope.wallpaperParams.currentWallpaperPath);
