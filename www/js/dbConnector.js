@@ -94,8 +94,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
           'boardComment': 'this is a sample',
           'parts': [
             {
-              'partId': '0',
-              'class': 'sticky-note note-yellow note-normal',
+              'partId': '2',
+              'class': 'sticky-note note-yellow note-small',
               'type': 'sticky',
               'text': 'Tap "Wand" icon to put parts.',
               'position': {
@@ -104,13 +104,33 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               }
             },
             {
-              'partId': '3',
-              'class': 'sticky-note note-blue note-normal',
+              'partId': '4',
+              'class': 'sticky-note note-blue note-wide',
               'type': 'sticky',
-              'text': 'If you like this app, please support us by tapping the Ads.',
+              'text': 'Ad is shown if you tap "Robot icon".',
               'position': {
                 'x': 200,
                 'y': 350
+              }
+            },
+            {
+              'partId': '7',
+              'class': 'sticky-note note-green note-wide',
+              'type': 'sticky',
+              'text': 'The icon appears randomly.',
+              'position': {
+                'x': 220,
+                'y': 425
+              }
+            },
+            {
+              'partId': '10',
+              'class': 'sticky-note note-pink note-wide',
+              'type': 'sticky',
+              'text': 'You can save changes by tapping "Pin" icon.',
+              'position': {
+                'x': 220,
+                'y': 30
               }
             }
           ],

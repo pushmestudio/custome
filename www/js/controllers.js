@@ -125,9 +125,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
       var editPopup = $ionicPopup.show({
         template: '<div class="list">' +
-          '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+          '<label class="item item-input"><input type="text" placeholder="Board name" ng-model="boardNames.boardName" autofocus></label>' +
           '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
-        title: 'Input Board Info',
+        title: 'Input board info',
         scope: $scope,
         buttons: [
           { text: 'Cancel' },
@@ -270,9 +270,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
           var editPopup = $ionicPopup.show({
             template: '<div class="list">' +
-              '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+              '<label class="item item-input"><input type="text" placeholder="Board name" ng-model="boardNames.boardName" autofocus></label>' +
               '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
-            title: 'Input Board Info',
+            title: 'Input board info',
             scope: $scope,
             buttons: [
               { text: 'Cancel' },
@@ -324,7 +324,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
       var editPopup = $ionicPopup.show({
         template: '<textarea rows="4" ng-model="selectedPart.text" autofocus></textarea>',
-        title: 'Edit Note',
+        title: 'Edit note',
         scope: $scope,
         buttons: [
           { text: 'Cancel' },
