@@ -27,12 +27,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }, {
     id: 2,
     name: 'Template3',
-    lastText: 'ToDo. Horizontal direction.',
+    lastText: 'ToDo. Horizontal.',
     img: 'img/wallpaper/taskboard_port_blue.png'
   }, {
     id: 3,
     name: 'Template4',
-    lastText: 'Weekly Calender',
+    lastText: 'Weekly calender',
     img: 'img/wallpaper/template_calender_weekly.png'
   }];
 
@@ -214,7 +214,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
           return myBoards[i].boardContent.boardName;
         }
       }
-      return 'New Board';
+      return 'New board';
     },
     checkSaveOrUpdate: function(parts, wallPaper, boardId){
       return checkSaveOrUpdate(parts, wallPaper, boardId);
@@ -1008,7 +1008,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         // 広告の読込が完了（成功したときのコールバック）
         document.addEventListener('onAdLoaded', function(data){
           if(Math.random() <= FREQ_POP_AD){
-            d.log('Interstitial ads is ready');
+            d.log('Interstitial ad is ready');
             $timeout(function(){
               flagData.iconFlag = true;
             });
