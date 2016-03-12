@@ -107,7 +107,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               'partId': '4',
               'class': 'sticky-note note-blue note-wide',
               'type': 'sticky',
-              'text': 'Ad is shown if you tap "Robot icon".',
+              'text': 'If you find "Robot icon", please tap it!".',
               'position': {
                 'x': 200,
                 'y': 350
