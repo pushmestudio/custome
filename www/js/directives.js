@@ -11,7 +11,7 @@ angular.module('mainApp.directives', [])
  */
 .directive('partDeleteToaster', [function() {
   return {
-    template: 'Part Deleted.<a class="undo" ng-click="undo()">UNDO</a>'
+    template: 'Deleted.<a class="undo" ng-click="undo()">UNDO</a>'
   };
 }])
 

@@ -39,6 +39,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description 使用する前に接続処理を行う
    * ここでDBから全Boardsを持ってくる処理を書く
    * 接続が終わったら取得、取得が終わったら変数に反映
+   * @todo ControllerからDBへ接続処理をするのは望ましくないのでリファクタリングを検討する
    */
   $scope.init = function(){
     DBConn.connect().then(function() {
@@ -58,7 +59,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function selectWallpaper
    * @description 詳細画面移行時に現在の壁紙を上書き
-   * @param selectedWallpaperPath 選択された壁紙のパス情報
+   * @param {String} selectedWallpaperPath 選択された壁紙のパス情報
    */
   $scope.selectWallpaper = function(selectedWallpaperPath){
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
@@ -68,6 +69,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function remove
    * @description 作成済のマイボードを削除する
    * @param boardIndex 削除するマイボードの配列内でのIndex
+   * @todo ControllerからDBへ接続処理をするのは望ましくないのでリファクタリングを検討する
    */
   $scope.remove = function(boardIndex) {
     $ionicPopup.confirm({
@@ -98,7 +100,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function openBoardInfoPopup
    * @description ボード一覧上にてボードの名前とコメントを変更ためのポップアップを開く
    * BoardsDetailCtrlとほぼ同様の実装方法
-   * @param board 削除するマイボードの配列内でのIndex
+   * @param {int} board 削除するマイボードの配列内でのIndex
    * @todo checkSaveOrUpdateとの共通化(必要に応じて、ポップアップの関数化？)
    */
   $scope.openBoardInfoPopup = function(board) { // openmodal to openBoardInfoPopup
@@ -113,13 +115,19 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.boardNames.boardNameBeforeChange = board.boardContent.boardName;
     //$scope.boardNames.boardCommentBeforeChange = board.boardContent.boardComment; //ボードコメントはブランクでも良いため，コメントアウト
 
+    /**
+     * @function showEditPopup
+     * @description 編集用のポップアップを表示する
+     * オートフォーカスをつけた上でキーボード表示を呼び出しているので、ポップアップ表示と同時にキーボードが開く
+     * @todo 関数内関数になっているので外出し化 BoardsDetailCtrlでも同じものを持ってしまっているので統一したい
+     */
     $scope.showEditPopup = function() {
 
       var editPopup = $ionicPopup.show({
         template: '<div class="list">' +
-          '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+          '<label class="item item-input"><input type="text" placeholder="Board name" ng-model="boardNames.boardName" autofocus></label>' +
           '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
-        title: 'Input Board Info',
+        title: 'Input board info',
         scope: $scope,
         buttons: [
           { text: 'Cancel' },
@@ -251,13 +259,20 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           toaster.pop('success', '', 'Saved!');
         });
       } else {
+
+        /**
+         * @function showEditPopup
+         * @description 編集用のポップアップを表示する
+         * オートフォーカスをつけた上でキーボード表示を呼び出しているので、ポップアップ表示と同時にキーボードが開く
+         * @todo 関数内関数になっているので外出し化 BoardsCtrlでも同じものを持ってしまっているので統一したい
+         */
         $scope.showEditPopup = function() {
 
           var editPopup = $ionicPopup.show({
             template: '<div class="list">' +
-              '<label class="item item-input"><input type="text" placeholder="Board Name" ng-model="boardNames.boardName" autofocus></label>' +
+              '<label class="item item-input"><input type="text" placeholder="Board name" ng-model="boardNames.boardName" autofocus></label>' +
               '<label class="item item-input"><textarea placeholder="Comment" ng-model="boardNames.boardComment"></textarea></label></div>',
-            title: 'Input Board Info',
+            title: 'Input board info',
             scope: $scope,
             buttons: [
               { text: 'Cancel' },
@@ -293,16 +308,23 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function openEditNotePopup
    * @description 付箋パーツのテキストを編集するためのポップアップを開く
-   * @param index 編集対象の付箋パーツのIndex
+   * @param {int} index 編集対象の付箋パーツのIndex
    * @todo (必要に応じて、ポップアップの関数化？)
    */
   $scope.openEditNotePopup = function(index) {
     Parts.selectPart(index); // selectedPartに、indexに該当するパーツを引き当てる
+
+    /**
+     * @function showEditPopup
+     * @description 編集用のポップアップを表示する
+     * オートフォーカスをつけた上でキーボード表示を呼び出しているので、ポップアップ表示と同時にキーボードが開く
+     * @todo 関数内関数になっているので外出し化
+     */
     $scope.showEditPopup = function() {
 
       var editPopup = $ionicPopup.show({
-        template: '<textarea rows="8" ng-model="selectedPart.text" autofocus></textarea>',
-        title: 'Edit Note',
+        template: '<textarea rows="4" ng-model="selectedPart.text" autofocus></textarea>',
+        title: 'Edit note',
         scope: $scope,
         buttons: [
           { text: 'Cancel' },
@@ -336,6 +358,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function save
    * @description 新規作成時の保存処理
+   * ボード名が空の場合は日付を入れる
    */
   $scope.save = function(){
     // ボード名が未入力の場合に，デフォルト値を入れる
@@ -362,7 +385,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function click
    * @description ボードにパーツを配置する
    * @todo 名前がわかりにくいかも、関数名の変更を検討すること at 12/22 小島
-   * @param $event 配置のためにクリックされた時点のイベント情報、配置先の座標などを含む
+   * @param {Object} $event 配置のためにクリックされた時点のイベント情報、配置先の座標などを含む
    */
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
@@ -373,7 +396,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function remove
    * @description 配置済のパーツを削除する
    * 一時保存用の配列に退避させ、トースト表示からUNDOができる
-   * @param partIndex 削除対象としてクリックされたパーツのIndex
+   * @param {int} partIndex 削除対象としてクリックされたパーツのIndex
    */
   $scope.remove = function(partIndex) {
     // deployedPartsにあるpartを削除し、削除したパーツを一時保存用配列に退避
@@ -407,7 +430,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function openMenu
    * @description パーツの削除や編集などの処理が可能なメニューを開く
-   * @param partIndex メニューを開く対象として選択されたパーツのIndex
+   * パーツタイプが'saveTime'なら時間保存メニューを表示、そうでないなら編集ボタンを表示する
+   * @param {int} partIndex メニューを開く対象として選択されたパーツのIndex
    * @TODO if文の分岐がかなり冗長なのでリファクタリング必要か
    */
   $scope.openMenu = function(partIndex) {
@@ -485,7 +509,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function select
    * @description パレットからボードに配置するパーツを選択する
-   * @param tgtId 選択した付箋を示すID
+   * @param {String} tgtId 選択した付箋を示すID
    */
   $scope.select = function(tgtId){
     Parts.select(tgtId);//パレットからボードに配置するパーツを選択
@@ -495,12 +519,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   };
   /**
    * @function selectSaveTimeParts
-   * @description パレットからボードに配置する時間保存パーツを選択する (後にselect()と統合したい)
+   * @description パレットからボードに配置する時間保存パーツを選択する
+   * @todo 後にselect()と統合したい
    */
   $scope.selectSaveTimeParts = function(){
-    //Parts.setOnFlag2TimeParts();//servicesのPartsサービス内でフラグをtrueにする。その後，BoardsDetailCtrl#click()で指定座標に配置
-    //Parts.otherPart[0].flag = true;
-    //Parts.parts[6].flag = true;
     Parts.setOnFlag();
   }
 })
@@ -511,7 +533,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
  * @requires $scope
  * @requires $ionicPralform
  * @requires $ionicPopup
- * @requires $AdMobManager
+ * @requires AdMobManager
  * @requires d
  */
 .controller('AdsCtrl', function($scope, $ionicPlatform, $ionicPopup, AdMobManager, d) {
@@ -532,6 +554,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @function showUpInterstitialAd
    * @description インタースティシャル広告を画面全体に表示させる
    * 何らかのエラーでInterstitial広告が表示できない場合は、代替広告表示用のフラグをtrueにする
+   * @todo 現在、代替広告表示用のフラグがONになっても特段の処理はされていない模様
    */
   $scope.showUpInterstitialAd = function(){
     try{
@@ -546,11 +569,11 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
   /**
    * @function popAd
-   * 広告の表示についてポップアップで表示してもよいか確認後、モーダルにて表示する
+   * @description 広告の表示についてポップアップで表示してもよいか確認後、モーダルにて表示する
    */
   $scope.popAd = function() {
     $ionicPopup.confirm({
-      title: '[We need your help!]', // String. The title of the popup.
+      title: '[Ad Display Confirmation]', // String. The title of the popup.
       template: 'Our Robo bring an ad. <br>Can I show you it once?<br>(You can help us through tapping an ad!)', // String (optional). The html template to place in the popup body.
     }).then(function(res) { // ポップアップ上でOkならtrue、Cancelならfalseが返る
       if(res) { // Okなら広告を表示する
@@ -597,15 +620,15 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   /**
    * @function selectWallpaper
    * @description 選択された壁紙のパス情報を元に壁紙をセットする
-   * @param selectWallpaperPath 壁紙のパス情報
+   * @param {String} selectWallpaperPath 壁紙のパス情報
    */
   $scope.selectWallpaper = function(selectedWallpaperPath) {
-    d.log($scope.wallpaperParams.currentWallpaperPath);
+    d.log('変更前：' + $scope.wallpaperParams.currentWallpaperPath);
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
     if($scope.modal.isShown()){
       $scope.modal.hide();
     }
-    d.log($scope.wallpaperParams.currentWallpaperPath);
+    d.log('変更後：' + $scope.wallpaperParams.currentWallpaperPath);
   };
 
   /**
