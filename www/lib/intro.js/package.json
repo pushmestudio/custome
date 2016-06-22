@@ -1,0 +1,62 @@
+{
+  "name": "intro.js",
+  "description": "Better introductions for websites and features with a step-by-step guide for your projects",
+  "version": "2.1.0",
+  "author": {
+    "name": "Afshin Mehrabani",
+    "email": "afshin.meh@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usablica/intro.js.git"
+  },
+  "devDependencies": {
+    "node-minify": "*"
+  },
+  "engine": [
+    "node >=0.1.90"
+  ],
+  "main": "intro.js",
+  "spm": {
+    "main": "intro.js",
+    "output": [
+      "introjs.css"
+    ]
+  },
+  "gitHead": "9ec93e18d26c000611a03b6ba0eb0f477c7290c7",
+  "bugs": {
+    "url": "https://github.com/usablica/intro.js/issues"
+  },
+  "homepage": "https://github.com/usablica/intro.js#readme",
+  "_id": "intro.js@2.1.0",
+  "scripts": {},
+  "_shasum": "68953f39b1ef07ea9213ffad541d7d03b9803e2f",
+  "_from": "intro.js@latest",
+  "_npmVersion": "3.8.6",
+  "_nodeVersion": "5.5.0",
+  "_npmUser": {
+    "name": "afshinmeh",
+    "email": "afshin.meh@gmail.com"
+  },
+  "dist": {
+    "shasum": "68953f39b1ef07ea9213ffad541d7d03b9803e2f",
+    "tarball": "https://registry.npmjs.org/intro.js/-/intro.js-2.1.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "ricardmo",
+      "email": "marco.ricard@gmail.com"
+    },
+    {
+      "name": "afshinmeh",
+      "email": "afshin.meh@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/intro.js-2.1.0.tgz_1461836262804_0.9316400170791894"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/intro.js/-/intro.js-2.1.0.tgz",
+  "readme": "ERROR: No README data found!"
+}
