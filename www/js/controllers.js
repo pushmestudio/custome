@@ -66,18 +66,15 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
   $scope.ChangeEvent = function (targetElement, scope) {
     console.log("Change Event called");
-    console.log(targetElement);  //The target element
     console.log(this);  //The IntroJS object
   };
 
   $scope.BeforeChangeEvent = function (targetElement, scope) {
     console.log("Before Change Event called");
-    console.log(targetElement);
   };
 
   $scope.AfterChangeEvent = function (targetElement, scope) {
     console.log("After Change Event called");
-    console.log(targetElement);
   };
 
   $scope.IntroOptions = {
@@ -87,9 +84,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       intro: "This is the first tooltip."
     },
     {
-      element: document.querySelectorAll('#step2')[0],
+      element: document.querySelector('#step2'),
       intro: "<strong>You</strong> can also <em>include</em> HTML",
-      position: 'right'
+      position: 'bottom'
     },
       {
         element: '#step3',
@@ -116,8 +113,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   };
   $scope.ShouldAutoStart = false;
 
-  $scope.CallMe = function() {
-    d.log('hello');
+  $scope.something = function() {
+    $ionicListDelegate.closeOptionButtons();
   }
 
   /**
