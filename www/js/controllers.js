@@ -62,6 +62,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 
   $scope.ExitEvent = function (scope) {
     console.log("Exit Event called");
+    $scope.saveState();
+    $scope.restoreState();
   };
 
   $scope.ChangeEvent = function (targetElement, scope) {
@@ -84,12 +86,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     steps:[
     {
       element: document.querySelector('#step1'),
-      intro: "This is the first tooltip."
+      intro: "This is the first tooltip.",
+      position: 'bottom'
     },
     {
-      element: document.querySelectorAll('#step2')[0],
+      //element: document.querySelectorAll('#step2')[0],
       intro: "<strong>You</strong> can also <em>include</em> HTML",
-      position: 'right'
+      position: 'bottom'
     },
       {
         element: '#step3',
@@ -101,10 +104,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         intro: "Another step.",
         position: 'bottom'
       },
-        {
-          element: '#step5',
-          intro: 'Get it, use it.'
-        }
+      {
+        element: '#step5',
+        intro: 'Get it, use it.'
+      }
     ],
     showStepNumbers: false,
     exitOnOverlayClick: true,
@@ -114,11 +117,22 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     skipLabel: 'Exit',
     doneLabel: 'Thanks'
   };
-  $scope.ShouldAutoStart = false;
+  $scope.saveState = function () {
+    d.log('save');
+    localStorage.userService = angular.toJson({isDone1stTutorial:true, isDone2ndTutorial:false});
+    d.log($scope.intro);
+    var some = angular.toJson($scope.intro);
+  },
 
-  $scope.CallMe = function() {
-    d.log('hello');
-  }
+  // sessionstorageではなくlocalstorageを使うこと
+  $scope.restoreState = function () {
+    var value = angular.fromJson(localStorage.userService);
+    return value;
+  };
+
+  $scope.intro = $scope.restoreState();
+  $scope.ShouldAutoStart = $scope.intro && $scope.intro['isDone1stTutorial'] ? false : true;
+
 
   /**
    * @function selectWallpaper

@@ -1,5 +1,5 @@
 /**
- * Intro.js v2.1.0
+ * Intro.js v2.0
  * https://github.com/usablica/intro.js
  * MIT licensed
  *
@@ -19,7 +19,7 @@
   }
 } (this, function (exports) {
   //Default config/variables
-  var VERSION = '2.1.0';
+  var VERSION = '2.0';
 
   /**
    * IntroJs main class
@@ -129,12 +129,6 @@
       //first add intro items with data-step
       for (var i = 0, elmsLength = allIntroSteps.length; i < elmsLength; i++) {
         var currentElement = allIntroSteps[i];
-
-        // skip hidden elements
-        if (currentElement.style.display == 'none') {
-          continue;
-        }
-
         var step = parseInt(currentElement.getAttribute('data-step'), 10);
 
         if (step > 0) {
@@ -701,13 +695,9 @@
           elementPosition = _getOffset(currentElement.element),
           widthHeightPadding = 10;
 
-      // If the target element is fixed, the tooltip should be fixed as well.
-      // Otherwise, remove a fixed class that may be left over from the previous
-      // step.
+      // if the target element is fixed, the tooltip should be fixed as well.
       if (_isFixed(currentElement.element)) {
         helperLayer.className += ' introjs-fixedTooltip';
-      } else {
-        helperLayer.className = helperLayer.className.replace(' introjs-fixedTooltip', '');
       }
 
       if (currentElement.position == 'floating') {
@@ -738,17 +728,6 @@
     }
 
     _setHelperLayerPosition.call(this, disableInteractionLayer);
-  }
-
-  /**
-   * Setting anchors to behave like buttons
-   *
-   * @api private
-   * @method _setAnchorAsButton
-   */
-  function _setAnchorAsButton(anchor){
-    anchor.setAttribute('role', 'button');
-    anchor.tabIndex = 0;
   }
 
   /**
@@ -814,11 +793,9 @@
         };
       }
 
-      //remove old classes if the element still exist
+      //remove old classes
       var oldShowElement = document.querySelector('.introjs-showElement');
-      if(oldShowElement) {
-        oldShowElement.className = oldShowElement.className.replace(/introjs-[a-zA-Z]+/g, '').replace(/^\s+|\s+$/g, '');
-      }
+      oldShowElement.className = oldShowElement.className.replace(/introjs-[a-zA-Z]+/g, '').replace(/^\s+|\s+$/g, '');
 
       //we should wait until the CSS3 transition is competed (it's 0.3 sec) to prevent incorrect `height` and `width` calculation
       if (self._lastShowElementTimer) {
@@ -899,7 +876,7 @@
 
         if (i === (targetElement.step-1)) anchorLink.className = 'active';
 
-        _setAnchorAsButton(anchorLink);
+        anchorLink.href = 'javascript:void(0);';
         anchorLink.innerHTML = "&nbsp;";
         anchorLink.setAttribute('data-stepnumber', this._introItems[i].step);
 
@@ -950,7 +927,7 @@
         }
       };
 
-      _setAnchorAsButton(nextTooltipButton);
+      nextTooltipButton.href = 'javascript:void(0);';
       nextTooltipButton.innerHTML = this._options.nextLabel;
 
       //previous button
@@ -962,13 +939,13 @@
         }
       };
 
-      _setAnchorAsButton(prevTooltipButton);
+      prevTooltipButton.href = 'javascript:void(0);';
       prevTooltipButton.innerHTML = this._options.prevLabel;
 
       //skip button
       var skipTooltipButton = document.createElement('a');
       skipTooltipButton.className = 'introjs-button introjs-skipbutton';
-      _setAnchorAsButton(skipTooltipButton);
+      skipTooltipButton.href = 'javascript:void(0);';
       skipTooltipButton.innerHTML = this._options.skipLabel;
 
       skipTooltipButton.onclick = function() {
@@ -1029,8 +1006,7 @@
 
     var currentElementPosition = _getPropValue(targetElement.element, 'position');
     if (currentElementPosition !== 'absolute' &&
-        currentElementPosition !== 'relative' &&
-        currentElementPosition !== 'fixed') {
+        currentElementPosition !== 'relative') {
       //change to new intro item
       targetElement.element.className += ' introjs-relativePosition';
     }
@@ -1291,9 +1267,6 @@
   function _reAlignHints() {
     for (var i = 0, l = this._introItems.length; i < l; i++) {
       var item = this._introItems[i];
-
-      if (typeof (item.targetElement) == 'undefined') continue;
-
       _alignHintPosition.call(this, item.hintPosition, item.element, item.targetElement)
     }
   }
@@ -1344,7 +1317,7 @@
         continue;
 
       var hint = document.createElement('a');
-      _setAnchorAsButton(hint);
+      hint.href = "javascript:void(0);";
 
       (function (hint, item, i) {
         // when user clicks on the hint element
@@ -1633,12 +1606,8 @@
       return this;
     },
     refresh: function() {
-      // re-align intros
       _setHelperLayerPosition.call(this, document.querySelector('.introjs-helperLayer'));
       _setHelperLayerPosition.call(this, document.querySelector('.introjs-tooltipReferenceLayer'));
-
-      //re-align hints
-      _reAlignHints.call(this);
       return this;
     },
     onbeforechange: function(providedCallback) {
@@ -1707,10 +1676,6 @@
     },
     addHints: function() {
       _populateHints.call(this, this._targetElement);
-      return this;
-    },
-    hideHint: function (stepId) {
-      _hideHint.call(this, stepId);
       return this;
     }
   };
