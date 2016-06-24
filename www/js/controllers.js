@@ -215,7 +215,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     Boards.setUpdateFlag(boardData.boardId);
     // 既存ボードの更新を行う際に、オートセーブを開始する
     if(Boards.getUpdateFlag()){
-      Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
+      Boards.autoSavePromise = $interval(function(){
+        $scope.autoSaving = true;
+        $scope.checkSaveOrUpdate();
+      },30000);
     }else{
       // 新規ボード作成時に，ボード名，コメントを初期化
       // ボード一覧で，ボード名やコメントを変更後に，新規ボード作成した際の影響をなくすため
@@ -227,7 +230,10 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       Boards.autoSavePromise_at_1st = $timeout(function(){$scope.save();
       },15000);
         // 3回目以降は30秒ごとにオートセーブ開始。
-      Boards.autoSavePromise = $interval(function(){$scope.checkSaveOrUpdate();},30000);
+      Boards.autoSavePromise = $interval(function(){
+        $scope.autoSaving = true;
+        $scope.checkSaveOrUpdate();
+      },30000);
     }
     $timeout(function(){
       Parts.reDeploy(boardData.boardContent);
@@ -241,6 +247,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   // $scope.wallpaper = Wallpapers.getCurrentWallpaper();
   $scope.wallpaperParams = Wallpapers.getWallpaperParams();
   $scope.selectedPart = Parts.selectedPart;
+  // autosave中かどうかを判断するフラグ（loading画像の表示切り替えに使用)、autoSaving:セーブ中 autoSaved:セーブ完了
+  $scope.autoSaving = false;
+  $scope.autoSaved = false;
 
   /**
    * @function checkSaveOrUpdate
@@ -255,9 +264,20 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       if(boardId){
         // boardsList.htmlで表示されるthumbnail画像を変更する
         Boards.updateWallpaperOnMemory(boardId, Wallpapers.getCurrentWallpaper());
-        $timeout(function(){
-          toaster.pop('success', '', 'Saved!');
-        });
+        // autosave中じゃなかったら（saveボタンを押してsaveしたら)
+        if($scope.autoSaving == false){
+          $timeout(function(){
+            toaster.pop('success', '', 'Saved!');
+          });
+        } else {
+          $timeout(function(){
+            $scope.autoSaving = false;
+            $scope.autoSaved = true;
+          });
+          $timeout(function(){
+            $scope.autoSaved = false;
+          }, 3000);
+        }
       } else {
 
         /**
