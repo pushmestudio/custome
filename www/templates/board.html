@@ -15,5 +15,10 @@
         <div style="margin: 5px">{{deployedPart.text}}</div>
       </div>
     </div>
+
+    <div style="position: fixed; bottom: 10px; right: 20px; z-index: 100;">
+      <p ng-show="autoSaving"><ion-spinner icon="android" ></ion-spinner><span>saving...</span></p>
+      <p ng-show="autoSaved"><i class="icon ion-checkmark-round balanced" style="font-size: 25px;"></i><span>saved!</span></p>
+    </div>
   </ion-content>
 </ion-view>
