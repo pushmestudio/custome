@@ -32,8 +32,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }, {
     id: 3,
     name: 'Template4',
-    lastText: 'Weekly calender',
+    lastText: 'Weekly Calender',
     img: 'img/wallpaper/template_calender_weekly.png'
+  }, {
+    id: 4,
+    name: 'Template5',
+    lastText: 'Blank Template',
+    img: 'img/wallpaper/template_blank.png'
   }];
 
   // 非同期処理のために使う、q.defer()のようにして呼び出す
