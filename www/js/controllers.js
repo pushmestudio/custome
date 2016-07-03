@@ -56,8 +56,59 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.templates = Boards.getAllTemplates();
   $scope.listCanSwipe = true; // リストに対してスワイプ操作を可能にする
 
+  $scope.IntroOptions = {
+    steps:[
+      {
+        element: '#step1',
+        intro: '作成済のボード一覧を表示するページだよ、サンプルで1つ作ってあるよ<br> <img src="../img/pointing.png" width="30" height="40"></img>',
+      },
+      {
+        element: '#step2',
+        intro: '＋ボタンから新規追加できるよ',
+      },
+      {
+        element: '#step3',
+        intro: '既存のボードはスワイプできるよ',
+      },
+      {
+        element: '#step4',
+        intro: 'スワイプしたらボード名変更と削除が出きるよ',
+      },
+      {
+        element: '#step5',
+        intro: '既存のボードをタップするとボードの画面が見れるよ'
+      }
+    ],
+    showStepNumbers: false,
+    exitOnOverlayClick: true,
+    exitOnEsc:true,
+    nextLabel: '<strong>NEXT!</strong>',
+    prevLabel: 'Previous',
+    skipLabel: 'Exit',
+    doneLabel: '<span style="color:green">Complete!</span>'
+  };
+
+  $scope.saveState = function () {
+    d.log('sateState is called.');
+    // localstorage上にisDone1stTutorialという名前でチュートリアルが完了しているかのフラグを保存する
+    localStorage.isDone1stTutorial = true;
+  },
+
+  // sessionstorageではなくlocalstorageを使うこと
+  $scope.restoreState = function () {
+    var value = localStorage.isDone1stTutorial;
+    return value;
+  };
+
+  $scope.intro = $scope.restoreState();
+
+  // チュートリアル完了==trueならautostartをfalseとしてセットする
+  $scope.ShouldAutoStart = !$scope.intro;
+
   $scope.CompletedEvent = function (scope) {
     console.log("Completed Event called");
+    $scope.saveState();
+    $scope.restoreState();
   };
 
   $scope.ExitEvent = function (scope) {
@@ -65,75 +116,6 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.saveState();
     $scope.restoreState();
   };
-
-  $scope.ChangeEvent = function (targetElement, scope) {
-    console.log("Change Event called");
-    console.log(this);  //The IntroJS object
-  };
-
-  $scope.BeforeChangeEvent = function (targetElement, scope) {
-    console.log("Before Change Event called");
-  };
-
-  $scope.AfterChangeEvent = function (targetElement, scope) {
-    console.log("After Change Event called");
-  };
-
-  $scope.IntroOptions = {
-    steps:[
-    {
-      element: document.querySelector('#step1'),
-      intro: "This is the first tooltip.",
-      position: 'bottom'
-    },
-    {
-      element: document.querySelector('#step2'),
-      //element: document.querySelectorAll('#step2')[0],
-      intro: "<strong>You</strong> can also <em>include</em> HTML",
-      position: 'bottom'
-    },
-      {
-        element: '#step3',
-        intro: 'More features, more fun.',
-        position: 'left'
-      },
-      {
-        element: '#step4',
-        intro: "Another step.",
-        position: 'bottom'
-      },
-      {
-        element: '#step5',
-        intro: 'Get it, use it.'
-      }
-    ],
-    showStepNumbers: false,
-    exitOnOverlayClick: true,
-    exitOnEsc:true,
-    nextLabel: '<strong>NEXT!</strong>',
-    prevLabel: '<span style="color:green">Previous</span>',
-    skipLabel: 'Exit',
-    doneLabel: 'Thanks'
-  };
-  $scope.saveState = function () {
-    d.log('save');
-    localStorage.userService = angular.toJson({isDone1stTutorial:true, isDone2ndTutorial:false});
-    d.log($scope.intro);
-    var some = angular.toJson($scope.intro);
-  },
-
-  // sessionstorageではなくlocalstorageを使うこと
-  $scope.restoreState = function () {
-    var value = angular.fromJson(localStorage.userService);
-    return value;
-  };
-
-  $scope.intro = $scope.restoreState();
-  $scope.ShouldAutoStart = $scope.intro && $scope.intro['isDone1stTutorial'] ? false : true;
-
-  $scope.something = function() {
-    $ionicListDelegate.closeOptionButtons();
-  }
 
   /**
    * @function selectWallpaper
@@ -312,6 +294,68 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       Parts.reDeploy(boardData.boardContent);
     });
   });
+
+
+  $scope.IntroOptions = {
+    steps:[
+      {
+        element: '#step1',
+        intro: '作成済のボード一覧を表示するページだよ、サンプルで1つ作ってあるよ<br> <img src="../img/pointing.png" width="30" height="40"></img>',
+      },
+      {
+        element: '#step2',
+        intro: '＋ボタンから新規追加できるよ',
+      },
+      {
+        element: '#step3',
+        intro: '既存のボードはスワイプできるよ',
+      },
+      {
+        element: '#step4',
+        intro: 'スワイプしたらボード名変更と削除が出きるよ',
+      },
+      {
+        element: '#step5',
+        intro: '既存のボードをタップするとボードの画面が見れるよ'
+      }
+    ],
+    showStepNumbers: false,
+    exitOnOverlayClick: true,
+    exitOnEsc:true,
+    nextLabel: '<strong>NEXT!</strong>',
+    prevLabel: 'Previous',
+    skipLabel: 'Exit',
+    doneLabel: '<span style="color:green">Complete!</span>'
+  };
+
+  $scope.saveState = function () {
+    d.log('sateState is called.');
+    // localstorage上にisDone1stTutorialという名前でチュートリアルが完了しているかのフラグを保存する
+    localStorage.isDone1stTutorial = true;
+  },
+
+  // sessionstorageではなくlocalstorageを使うこと
+  $scope.restoreState = function () {
+    var value = localStorage.isDone1stTutorial;
+    return value;
+  };
+
+  $scope.intro = $scope.restoreState();
+
+  // チュートリアル完了==trueならautostartをfalseとしてセットする
+  $scope.ShouldAutoStart = !$scope.intro;
+
+  $scope.CompletedEvent = function (scope) {
+    console.log("Completed Event called");
+    $scope.saveState();
+    $scope.restoreState();
+  };
+
+  $scope.ExitEvent = function (scope) {
+    console.log("Exit Event called");
+    $scope.saveState();
+    $scope.restoreState();
+  };
 
   // binding
   $scope.template = Boards.getTemplate($stateParams.boardId);

@@ -2,8 +2,8 @@
 <ion-view view-title="{{boardName}}">
   <toaster-container toaster-options="{'time-out': 3000, 'close-button': true, 'animation-class': 'toast-top-center', 'tap-to-dismiss': 'false'}"></toaster-container>
   <ion-nav-buttons side="right">
-    <button class="button button-icon icon ion-pin" ng-click="checkSaveOrUpdate()"></button>
     <button class="button button-icon icon ion-home" onclick="location.href='#/templates/boardsList.html'">
+    <button class="button button-icon icon ion-pin" ng-click="checkSaveOrUpdate()"></button>
     <button menu-toggle="right" class="button button-icon icon ion-wand"></button>
   </ion-nav-buttons>
 
@@ -14,6 +14,11 @@
 
         <div style="margin: 5px">{{deployedPart.text}}</div>
       </div>
+    </div>
+    <div ng-intro-options="IntroOptions" ng-intro-method="StartIntro"
+    ng-intro-oncomplete="CompletedEvent" ng-intro-onexit="ExitEvent"
+    ng-intro-autostart="ShouldAutoStart">
+      <button ng-click="StartIntro()">Call Introjs</button>
     </div>
   </ion-content>
 </ion-view>

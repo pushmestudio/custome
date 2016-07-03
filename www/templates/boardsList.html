@@ -3,17 +3,17 @@
   <toaster-container toaster-options="{'time-out': 3000, 'close-button': true, 'animation-class': 'toast-top-center', 'tap-to-dismiss': 'false'}"></toaster-container>
   <ion-content>
     <ion-list can-swipe="listCanSwipe">
-      <div id="step1" class="item item-divider">
+      <div class="item item-divider">
         My boards
       </div>
       <ion-item class="item-remove-animate item-thumbnail-left item-icon-right item-text-wrap" ng-repeat="board in myBoards track by $index" type="item-text-wrap" ng-href="#/{{board.boardId}}" ng-click="selectWallpaper(board.boardContent.wallpaper)">
         <img ng-src="{{board.boardContent.wallpaper}}">
-        <!--{{board.boardContent.wallpaper}} --><!-- 使用中のWallpaperのパス表示用 -->
+        <!-- 使用中のWallpaperのパス表示用 -->
         <h2>{{board.boardContent.boardName}}</h2>
         <p>{{board.boardContent.boardComment}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
-        <ion-option-button class="button-balanced" ng-click="openBoardInfoPopup(board)" id="step1">
+        <ion-option-button class="button-balanced" ng-click="openBoardInfoPopup(board)">
           <i class="icon ion-edit"></i>
         </ion-option-button>
         <ion-option-button class="button-assertive" ng-click="remove($index)">
@@ -21,14 +21,10 @@
         </ion-option-button>
       </ion-item>
     </ion-list>
-    <div ng-intro-options="IntroOptions" ng-intro-method="CallMe"
+    <div ng-intro-options="IntroOptions" ng-intro-method="StartIntro"
     ng-intro-oncomplete="CompletedEvent" ng-intro-onexit="ExitEvent"
-    ng-intro-onchange="ChangeEvent" ng-intro-onbeforechange="BeforeChangeEvent"
-    ng-intro-onafterchange="AfterChangeEvent"
     ng-intro-autostart="ShouldAutoStart">
-      <button ng-click="something()">something</button>
-      <button ng-click="CallMe()">call me</button>
-      <p id="step2" style="z-index:999;right:10%;top:20%;position:absolute;"><img ng-src="img/pointing.png" width="30" height="40"></img></p>
+      <button ng-click="StartIntro()">Call Introjs</button>
     </div>
     <!-- 作成済ボード一覧画面で，プラスボタン押下するとテンプレート一覧の画面に遷移 -->
     <a href="#/templates">
