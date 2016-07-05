@@ -56,27 +56,28 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.templates = Boards.getAllTemplates();
   $scope.listCanSwipe = true; // リストに対してスワイプ操作を可能にする
 
+  // TODO 文言と保存するkeyが異なるのみで、使用してイントロの枠組みはBoardsDetailCtrlと全く同じ。変更の余地ありか。
   $scope.IntroOptions = {
     steps:[
       {
         element: '#step1',
-        intro: '作成済のボード一覧を表示するページだよ、サンプルで1つ作ってあるよ<br> <img src="../img/pointing.png" width="30" height="40"></img>',
+        intro: '作成済のボード一覧を表示するページだよ、サンプルで1つ作ってあるよ<br> <img src="../img/intro/intro1-1.png" width="100%"></img>',
       },
       {
         element: '#step2',
-        intro: '＋ボタンから新規追加できるよ',
+        intro: '＋ボタンから新規追加できるよ<br> <img src="../img/intro/intro1-1.png" width="100%"></img>',
       },
       {
         element: '#step3',
-        intro: '既存のボードはスワイプできるよ',
+        intro: '既存のボードはスワイプできるよ<br> <img src="../img/intro/intro1-2.png" width="100%"></img>',
       },
       {
         element: '#step4',
-        intro: 'スワイプしたらボード名変更と削除が出きるよ',
+        intro: 'スワイプしたらボード名変更と削除が出きるよ<br> <img src="../img/intro/intro1-2.png" width="100%"></img>',
       },
       {
         element: '#step5',
-        intro: '既存のボードをタップするとボードの画面が見れるよ'
+        intro: '既存のボードをタップするとボードの画面が見れるよ<br> <img src="../img/intro/intro1-1.png" width="100%"></img>'
       }
     ],
     showStepNumbers: false,
@@ -89,33 +90,23 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   };
 
   $scope.saveState = function () {
-    d.log('sateState is called.');
+    d.log('saveState is called.');
     // localstorage上にisDone1stTutorialという名前でチュートリアルが完了しているかのフラグを保存する
     localStorage.isDone1stTutorial = true;
   },
 
-  // sessionstorageではなくlocalstorageを使うこと
-  $scope.restoreState = function () {
-    var value = localStorage.isDone1stTutorial;
-    return value;
-  };
-
-  $scope.intro = $scope.restoreState();
-
-  // チュートリアル完了==trueならautostartをfalseとしてセットする
-  $scope.ShouldAutoStart = !$scope.intro;
-
   $scope.CompletedEvent = function (scope) {
     console.log("Completed Event called");
     $scope.saveState();
-    $scope.restoreState();
   };
 
   $scope.ExitEvent = function (scope) {
     console.log("Exit Event called");
     $scope.saveState();
-    $scope.restoreState();
   };
+
+  // チュートリアル完了==trueならautostartをfalseとしてセットする
+  $scope.ShouldAutoStart = !localStorage.isDone1stTutorial;
 
   /**
    * @function selectWallpaper
@@ -296,27 +287,32 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   });
 
 
+  // TODO 文言と保存するkeyが異なるのみで、使用してイントロの枠組みはBoardsCtrlと全く同じ。変更の余地ありか。
   $scope.IntroOptions = {
     steps:[
       {
         element: '#step1',
-        intro: '作成済のボード一覧を表示するページだよ、サンプルで1つ作ってあるよ<br> <img src="../img/pointing.png" width="30" height="40"></img>',
+        intro: '壁紙を設定して付箋のようなパーツを設置できるよ、サンプルでいくつか付箋おいているよ<img src="../img/intro/intro2-1.png" width="100%"></img>',
       },
       {
         element: '#step2',
-        intro: '＋ボタンから新規追加できるよ',
+        intro: 'ホームボタンでリストに戻れるよ<img src="../img/intro/intro2-2.png" width="100%"></img>',
       },
       {
         element: '#step3',
-        intro: '既存のボードはスワイプできるよ',
+        intro: 'セーブボタンで保存できるよ、一応自動セーブもしているよ<img src="../img/intro/intro2-2.png" width="100%"></img>',
       },
       {
         element: '#step4',
-        intro: 'スワイプしたらボード名変更と削除が出きるよ',
+        intro: 'パレットボタンでメニュー開くよ、パーツをおいたり、壁紙を変更したりできるよ<img src="../img/intro/intro2-3.png" width="100%"></img>',
       },
       {
         element: '#step5',
-        intro: '既存のボードをタップするとボードの画面が見れるよ'
+        intro: '付箋はタップしたままスライド(ドラッグ)で移動できるよ<img src="../img/intro/intro2-4.png" width="100%"></img>'
+      },
+      {
+        element: '#step6',
+        intro: '付箋はタップすると編集や削除ができるよ<img src="../img/intro/intro2-5.png" width="100%"></img>'
       }
     ],
     showStepNumbers: false,
@@ -329,33 +325,23 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   };
 
   $scope.saveState = function () {
-    d.log('sateState is called.');
-    // localstorage上にisDone1stTutorialという名前でチュートリアルが完了しているかのフラグを保存する
-    localStorage.isDone1stTutorial = true;
+    d.log('saveState is called.');
+    // localstorage上にisDone2ndTutorialという名前でチュートリアルが完了しているかのフラグを保存する
+    localStorage.isDone2ndTutorial = true;
   },
-
-  // sessionstorageではなくlocalstorageを使うこと
-  $scope.restoreState = function () {
-    var value = localStorage.isDone1stTutorial;
-    return value;
-  };
-
-  $scope.intro = $scope.restoreState();
-
-  // チュートリアル完了==trueならautostartをfalseとしてセットする
-  $scope.ShouldAutoStart = !$scope.intro;
 
   $scope.CompletedEvent = function (scope) {
     console.log("Completed Event called");
     $scope.saveState();
-    $scope.restoreState();
   };
 
   $scope.ExitEvent = function (scope) {
     console.log("Exit Event called");
     $scope.saveState();
-    $scope.restoreState();
   };
+
+  // チュートリアル完了==trueならautostartをfalseとしてセットする
+  $scope.ShouldAutoStart = !localStorage.isDone2ndTutorial;
 
   // binding
   $scope.template = Boards.getTemplate($stateParams.boardId);
