@@ -60,30 +60,22 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.IntroOptions = {
     steps:[
       {
-        element: '#step1',
-        intro: '作成済のボード一覧を表示するページだよ、サンプルで1つ作ってあるよ<br> <img src="../img/intro/intro1-1.png" width="100%"></img>',
+        intro: '<img src="../img/intro/intro1-1.png" width="100%"></img><br>Here is board list page. One sample board is already listed.',
       },
       {
-        element: '#step2',
-        intro: '＋ボタンから新規追加できるよ<br> <img src="../img/intro/intro1-1.png" width="100%"></img>',
+        intro: '<img src="../img/intro/intro1-2.png" width="100%"></img><br>You can add a new board with tapping "+" button.',
       },
       {
-        element: '#step3',
-        intro: '既存のボードはスワイプできるよ<br> <img src="../img/intro/intro1-2.png" width="100%"></img>',
+        intro: '<img src="../img/intro/intro1-3.png" width="100%"></img><br>You can see the hidden menu with swipping right to left on each board.',
       },
       {
-        element: '#step4',
-        intro: 'スワイプしたらボード名変更と削除が出きるよ<br> <img src="../img/intro/intro1-2.png" width="100%"></img>',
-      },
-      {
-        element: '#step5',
-        intro: '既存のボードをタップするとボードの画面が見れるよ<br> <img src="../img/intro/intro1-1.png" width="100%"></img>'
+        intro: '<img src="../img/intro/intro1-4.png" width="100%"></img><br>Now let\'s move to board detail page with tapping a listed board.'
       }
     ],
     showStepNumbers: false,
     exitOnOverlayClick: true,
     exitOnEsc:true,
-    nextLabel: '<strong>NEXT!</strong>',
+    nextLabel: 'Next',
     prevLabel: 'Previous',
     skipLabel: 'Exit',
     doneLabel: '<span style="color:green">Complete!</span>'
@@ -291,34 +283,28 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.IntroOptions = {
     steps:[
       {
-        element: '#step1',
-        intro: '壁紙を設定して付箋のようなパーツを設置できるよ、サンプルでいくつか付箋おいているよ<img src="../img/intro/intro2-1.png" width="100%"></img>',
+        intro: '<img src="../img/intro/intro2-1.png" width="100%"></img><br>You can change the wallpaper, add a stickey note and more!',
       },
       {
-        element: '#step2',
-        intro: 'ホームボタンでリストに戻れるよ<img src="../img/intro/intro2-2.png" width="100%"></img>',
+        intro: '<img src="../img/intro/intro2-2.png" width="100%"></img><br>Go back to list page with tapping home icon.',
       },
       {
-        element: '#step3',
-        intro: 'セーブボタンで保存できるよ、一応自動セーブもしているよ<img src="../img/intro/intro2-2.png" width="100%"></img>',
+        intro: '<img src="../img/intro/intro2-3.png" width="100%"></img><br>Auto-saving is working at a certain interval, but you can also save your board immediately.',
       },
       {
-        element: '#step4',
-        intro: 'パレットボタンでメニュー開くよ、パーツをおいたり、壁紙を変更したりできるよ<img src="../img/intro/intro2-3.png" width="100%"></img>',
+        intro: '<img src="../img/intro/intro2-4.png" width="100%"></img><br>Add a sticky and change the wallpaper are in the sidemenu.',
       },
       {
-        element: '#step5',
-        intro: '付箋はタップしたままスライド(ドラッグ)で移動できるよ<img src="../img/intro/intro2-4.png" width="100%"></img>'
+        intro: '<img src="../img/intro/intro2-5.png" width="100%"></img><br>You can move the sticky with drag.'
       },
       {
-        element: '#step6',
-        intro: '付箋はタップすると編集や削除ができるよ<img src="../img/intro/intro2-5.png" width="100%"></img>'
+        intro: '<img src="../img/intro/intro2-6.png" width="100%"></img><br>Additional menu is available with tapping a stikcy.'
       }
     ],
     showStepNumbers: false,
     exitOnOverlayClick: true,
     exitOnEsc:true,
-    nextLabel: '<strong>NEXT!</strong>',
+    nextLabel: 'NEXT',
     prevLabel: 'Previous',
     skipLabel: 'Exit',
     doneLabel: '<span style="color:green">Complete!</span>'
