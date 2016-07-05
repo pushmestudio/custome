@@ -79,4 +79,5 @@
 .palette-item {
   width: 100px;
   height: 100px;
+  background: white; /*透過PNGの壁紙時にパレットの背景が透けることへの対策*/
 }
