@@ -16,6 +16,10 @@
   },
   "cordovaPlugins": [],
   "cordovaPlatforms": [
-    "android"
+    {
+      "platform": "android",
+      "version": "5.0.0",
+      "locator": "android@5.0.0"
+    }
   ]
 }
