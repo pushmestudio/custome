@@ -78,7 +78,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     nextLabel: 'Next',
     prevLabel: 'Previous',
     skipLabel: 'Exit',
-    doneLabel: '<span style="color:green">Complete!</span>'
+    doneLabel: '<span style="color:green">Done!</span>'
   };
 
   $scope.saveState = function () {
@@ -313,7 +313,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     nextLabel: 'NEXT',
     prevLabel: 'Previous',
     skipLabel: 'Exit',
-    doneLabel: '<span style="color:green">Complete!</span>'
+    doneLabel: '<span style="color:green">Done!</span>'
   };
 
   $scope.saveState = function () {

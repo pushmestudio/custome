@@ -89,7 +89,7 @@ div.introjs-tooltip {
   min-width: 300px;
 }
 
-/* デフォルトのボタンサイズが小さすぎる印象だったので11pxから18pxへ */
+/* デフォルトのボタンサイズが小さすぎる印象だったので11pxから16pxへ */
 a.introjs-button {
-  font: 18px/normal sans-serif;
+  font: 16px/normal sans-serif;
 }
