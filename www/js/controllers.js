@@ -60,16 +60,16 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.IntroOptions = {
     steps:[
       {
-        intro: '<img src="../img/intro/intro1-1.png" width="100%"></img><br>Here is board list page. One sample board is already listed.',
+        intro: '<img src="img/intro/intro1-1.png" width="100%"></img><br>Here is board list page. One sample board is already listed.',
       },
       {
-        intro: '<img src="../img/intro/intro1-2.png" width="100%"></img><br>You can add a new board with tapping "+" button.',
+        intro: '<img src="img/intro/intro1-2.png" width="100%"></img><br>You can add a new board with tapping "+" button.',
       },
       {
-        intro: '<img src="../img/intro/intro1-3.png" width="100%"></img><br>You can see the hidden menu with swipping right to left on each board.',
+        intro: '<img src="img/intro/intro1-3.png" width="100%"></img><br>You can see the hidden menu with swipping right to left on each board.',
       },
       {
-        intro: '<img src="../img/intro/intro1-4.png" width="100%"></img><br>Now let\'s move to board detail page with tapping a listed board.'
+        intro: '<img src="img/intro/intro1-4.png" width="100%"></img><br>Now let\'s move to board detail page with tapping a listed board.'
       }
     ],
     showStepNumbers: false,
@@ -283,22 +283,22 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.IntroOptions = {
     steps:[
       {
-        intro: '<img src="../img/intro/intro2-1.png" width="100%"></img><br>You can change the wallpaper, add a stickey note and more!',
+        intro: '<img src="img/intro/intro2-1.png" width="100%"></img><br>You can change the wallpaper, add a stickey note and more!',
       },
       {
-        intro: '<img src="../img/intro/intro2-2.png" width="100%"></img><br>Go back to list page with tapping home icon.',
+        intro: '<img src="img/intro/intro2-2.png" width="100%"></img><br>Go back to list page with tapping home icon.',
       },
       {
-        intro: '<img src="../img/intro/intro2-3.png" width="100%"></img><br>Auto-saving is working at a certain interval, but you can also save your board immediately.',
+        intro: '<img src="img/intro/intro2-3.png" width="100%"></img><br>Auto-saving is working at a certain interval, but you can also save your board immediately.',
       },
       {
-        intro: '<img src="../img/intro/intro2-4.png" width="100%"></img><br>Add a sticky and change the wallpaper are in the sidemenu.',
+        intro: '<img src="img/intro/intro2-4.png" width="100%"></img><br>Add a sticky and change the wallpaper are in the sidemenu.',
       },
       {
-        intro: '<img src="../img/intro/intro2-5.png" width="100%"></img><br>You can move the sticky with drag.'
+        intro: '<img src="img/intro/intro2-5.png" width="100%"></img><br>You can move the sticky with drag.'
       },
       {
-        intro: '<img src="../img/intro/intro2-6.png" width="100%"></img><br>Additional menu is available with tapping a stikcy.'
+        intro: '<img src="img/intro/intro2-6.png" width="100%"></img><br>Additional menu is available with tapping a stikcy.'
       }
     ],
     showStepNumbers: false,
