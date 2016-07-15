@@ -8,7 +8,7 @@
       </div>
       <ion-item class="item-remove-animate item-thumbnail-left item-icon-right item-text-wrap" ng-repeat="board in myBoards track by $index" type="item-text-wrap" ng-href="#/{{board.boardId}}" ng-click="selectWallpaper(board.boardContent.wallpaper)">
         <img ng-src="{{board.boardContent.wallpaper}}">
-        <!--{{board.boardContent.wallpaper}} --><!-- 使用中のWallpaperのパス表示用 -->
+        <!-- 使用中のWallpaperのパス表示用 -->
         <h2>{{board.boardContent.boardName}}</h2>
         <p>{{board.boardContent.boardComment}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
@@ -21,6 +21,9 @@
         </ion-option-button>
       </ion-item>
     </ion-list>
+    <div ng-intro-options="IntroOptions" ng-intro-method="StartIntro"
+    ng-intro-oncomplete="CompletedEvent" ng-intro-onexit="ExitEvent"
+    ng-intro-autostart="ShouldAutoStart"></div>
     <!-- 作成済ボード一覧画面で，プラスボタン押下するとテンプレート一覧の画面に遷移 -->
     <a href="#/templates">
       <button class="button button-clear button-full button-large">
