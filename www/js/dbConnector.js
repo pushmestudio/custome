@@ -99,18 +99,18 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               'type': 'sticky',
               'text': 'Tap "Wand" icon to put parts.',
               'position': {
-                'x': 50,
-                'y': 50
+                'x': 40,
+                'y': 160
               }
             },
             {
               'partId': '4',
-              'class': 'sticky-note note-blue note-wide',
+              'class': 'sticky-note note-blue note-normal',
               'type': 'sticky',
               'text': 'If you found a "Robot" icon, please tap it!',
               'position': {
-                'x': 200,
-                'y': 350
+                'x': 160,
+                'y': 320
               }
             },
             {
@@ -119,8 +119,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               'type': 'sticky',
               'text': 'The "Robot" icon appears randomly.',
               'position': {
-                'x': 220,
-                'y': 425
+                'x': 120,
+                'y': 440
               }
             },
             {
@@ -129,8 +129,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               'type': 'sticky',
               'text': 'You can save changes by tapping "Pin" icon.',
               'position': {
-                'x': 220,
-                'y': 30
+                'x': 160,
+                'y': 40
               }
             }
           ],
