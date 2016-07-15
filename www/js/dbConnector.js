@@ -107,7 +107,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               'partId': '4',
               'class': 'sticky-note note-blue note-wide',
               'type': 'sticky',
-              'text': 'If you find "Robot icon", please tap it!".',
+              'text': 'If you found a "Robot" icon, please tap it!',
               'position': {
                 'x': 200,
                 'y': 350
@@ -117,7 +117,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               'partId': '7',
               'class': 'sticky-note note-green note-wide',
               'type': 'sticky',
-              'text': 'The icon appears randomly.',
+              'text': 'The "Robot" icon appears randomly.',
               'position': {
                 'x': 220,
                 'y': 425

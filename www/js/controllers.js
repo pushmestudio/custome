@@ -3,7 +3,7 @@
  * ビューとモデルをつなぐ各種コントローラを定義している
  * @copyright (c) 2015 PushMe Studio
  */
-angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives', 'toaster', 'ngAnimate'])
+angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives', 'toaster', 'ngAnimate', 'angular-intro'])
 
 /**
  * @module BoardsCtrl
@@ -55,6 +55,50 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   // テンプレート一覧を読み込む
   $scope.templates = Boards.getAllTemplates();
   $scope.listCanSwipe = true; // リストに対してスワイプ操作を可能にする
+
+  // TODO 文言と保存するkeyが異なるのみで、使用してイントロの枠組みはBoardsDetailCtrlと全く同じ。変更の余地ありか。
+  $scope.IntroOptions = {
+    steps:[
+      {
+        intro: '<img src="img/intro/intro1-1.png" width="100%"></img><br>Here is board list page. One sample board is already listed.',
+      },
+      {
+        intro: '<img src="img/intro/intro1-2.png" width="100%"></img><br>You can add a new board with tapping "+" button.',
+      },
+      {
+        intro: '<img src="img/intro/intro1-3.png" width="100%"></img><br>You can see the hidden menu with swipping right to left on each board.',
+      },
+      {
+        intro: '<img src="img/intro/intro1-4.png" width="100%"></img><br>Now let\'s move to board detail page with tapping a listed board.'
+      }
+    ],
+    showStepNumbers: false,
+    exitOnOverlayClick: true,
+    exitOnEsc:true,
+    nextLabel: 'Next',
+    prevLabel: 'Previous',
+    skipLabel: 'Exit',
+    doneLabel: '<span style="color:green">Done!</span>'
+  };
+
+  $scope.saveState = function () {
+    d.log('saveState is called.');
+    // localstorage上にisDone1stTutorialという名前でチュートリアルが完了しているかのフラグを保存する
+    localStorage.isDone1stTutorial = true;
+  },
+
+  $scope.CompletedEvent = function (scope) {
+    console.log("Completed Event called");
+    $scope.saveState();
+  };
+
+  $scope.ExitEvent = function (scope) {
+    console.log("Exit Event called");
+    $scope.saveState();
+  };
+
+  // チュートリアル完了==trueならautostartをfalseとしてセットする
+  $scope.ShouldAutoStart = !localStorage.isDone1stTutorial;
 
   /**
    * @function selectWallpaper
@@ -239,6 +283,57 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       Parts.reDeploy(boardData.boardContent);
     });
   });
+
+
+  // TODO 文言と保存するkeyが異なるのみで、使用してイントロの枠組みはBoardsCtrlと全く同じ。変更の余地ありか。
+  $scope.IntroOptions = {
+    steps:[
+      {
+        intro: '<img src="img/intro/intro2-1.png" width="100%"></img><br>You can change the wallpaper, add a stickey note and more!',
+      },
+      {
+        intro: '<img src="img/intro/intro2-2.png" width="100%"></img><br>Go back to list page with tapping home icon.',
+      },
+      {
+        intro: '<img src="img/intro/intro2-3.png" width="100%"></img><br>Auto-saving is working at a certain interval, but you can also save your board immediately.',
+      },
+      {
+        intro: '<img src="img/intro/intro2-4.png" width="100%"></img><br>Add a sticky and change the wallpaper are in the sidemenu.',
+      },
+      {
+        intro: '<img src="img/intro/intro2-5.png" width="100%"></img><br>You can move the sticky with drag.'
+      },
+      {
+        intro: '<img src="img/intro/intro2-6.png" width="100%"></img><br>Additional menu is available with tapping a stikcy.'
+      }
+    ],
+    showStepNumbers: false,
+    exitOnOverlayClick: true,
+    exitOnEsc:true,
+    nextLabel: 'NEXT',
+    prevLabel: 'Previous',
+    skipLabel: 'Exit',
+    doneLabel: '<span style="color:green">Done!</span>'
+  };
+
+  $scope.saveState = function () {
+    d.log('saveState is called.');
+    // localstorage上にisDone2ndTutorialという名前でチュートリアルが完了しているかのフラグを保存する
+    localStorage.isDone2ndTutorial = true;
+  },
+
+  $scope.CompletedEvent = function (scope) {
+    console.log("Completed Event called");
+    $scope.saveState();
+  };
+
+  $scope.ExitEvent = function (scope) {
+    console.log("Exit Event called");
+    $scope.saveState();
+  };
+
+  // チュートリアル完了==trueならautostartをfalseとしてセットする
+  $scope.ShouldAutoStart = !localStorage.isDone2ndTutorial;
 
   // binding
   $scope.template = Boards.getTemplate($stateParams.boardId);

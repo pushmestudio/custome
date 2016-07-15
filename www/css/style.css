@@ -81,3 +81,15 @@
   height: 100px;
   background: white; /*透過PNGの壁紙時にパレットの背景が透けることへの対策*/
 }
+
+
+/* introjsのcssを上書き */
+/* デフォルトの横幅が狭すぎる印象だったので200pxから300pxへ */
+div.introjs-tooltip {
+  min-width: 300px;
+}
+
+/* デフォルトのボタンサイズが小さすぎる印象だったので11pxから16pxへ */
+a.introjs-button {
+  font: 16px/normal sans-serif;
+}
