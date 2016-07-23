@@ -176,7 +176,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         buttons: [
           { text: 'Cancel' },
           {
-            text: '<b>Save</b>',
+            text: '<b>OK</b>',
             type: 'button-positive',
             onTap: function(e) {
               return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
@@ -392,7 +392,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
             buttons: [
               { text: 'Cancel' },
               {
-                text: '<b>Save</b>',
+                text: '<b>OK</b>',
                 type: 'button-positive',
                 onTap: function(e) {
                   return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
@@ -444,7 +444,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         buttons: [
           { text: 'Cancel' },
           {
-            text: '<b>Save</b>',
+            text: '<b>OK</b>',
             type: 'button-positive',
             onTap: function(e) {
               return $scope.selectedPart.text;
