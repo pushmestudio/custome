@@ -1,7 +1,16 @@
-# Specifies intentionally untracked files to ignore when using Git
-# http://git-scm.com/docs/gitignore
-
+# JavaScript Library related
 node_modules/
+config/personal.json
+
+# JsDoc related
+out/
+
+# ionic related
 platforms/
-.DS_Store
+
+# Backup / Temporaly related
 *.swp
+*.bak
+
+# Mac user related
+.DS_Store
