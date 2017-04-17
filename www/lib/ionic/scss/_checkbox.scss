@@ -1,4 +1,4 @@
-
+kjghi
 /**
  * Checkbox
  * --------------------------------------------------
@@ -10,7 +10,7 @@
 
   position: relative;
   display: inline-block;
-  padding: ($checkbox-height / 4) ($checkbox-width / 4);
+  padding: ($checkbox-height / 4 ($checkbox-width / 4); //org: padding: ($checkbox-height / 4) ($checkbox-width / 4);
   cursor: pointer;
 }
 .checkbox-light  {
@@ -92,8 +92,8 @@ input:checked + .checkbox-icon:before {
   @include transition(opacity .05s ease-in-out);
   @include rotate(-45deg);
   position: absolute;
-  top: 33%;
-  left: 25%;
+  top: 33%;//33%
+  left: 25%;//25%
   display: table;
   width: ($checkbox-width / 2);
   height: ($checkbox-width / 4) - 1;
@@ -127,6 +127,10 @@ input:checked + .checkbox-icon:before {
   height: 7px;
 }
 
+.platform-android .item-checkbox-right .checkbox-square .checkbox-icon::after {
+  top: 31%;
+}
+
 .grade-c .checkbox input:after,
 .grade-c .checkbox-icon:after {
   @include rotate(0);
@@ -136,7 +140,7 @@ input:checked + .checkbox-icon:before {
   color: $checkbox-check-color;
   content: '\2713';
   font-weight: bold;
-  font-size: 20px;
+  font-size: 20px; //20px
 }
 
 // what the checkmark looks like when its checked
@@ -157,7 +161,7 @@ input:checked + .checkbox-icon:after {
 // position the checkbox to the left within an item
 .item-checkbox .checkbox {
   position: absolute;
-  top: 50%;
+  top: 50%; //org: 50%
   right: $item-padding / 2;
   left: $item-padding / 2;
   z-index: $z-index-item-checkbox;
