@@ -19,20 +19,20 @@ angular.module('mainApp.directives', [])
  * @module draggablePart
  * @description drag可能な要素につける属性を定義したdirective
  */
-.directive('draggablePart', function($ionicGesture, d){
+.directive('draggablePart', function($ionicGesture){
   return {
     restrict: 'A',
     scope: false,
-    link: function(scope, elem, attrs){
+    link: function(scope, elem){
       // おまじない。これをしないとAndroid4.4系でdragイベントが正しく動作しない
-      elem.bind("touchstart", function(event){
+      elem.bind('touchstart', function(event){
         event.preventDefault();
       });
 
       // ドラッグ中はCSSをtransformによって変化させることにより、移動しているように見せる
       $ionicGesture.on('drag', function(event){
-        deltaX = event.gesture.deltaX;
-        deltaY = event.gesture.deltaY;
+        var deltaX = event.gesture.deltaX;
+        var deltaY = event.gesture.deltaY;
 
         // transform3D
         elem.css('transform', 'translate3D(' + String(scope.deployedPart.position.x + deltaX) + 'px, '
@@ -47,5 +47,5 @@ angular.module('mainApp.directives', [])
         scope.deployedPart.position.y = scope.deployedPart.position.y + event.gesture.deltaY;
       }, elem);
     }
-  }
-})
+  };
+});
