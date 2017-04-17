@@ -9,9 +9,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  * @module Boards
  * @description ボード、テンプレートの内容の定義も含む
  * @requires DBConn
- * @requires toaster
  */
-.factory('Boards', function(DBConn, toaster) {
+.factory('Boards', function(DBConn) {
 
   // boardのtemplate
   var templates = [{
@@ -48,16 +47,11 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   // DBに保存したBoard一覧を格納する
   var myBoards = [];
 
-  // 現在のbordIdを格納するもので、BoardsDetailCtrlとの間でバインドすることを目的としている
-  var boardId = '';
-
   // modalに入力されるボードの名前と説明文を格納する
   var boardNames = {
     boardName : '',
     boardComment : ''
   };
-
-  var extWallpaper='';
 
   // ボード画面を開いたとき、新規か更新かを判断する
   var updateFlag = true;
@@ -71,8 +65,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @description 引数として与えられたallMyBoards(DB内のボード一覧)を、メモリ上のmyBoards[]にコピーする
    * @param {Array} allMyBoards ボードオブジェクトの配列
    */
-  var addAllMyBoards = function(allMyBoards){
-    allMyBoards.forEach(function(myBoard, i){
+  var addAllMyBoards = function(allMyBoards) {
+    allMyBoards.forEach(function(myBoard) {
       myBoards.push(myBoard);
     });
   };
@@ -82,13 +76,13 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @description boardの読込時に新規なのか更新なのかを判断し、以降これを見て状態を判断する
    * @param {String} boardId 判定対象とするボードのID
    */
-  var setUpdateFlag = function(boardId){
+  var setUpdateFlag = function(boardId) {
     if(boardId) { // undefinedもnullも空文字も一括判定(http://qiita.com/phi/items/723aa59851b0716a87e3)
       updateFlag = true;
     } else {
       updateFlag = false;
     }
-  }
+  };
 
   /**
    * @function checkSaveOrUpdate
@@ -149,10 +143,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   var updateBoardNames = function(boardId, boardNames){
     var deferred = q.defer();
     DBConn.updateBoardNames(boardId, boardNames).then(function(newBoard) {
-      deferred.resolve();
+      deferred.resolve(newBoard);
     });
     return deferred.promise;
-  }
+  };
 
   /**
    * @function updateWallpaperOnMemory
@@ -167,7 +161,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         break;
       }
     }
-  }
+  };
 
   return {
     boardNames: boardNames,
@@ -493,10 +487,8 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
   }];
 
   // サービス内で使い回している、各パーツの位置やテキストを一時的に格納している変数
-  var flag='false';
   var partX;
   var partY;
-  var text;
 
   // 配置済のパーツを管理するために使用している配列
   var deployedParts=[];
@@ -516,7 +508,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         part.flag='false';
       }
     }
-  }
+  };
 
   /**
    * @function deployPartByClick
@@ -543,7 +535,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         deployedParts.push(deployedPart);
       }
     }
-  }
+  };
 
   /**
    * @function getAllDeployedParts
@@ -552,7 +544,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    */
   var getAllDeployedParts = function(){
     return deployedParts;
-  }
+  };
 
   /**
    * @function
@@ -566,7 +558,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       deployedParts.pop();
     }
     return deployedParts;
-  }
+  };
 
   /**
    * @function reDeployUsingDBdata
@@ -585,45 +577,45 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       //parts[part.partId].counter++;
       deployedParts.push(part);
     }
-  }
+  };
 
   var selectedPart = {
     index: -1,
     partId: -1,
-    image:"",
-    text: "",
-    type:"",
+    image: '',
+    text: '',
+    type: '',
     position:{
       x: -1,
       y: -1
     }
-  }
+  };
 
   /**
    * @function selectPart
    * @description 配置済パーツの中から選択されたパーツについて、処理に使いやすいように別オブジェクトにコピーする
    * @param {int} index 選択されたパーツのIndex
    */
-  var selectPart = function(index){
+  var selectPart = function(index) {
     selectedPart.index = index;
     selectedPart.partId = deployedParts[selectedPart.index].partId;
     selectedPart.image = deployedParts[selectedPart.index].image;
     selectedPart.text = deployedParts[selectedPart.index].text;
     selectedPart.type = deployedParts[selectedPart.index].type;
     selectedPart.position = deployedParts[selectedPart.index].position;
-  }
+  };
 
   /**
    * @function updatePart
    * @description 選択されていたパーツの更新後の結果を、配置済のパーツへと反映する
    */
-  var updatePart = function(){
+  var updatePart = function() {
     deployedParts[selectedPart.index].partId = selectedPart.partId;
     deployedParts[selectedPart.index].image = selectedPart.image;
     deployedParts[selectedPart.index].text = selectedPart.text;
     deployedParts[selectedPart.index].type = selectedPart.type;
     deployedParts[selectedPart.index].position = selectedPart.position;
-  }
+  };
 
   /**
    * @function setPartState
@@ -632,15 +624,15 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @param {Array} variable パーツの配列
    * @param {String} selectedType 選択されたパーツのID
    */
-  var setPartState = function(variable, selectedType){
-    for(var key in variable){
-      if(selectedType === variable[key].id){
+  var setPartState = function(variable, selectedType) {
+    for (var key in variable) {
+      if (selectedType === variable[key].id) {
         variable[key].flag = true;
-      }else{
+      } else {
         variable[key].flag = false;
       }
     }
-  }
+  };
 
   /**
    * @function deployTimeStampAsSticky
@@ -648,7 +640,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @param {double} x タップされた時間保存パーツのx(横)位置, NaNが来たら固定値に置き換え
    * @param {double} y タップされた時間保存パーツのy(縦)位置, NaNが来たら固定値に置き換え
    */
-  var deployTimeStampAsSticky = function(x, y){
+  var deployTimeStampAsSticky = function(x, y) {
     var date = new Date();
     var currentTime = date.toTimeString().substring(0, 8); // "21:54:26 GMT+0900"の出力の0番目(含)から8番目(除)まで
 
@@ -686,27 +678,27 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @return {int} 1 or -1
    */
   var getRandomSign = function() {
-    if(Math.random() - 0.5 >= 0) {
+    if (Math.random() - 0.5 >= 0) {
       return 1;
     } else {
       return -1;
     }
-  }
+  };
 
   /**
    * @function getStickyParts
    * @description 事前に用意してある全パーツの中から，Stickyを抽出する
    * @return {Array} extractedStickyParts 抽出したSticky配列
    */
-  var getStickyParts = function(){
+  var getStickyParts = function() {
     var extractedStickyParts=[];
     for (var partNo in parts){
-      if (parts[partNo].type === 'sticky'){
+      if (parts[partNo].type === 'sticky') {
         extractedStickyParts.push(parts[partNo]);
       }
     }
     return extractedStickyParts;
-  }
+  };
 
   return {
     all: function() {
@@ -728,6 +720,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     selectedPart: selectedPart,
     selectPart: selectPart,
     updatePart: updatePart,
+    setPartState: setPartState,
     reDeploy: function(boardContent){
       reDeployUsingDBdata(boardContent);
     },
@@ -773,7 +766,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    */
   var toArray = function(list) {
     return Array.prototype.slice.call(list || [], 0);
-  }
+  };
 
   /**
    * @function listResults
@@ -781,11 +774,11 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    * @param {Array} entries 事前に用意した壁紙のファイル名の配列
    */
   var listResults = function(entries) {
-    entries.forEach(function(entry, i) {
+    entries.forEach(function(entry) {
       // 最終的にディレクトリ内のファイル一覧を表示する場所がここ
-      wallpaperParams.wallpaperPaths.push("img/wallpaper/" + entry.name);
+      wallpaperParams.wallpaperPaths.push('img/wallpaper/' + entry.name);
     });
-  }
+  };
 
   /**
    * @function loadWallpapers
@@ -800,7 +793,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     // resolveLocalFileSystemURL()は、DirectoryEntryもしくはFileEntryを、ローカルのURL(第1引数)を指定して取得する(第2引数)
     // ここでは、cordova.file.applicationDirectory = "file:///android_asset/" (つまり"custome/platforms/android/assets/")である
     // 失敗した場合、failが呼ばれる
-    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + "www/img/wallpaper", gotDIR, fail);
+    window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + 'www/img/wallpaper', gotDIR, fail);
 
     function gotDIR(dirEntry) {
       var dirReader = dirEntry.createReader();
@@ -830,7 +823,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       deferred.reject();
     }
     return deferred.promise;
-  }
+  };
 
   /**
    * @function setCurrentWallpaper
@@ -839,7 +832,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    */
   var setCurrentWallpaper = function(selectedWallpaperPath) {
     wallpaperParams.currentWallpaperPath = selectedWallpaperPath;
-  }
+  };
 
   /**
    * @function
@@ -853,10 +846,10 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     var deferred = q.defer();
     // imagePickerで使用するオプション定義
     var options = {
-       maximumImagesCount: 1, // 同時に選択できるイメージの数
-       // width: 800,
-       // height: 800,
-       quality: 80
+      maximumImagesCount: 1, // 同時に選択できるイメージの数
+      // width: 800,
+      // height: 800,
+      quality: 80
     };
     var appImagePath; // 戻り値に使う、アプリ内フォルダのイメージへのパス
 
@@ -866,12 +859,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
       for (var i = 0; i < results.length; i++) {
         var filepath = results[i];
         d.log('Image URI: ' + filepath); // コピー元のイメージへのパス
-        var sp = filepath.lastIndexOf("/") + 1; // フォルダとファイルの境目の位置, Separatorの略
+        var sp = filepath.lastIndexOf('/') + 1; // フォルダとファイルの境目の位置, Separatorの略
 
         // copyFile(コピー元フォルダ、コピーファイル名、コピー先フォルダ、コピーファイル名)
         // dataDirectoryはアプリ内フォルダ
         $cordovaFile.copyFile(filepath.substring(0, sp), filepath.substring(sp)
-          , cordova.file.dataDirectory, filepath.substring(sp)).then(function (success) {
+          , cordova.file.dataDirectory, filepath.substring(sp)).then(function() {
             appImagePath = cordova.file.dataDirectory + filepath.substring(sp);
             deferred.resolve(appImagePath);
           }, function (error) {
@@ -880,12 +873,12 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
           });
       }
     }, function(error) {
-        d.log('fail to pick a image');
-        deferred.reject(error);
+      d.log('fail to pick a image');
+      deferred.reject(error);
     });
 
     return deferred.promise;
-  }
+  };
 
   return {
     loadWallpapers: function() {
@@ -913,6 +906,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
  * @requires $rootScope
  */
 .factory('d', function($rootScope) {
+  /* eslint-disable no-console */
   /**
    * @const {boolean} DEBUG_MODE デバッグ中ならONにして、ログ出力機能を有効にする
    */
@@ -977,14 +971,14 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
 
   // 広告呼び出し用のID
   var admobid = {
-    // banner: '',　バナー広告を使用する場合に必要
+    // banner: '', バナー広告を使用する場合に必要
     interstitial: 'ca-app-pub-2622960706202758/6313111825'
   };
 
   var flagData = {
     iconFlag: false,
     alterFlag: false
-  }
+  };
 
   /**
    * @function initAdMob
@@ -1011,7 +1005,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         */
 
         // 広告の読込が完了（成功したときのコールバック）
-        document.addEventListener('onAdLoaded', function(data){
+        document.addEventListener('onAdLoaded', function() {
           if(Math.random() <= FREQ_POP_AD){
             d.log('Interstitial ad is ready');
             $timeout(function(){
@@ -1029,7 +1023,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
         });
       }
     }
-  }
+  };
 
   /**
    * @function showInterstitialAd
@@ -1037,7 +1031,7 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
    */
   var showInterstitialAd = function(){
     window.AdMob.showInterstitial();
-  }
+  };
 
   return {
     AdMob: window.AdMob,
@@ -1048,5 +1042,5 @@ angular.module('mainApp.services', ['mainApp.dbConnector', 'ngCordova'])
     showInterstitialAd: function(){
       showInterstitialAd();
     }
-  }
-})
+  };
+});

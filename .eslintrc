@@ -23,6 +23,7 @@
   },
   "globals": {
     "ionic": true,
-    "angular": true // angularを使用する
+    "angular": true, // angularを使用する
+    "cordova": true
   }
 }
