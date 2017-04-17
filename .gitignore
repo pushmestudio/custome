@@ -5,8 +5,9 @@ config/personal.json
 # JsDoc related
 out/
 
-# ionic related
+# cordova/ionic related
 platforms/
+plugins/
 
 # Backup / Temporaly related
 *.swp
