@@ -6,25 +6,14 @@
 angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
 .run(function($ionicPlatform, $rootScope) {
-
   /**
    * @const {boolean} debugMode デバッグモードか否か、デバッグモード=trueならログ出力する
    */
   $rootScope.debugMode = true;
 
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard for form inputs)
-    // 20150910(tomita)キーボード用のPluginを使う予定はないのでコメントアウト
-    /*
-    if (window.cordova && window.cordova.plugins.Keyboard ) {
-       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
-    */
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
+  if (window.StatusBar) {
+    window.StatusBar.styleDefault();
+  }
 })
 
 // Angular JSの外部ツール(AngulatUI Router)を使用したルーティングを記述
@@ -96,8 +85,8 @@ angular.module('mainApp', ['ionic', 'mainApp.controllers'])
 
   .state('pallet', {
     url: '/palletEdit',
-    templateUrl: 'templates/boardPallet.html',
+    templateUrl: 'templates/sidemenu.html',
     controller: 'PalletCtrl'
-  })
+  });
 
 });
