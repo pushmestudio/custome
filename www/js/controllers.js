@@ -49,7 +49,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         });
       });
     });
-  }
+  };
 
   $scope.myBoards = Boards.getMyBoards();
   // テンプレート一覧を読み込む
@@ -87,13 +87,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     localStorage.isDone1stTutorial = true;
   },
 
-  $scope.CompletedEvent = function (scope) {
-    console.log("Completed Event called");
+  $scope.CompletedEvent = function () {
+    d.log('Completed Event called');
     $scope.saveState();
   };
 
-  $scope.ExitEvent = function (scope) {
-    console.log("Exit Event called");
+  $scope.ExitEvent = function () {
+    d.log('Exit Event called');
     $scope.saveState();
   };
 
@@ -107,7 +107,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    */
   $scope.selectWallpaper = function(selectedWallpaperPath){
     Wallpapers.setCurrentWallpaper(selectedWallpaperPath);
-  }
+  };
 
   /**
    * @function remove
@@ -133,7 +133,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         });
       }
     });
-  }
+  };
 
 
   // ポップアップ画面の入力欄とバインド
@@ -178,7 +178,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           {
             text: '<b>OK</b>',
             type: 'button-positive',
-            onTap: function(e) {
+            onTap: function() {
               return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
             }
           }
@@ -208,18 +208,18 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description ボードの名前及びコメント保存時の処理
    */
   $scope.save = function(){
-    d.log("This is save() in BoardsCtrl");
+    d.log('This is save() in BoardsCtrl');
     // 変更結果をボード一覧上に反映
     $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardName;
     $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardComment;
 
     // 上記のpopupで"$scope.boardNames.boardNameBeforeChange"を用意
     // もし編集後，ボード名が空文字("")になっている場合は，変更前のボード名を利用する
-    if ($scope.currentBoard.boardContent.boardName === ""){
+    if ($scope.currentBoard.boardContent.boardName === ''){
       $scope.currentBoard.boardContent.boardName = $scope.boardNames.boardNameBeforeChange;
     }
 
-    // if ($scope.currentBoard.boardContent.boardComment === ""){ //ボードコメントはブランクでも良いため，コメントアウト
+    // if ($scope.currentBoard.boardContent.boardComment === ''){ //ボードコメントはブランクでも良いため，コメントアウト
     //   $scope.currentBoard.boardContent.boardComment = $scope.boardNames.boardCommentBeforeChange;
     // }
 
@@ -322,13 +322,13 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     localStorage.isDone2ndTutorial = true;
   },
 
-  $scope.CompletedEvent = function (scope) {
-    console.log("Completed Event called");
+  $scope.CompletedEvent = function () {
+    d.log('Completed Event called');
     $scope.saveState();
   };
 
-  $scope.ExitEvent = function (scope) {
-    console.log("Exit Event called");
+  $scope.ExitEvent = function () {
+    d.log('Exit Event called');
     $scope.saveState();
   };
 
@@ -394,7 +394,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
               {
                 text: '<b>OK</b>',
                 type: 'button-positive',
-                onTap: function(e) {
+                onTap: function() {
                   return 'Name: ' + $scope.boardNames.boardName + ' Comment: ' + $scope.boardNames.boardComment;
                 }
               }
@@ -446,7 +446,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           {
             text: '<b>OK</b>',
             type: 'button-positive',
-            onTap: function(e) {
+            onTap: function() {
               return $scope.selectedPart.text;
             }
           }
@@ -468,7 +468,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       });
     };
     $scope.showEditPopup();
-  }
+  };
 
   /**
    * @function save
@@ -478,9 +478,9 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.save = function(){
     // ボード名が未入力の場合に，デフォルト値を入れる
     // デフォルトのボード名 (as of) :  "board: YYYY/MM/DD"
-    if ($scope.boardNames.boardName === ""){
+    if ($scope.boardNames.boardName === ''){
       var currentTime = new Date();
-      var sampleBoardNameAt1stSave = "board: " + currentTime.getFullYear()+"/"+(currentTime.getMonth()+1)+"/"+currentTime.getDate();
+      var sampleBoardNameAt1stSave = 'board: ' + currentTime.getFullYear()+'/'+(currentTime.getMonth()+1)+'/'+currentTime.getDate();
       $scope.boardNames.boardName = sampleBoardNameAt1stSave;
     }
 
@@ -505,7 +505,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
   $scope.click = function($event){
     Parts.setCoord($event);//配置先の座標取得
     Parts.deploy();//パーツをボードに配置
-  }
+  };
 
   /**
    * @function remove
@@ -519,7 +519,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $scope.tmpReservedParts = $scope.deployedParts_angular.splice(partIndex, 1);
 
     // ng-showをtoast-containerに付与することで対応も可能だが、
-    //　現在のバージョンだと複数のtoast-containerがあった場合"type"の指定が無視されてしまう。
+    // 現在のバージョンだと複数のtoast-containerがあった場合"type"の指定が無視されてしまう。
     // トーストを表示
     toaster.pop({
       type: 'warning',
@@ -527,7 +527,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       body: 'part-delete-toaster',
       bodyOutputType: 'localDirective'
     });
-  }
+  };
 
   /**
    * @function undo
@@ -540,7 +540,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     toaster.clear('*');
     var undoPart = $scope.tmpReservedParts.pop();
     $scope.deployedParts_angular.push(undoPart);
-  }
+  };
 
   /**
    * @function openMenu
@@ -550,11 +550,12 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @TODO if文の分岐がかなり冗長なのでリファクタリング必要か
    */
   $scope.openMenu = function(partIndex) {
-    d.log("partIndex : " + partIndex);
+    d.log('partIndex : ' + partIndex);
     // 時間保存パーツの場合は，時間保存用メニュー(時間保存/Delete/Cancel)を出す
     // 通常のパーツの場合は，メニュー(Edit/Delete/Cancel)を出す
+    var hideSheet;
     if ($scope.deployedParts_angular[partIndex].type === 'saveTime'){
-      var hideSheet = $ionicActionSheet.show({
+      hideSheet = $ionicActionSheet.show({
         buttons: [
           { text: '<i class="icon ion-clock royal"></i>Create Time Stamp' } // index=0 時間保存用の文言、elseとの変化点1
         ],
@@ -571,8 +572,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
           return true;
         }
       });
-    }else{
-      var hideSheet = $ionicActionSheet.show({
+    } else {
+      hideSheet = $ionicActionSheet.show({
         buttons: [
           { text: '<i class="icon ion-edit balanced"></i>Edit' } // index=0
         //  , { text: '<i class="icon ion-clipboard energized"></i>Copy' } // index=1 今は使わない
@@ -590,7 +591,8 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
         }
       });
     }
-  }
+    return hideSheet;
+  };
 })
 
 /**
@@ -604,7 +606,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
 .controller('PalletCtrl', function($scope, $ionicModal, Parts){
   $scope.parts = Parts.all();//パレット上にあるパーツをすべて取得
 
-  // modalの定義　使用する付箋の選択を行うためのmodalを設定
+  // modalの定義 使用する付箋の選択を行うためのmodalを設定
   $ionicModal.fromTemplateUrl('templates/stickyNoteList-modal.html', {
     scope: $scope,
     animataion: 'slide-in-up'
@@ -639,7 +641,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    */
   $scope.selectSaveTimeParts = function(){
     Parts.setOnFlag();
-  }
+  };
 })
 
 /**
@@ -663,7 +665,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
     $ionicPlatform.ready(function(){
       AdMobManager.initAdMob();
     });
-  }
+  };
 
   /**
    * @function showUpInterstitialAd
@@ -726,7 +728,7 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
    * @description 初期化処理として、Cordovaプラグイン読み込み後、事前に用意した壁紙の一覧を読み込む
    */
   $scope.init = function() {
-    document.addEventListener("deviceready", onDeviceReady, false);
+    document.addEventListener('deviceready', onDeviceReady, false);
     function onDeviceReady() { // loadWallpapersがcordovaのプラグインを使用するため、devicereadyを待つ
       Wallpapers.loadWallpapers().then(function() {});
     }
@@ -770,4 +772,4 @@ angular.module('mainApp.controllers', ['mainApp.services', 'mainApp.directives',
       }
     });
   };
-})
+});

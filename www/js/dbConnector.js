@@ -52,7 +52,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
         deferred.reject('open error:' + event.message);
       };
       return deferred.promise;
-    }
+    };
 
     /**
      * @function init
@@ -76,7 +76,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
       store.createIndex('boardId', 'boardId', {unique: true});
 
       module.createSample(store);
-    }
+    };
 
     /**
      * @function createSample
@@ -89,62 +89,62 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
 
       var samples = [
         {'boardId': '1430626357000',
-         'boardContent': {
-          'boardName': 'SampleBoard',
-          'boardComment': 'this is a sample',
-          'parts': [
-            {
-              'partId': '2',
-              'class': 'sticky-note note-yellow note-small',
-              'type': 'sticky',
-              'text': 'Tap "Wand" icon to put parts.',
-              'position': {
-                'x': 40,
-                'y': 160
+          'boardContent': {
+            'boardName': 'SampleBoard',
+            'boardComment': 'this is a sample',
+            'parts': [
+              {
+                'partId': '2',
+                'class': 'sticky-note note-yellow note-small',
+                'type': 'sticky',
+                'text': 'Tap "Wand" icon to put parts.',
+                'position': {
+                  'x': 40,
+                  'y': 160
+                }
+              },
+              {
+                'partId': '4',
+                'class': 'sticky-note note-blue note-normal',
+                'type': 'sticky',
+                'text': 'If you found a "Robot" icon, please tap it!',
+                'position': {
+                  'x': 160,
+                  'y': 320
+                }
+              },
+              {
+                'partId': '7',
+                'class': 'sticky-note note-green note-wide',
+                'type': 'sticky',
+                'text': 'The "Robot" icon appears randomly.',
+                'position': {
+                  'x': 120,
+                  'y': 440
+                }
+              },
+              {
+                'partId': '10',
+                'class': 'sticky-note note-pink note-wide',
+                'type': 'sticky',
+                'text': 'You can save changes by tapping "Pin" icon.',
+                'position': {
+                  'x': 160,
+                  'y': 40
+                }
               }
-            },
-            {
-              'partId': '4',
-              'class': 'sticky-note note-blue note-normal',
-              'type': 'sticky',
-              'text': 'If you found a "Robot" icon, please tap it!',
-              'position': {
-                'x': 160,
-                'y': 320
-              }
-            },
-            {
-              'partId': '7',
-              'class': 'sticky-note note-green note-wide',
-              'type': 'sticky',
-              'text': 'The "Robot" icon appears randomly.',
-              'position': {
-                'x': 120,
-                'y': 440
-              }
-            },
-            {
-              'partId': '10',
-              'class': 'sticky-note note-pink note-wide',
-              'type': 'sticky',
-              'text': 'You can save changes by tapping "Pin" icon.',
-              'position': {
-                'x': 160,
-                'y': 40
-              }
-            }
-          ],
-          'wallpaper': 'img/wallpaper/taskboard_virt_blue.png'
+            ],
+            'wallpaper': 'img/wallpaper/taskboard_virt_blue.png'
           }
         }
       ];
 
       // サンプルデータを一件ずつ追加する
-      samples.forEach(function(entry, i) {
+      samples.forEach(function(entry) {
         store.add(entry);
       });
       d.log('finish to create samples.');
-    }
+    };
 
     /**
      * @function saveBoardContent
@@ -162,7 +162,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
 
       if(typeof boardId === 'undefined' || boardId === null) {
         updateFlag = false; // 判定結果として、要新規作成
-        d.log("create new board");
+        d.log('create new board');
       }
 
       // boardIdに対応するものがDBに保存されてるかを確認する
@@ -197,7 +197,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
               deferred.resolve(newBoard);
             });
           }
-        }
+        };
       } else {
         // DBを確認するまでもなく新規登録の場合
         module.addNewBoard(parts, wallpaper).then(function(newBoard) {
@@ -205,7 +205,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
         });
       }
       return deferred.promise;
-    }
+    };
 
     /**
      * @function updateBoard
@@ -247,13 +247,13 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
           }
 
           var request = store.put(data); // ストアへ更新をかける
-          request.onsuccess = function(event) {
+          request.onsuccess = function() {
             deferred.resolve();
             d.log('更新完了!');
-          }
+          };
           request.onerror = function(event) {
             deferred.reject('更新途中で失敗!' + event.message);
-          }
+          };
         } else { // 該当結果がない場合
           d.log('update対象が見つかりません');
         }
@@ -261,9 +261,9 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
       store.get(boardId).onerror = function(event) {
         deferred.reject('request is rejected');
         d.log('update error:' + event.message);
-      }
+      };
       return deferred.promise;
-    }
+    };
 
     /**
      * @function updateBoardNames
@@ -290,13 +290,13 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
           }
 
           var request = store.put(data); // ストアへ更新をかける
-          request.onsuccess = function(event) {
+          request.onsuccess = function() {
             deferred.resolve();
             d.log('更新完了!');
-          }
+          };
           request.onerror = function(event) {
             deferred.reject('更新途中で失敗!' + event.message);
-          }
+          };
         } else { // 該当結果がない場合
           d.log('update対象が見つかりません');
         }
@@ -304,9 +304,9 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
       store.get(boardId).onerror = function(event) {
         deferred.reject('request is rejected');
         d.log('update error:' + event.message);
-      }
+      };
       return deferred.promise;
-    }
+    };
 
     /**
      * @function addNewBoard
@@ -319,8 +319,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
     module.addNewBoard = function(parts, wallpaper, boardNames) {
       d.log('addNewBoard is called');
       var time = '' + Date.now() + ''; // JavascriptのDateでunixtimeを取得し、文字列化
-      var newBoard = {boardId: time, boardContent: {boardName: boardNames.boardName, boardComment: boardNames.boardComment,
-                      parts: parts, wallpaper: wallpaper}};
+      var newBoard = {boardId: time, boardContent: {boardName: boardNames.boardName, boardComment: boardNames.boardComment,parts: parts, wallpaper: wallpaper}};
       d.log('addNewBoard ID is ' +time);
 
       var trans = module.db.transaction(module.storeName, 'readwrite');
@@ -328,7 +327,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
       var deferred = module.q.defer();
 
       var request = store.add(newBoard); // idとcontentから構成したオブジェクトを追加
-      request.onsuccess = function(event) {
+      request.onsuccess = function() {
         deferred.resolve(newBoard);
       };
       request.onerror = function(event) {
@@ -336,7 +335,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
         d.log('addNewBoard失敗: '+ event.message);
       };
       return deferred.promise;
-    }
+    };
 
     /**
      * @function loadBoardContent
@@ -345,9 +344,9 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @return {Promise} data (同期処理オブジェクトを一旦返した上で)DBから取得したボード1件分のオブジェクト
      */
     module.loadBoardContent = function(boardId) {
-      d.log("loadBoardContent is called");
+      d.log('loadBoardContent is called');
       // var boardContents = []; // (冨田)配列として返すことも可能(ユニークな値なので不要だと思うが)
-      var trans = module.db.transaction(module.storeName, "readonly");
+      var trans = module.db.transaction(module.storeName, 'readonly');
       var store = trans.objectStore(module.storeName);
 
       var deferred = module.q.defer();
@@ -360,7 +359,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
         } else { // 該当結果がない場合
           d.log('load対象が見つかりません');
           // resolveに空のデータ構造を渡す。⇒結果としてParts.redeployが呼び出されても特に何も行われない。
-          deferred.resolve({boardId: '', boardContent: {boardName: '', boardComment: '', parts: [], wallpaper: ''}})
+          deferred.resolve({boardId: '', boardContent: {boardName: '', boardComment: '', parts: [], wallpaper: ''}});
         }
       };
 
@@ -369,7 +368,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
         d.log('load error:' + event.message);
       };
       return deferred.promise;
-    }
+    };
 
     /**
      * @function deleteBoard
@@ -378,8 +377,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
      * @return {Promise} 同期処理を行うためのオブジェクト
      */
     module.deleteBoard = function(boardId) {
-      d.log("deleteBoard is called");
-      var trans = module.db.transaction(module.storeName, "readwrite");
+      d.log('deleteBoard is called');
+      var trans = module.db.transaction(module.storeName, 'readwrite');
       var store = trans.objectStore(module.storeName);
 
       var deferred = module.q.defer();
@@ -387,8 +386,8 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
       // boardIDが一致するデータを削除する
       store.delete(boardId).onsuccess = function(event){
         var data = event.target.result;
-       　d.log("delete board");
-        deferred.resolve()
+        d.log('delete board');
+        deferred.resolve(data);
       };
 
       store.delete(boardId).onerror = function(event){
@@ -396,7 +395,7 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
         d.log('delete error:' + event.message);
       };
       return deferred.promise;
-    }
+    };
 
     /**
      * @function getAllMyBoards
@@ -425,12 +424,12 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
           deferred.resolve(myBoards);
         }
       };
-      store.openCursor().onerror = function(event) {
+      store.openCursor().onerror = function() {
         d.log('取得に失敗しました');
         deferred.reject();
-      }
+      };
       return deferred.promise;
-    }
+    };
 
     /**
      * @function reset
@@ -442,10 +441,10 @@ angular.module('mainApp.dbConnector', ['mainApp.services'])
       var store = trans.objectStore(module.storeName);
 
       var request = store.clear(); // storeの中身をすべて消す
-      request.onsuccess = function(event) {
+      request.onsuccess = function() {
         d.log(module.storeName + ' is cleaned');
-      }
-    }
+      };
+    };
 
     // DBConnとして呼び出し可能(≒public)とするメソッドを下記に定義
     return {
